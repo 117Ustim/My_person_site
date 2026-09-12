@@ -1,0 +1,8 @@
+.loading {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  background: #171615;
+  color: rgba(247, 245, 240, 0.7);
+  font-size: 14px;
+}

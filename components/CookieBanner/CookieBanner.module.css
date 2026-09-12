@@ -1,0 +1,93 @@
+.banner {
+  position: fixed;
+  z-index: 60;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-top: 1px solid rgba(247, 245, 240, 0.14);
+  background: rgba(0, 0, 0, 0.9);
+  box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(14px);
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  width: min(calc(100% - 48px), 1040px);
+  margin: 0 auto;
+  padding: 18px 0;
+}
+
+.copy {
+  max-width: 600px;
+  color: #f7f5f0;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.copy p {
+  margin: 0;
+}
+
+.copy a {
+  color: #f7f5f0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
+}
+
+.secondaryButton,
+.primaryButton {
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.secondaryButton {
+  border: 1px solid rgba(247, 245, 240, 0.24);
+  background: transparent;
+  color: #f7f5f0;
+}
+
+.primaryButton {
+  border: 1px solid #f7f5f0;
+  background: #f7f5f0;
+  color: #201f1e;
+}
+
+.secondaryButton:hover,
+.secondaryButton:focus-visible {
+  background: rgba(247, 245, 240, 0.1);
+}
+
+.primaryButton:hover,
+.primaryButton:focus-visible,
+.secondaryButton:active,
+.primaryButton:active {
+  transform: translateY(-1px);
+}
+
+@media (max-width: 780px) {
+  .content {
+    align-items: stretch;
+    flex-direction: column;
+    width: min(calc(100% - 32px), 600px);
+  }
+
+  .actions {
+    flex-wrap: wrap;
+  }
+}
+

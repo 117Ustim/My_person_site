@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="none" overflow="visible">
+  <g>
+    <g>
+      <path d="M 0 30 C 0 13.431 13.431 0 30 0 C 46.569 0 60 13.431 60 30 C 60 46.569 46.569 60 30 60 C 13.431 60 0 46.569 0 30 Z" fill="transparent"/>
+      <g>
+        <defs>
+          <linearGradient id="bg27001" x1="0.498" x2="0.502" y1="0" y2="1">
+            <stop offset="0" stop-color="rgb(0,0,0)" stop-opacity="1"/>
+            <stop offset="1" stop-color="rgb(47,44,42)" stop-opacity="1"/>
+          </linearGradient>
+        </defs>
+        <path d="M 0 30 C 0 13.431 13.431 0 30 0 C 46.569 0 60 13.431 60 30 C 60 46.569 46.569 60 30 60 C 13.431 60 0 46.569 0 30 Z" fill="url(#bg27001)"/>
+      </g>
+      <g opacity="0.3">
+        <defs>
+          <radialGradient id="rg27001a" cy="0.442" cx="0.458" r="0.512">
+            <stop offset="0" stop-color="rgba(255,255,255,0)" stop-opacity="0"/>
+            <stop offset="1" stop-color="rgba(255,255,255,0.4)" stop-opacity="0.4"/>
+          </radialGradient>
+        </defs>
+        <path d="M 0 30 C 0 13.431 13.431 0 30 0 C 46.569 0 60 13.431 60 30 C 60 46.569 46.569 60 30 60 C 13.431 60 0 46.569 0 30 Z" fill="url(#rg27001a)"/>
+      </g>
+      <g opacity="0.3">
+        <defs>
+          <radialGradient id="rg27001b" cy="0.442" cx="0.458" r="0.512">
+            <stop offset="0" stop-color="rgba(255,255,255,0)" stop-opacity="0"/>
+            <stop offset="1" stop-color="rgba(255,255,255,0.4)" stop-opacity="0.4"/>
+          </radialGradient>
+        </defs>
+        <path d="M 0 30 C 0 13.431 13.431 0 30 0 C 46.569 0 60 13.431 60 30 C 60 46.569 46.569 60 30 60 C 13.431 60 0 46.569 0 30 Z" fill="url(#rg27001b)"/>
+      </g>
+    </g>
+    <path d="M 6 30 C 6 16.745 16.745 6 30 6 C 43.255 6 54 16.745 54 30 C 54 43.255 43.255 54 30 54 C 16.745 54 6 43.255 6 30 Z" fill="rgb(0,0,0)" opacity="0.3"/>
+    <path d="M 5.5 30 C 5.5 16.469 16.469 5.5 30 5.5 C 43.531 5.5 54.5 16.469 54.5 30 C 54.5 43.531 43.531 54.5 30 54.5 C 16.469 54.5 5.5 43.531 5.5 30 Z" fill="rgb(0,0,0)" opacity="0.3"/>
+    <text x="30" y="19.5" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="4.5" font-weight="500" letter-spacing="0.5" fill="rgb(255,255,255)" opacity="0.7">ISO / IEC</text>
+    <text x="30" y="33" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" font-weight="400" letter-spacing="0.8" fill="rgb(255,255,255)">27001</text>
+    <text x="30" y="42.5" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="4.5" font-weight="500" letter-spacing="0.5" fill="rgb(255,255,255)" opacity="0.7">ISMS</text>
+  </g>
+</svg>

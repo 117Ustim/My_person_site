@@ -1,0 +1,93 @@
+.main {
+  min-height: 100vh;
+  padding: 190px 24px 120px;
+  background: #171615;
+}
+
+.article {
+  width: min(100%, 940px);
+  margin: 0 auto;
+}
+
+.updated,
+.eyebrow {
+  margin: 0 0 14px;
+  color: rgba(247, 245, 240, 0.45);
+  font-size: 14px;
+}
+
+.article h1 {
+  max-width: 840px;
+  margin: 0;
+  color: #f7f5f0;
+  font-family: var(--font-heading), Georgia, serif;
+  font-size: clamp(54px, 8vw, 108px);
+  font-weight: 300;
+  letter-spacing: -0.05em;
+  line-height: 0.95;
+}
+
+.intro {
+  max-width: 700px;
+  margin: 32px 0 0;
+  color: rgba(247, 245, 240, 0.64);
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.sections {
+  max-width: 760px;
+  margin: 100px 0 0;
+}
+
+.section {
+  margin-top: 100px;
+}
+
+.section:first-child {
+  margin-top: 0;
+}
+
+.section h2 {
+  margin: 0;
+  color: #e7e5e0;
+  font-family: var(--font-heading), Georgia, serif;
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 300;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.section p,
+.section li {
+  color: rgba(247, 245, 240, 0.56);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.section p {
+  margin: 18px 0 0;
+}
+
+.section ul {
+  margin: 16px 0 0;
+  padding-left: 24px;
+}
+
+.section li + li {
+  margin-top: 8px;
+}
+
+@media (max-width: 600px) {
+  .main {
+    padding: 150px 16px 88px;
+  }
+
+  .sections {
+    margin-top: 72px;
+  }
+
+  .section {
+    margin-top: 72px;
+  }
+}

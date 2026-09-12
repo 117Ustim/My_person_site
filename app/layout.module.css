@@ -1,0 +1,22 @@
+.body {
+  min-height: 100vh;
+  margin: 0;
+  background: #171615;
+  color: #f7f5f0;
+  font-family: var(--font-body), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.body :global(*) {
+  box-sizing: border-box;
+}
+
+.body :global(a) {
+  text-decoration: none;
+}
+
+.body :global(button),
+.body :global(a) {
+  -webkit-tap-highlight-color: transparent;
+}

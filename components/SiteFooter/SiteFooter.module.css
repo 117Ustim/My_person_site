@@ -1,0 +1,173 @@
+.footer {
+  position: relative;
+  overflow: hidden;
+  padding: 32px max(24px, calc((100vw - 1440px) / 2)) 24px;
+  background: #171615;
+  color: #f7f5f0;
+}
+
+.disclaimerRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 40px 0;
+  border-bottom: 1px solid rgba(247, 245, 240, 0.14);
+}
+
+.disclaimer {
+  max-width: 630px;
+  margin: 0;
+  color: rgba(247, 245, 240, 0.48);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.poweredBy {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 14px;
+  color: rgba(247, 245, 240, 0.48);
+  font-size: 13px;
+}
+
+.poweredBy img {
+  display: block;
+  width: 130px;
+  height: 25px;
+}
+
+.footerGrid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(280px, 3fr) repeat(3, minmax(130px, 1fr));
+  gap: 32px;
+  padding: 80px 0 48px;
+}
+
+.companyColumn {
+  max-width: 470px;
+}
+
+.footerBrand {
+  display: inline-flex;
+}
+
+.footerLogo {
+  display: block;
+  width: 168px;
+  height: 32px;
+}
+
+.companyText {
+  max-width: 468px;
+  margin: 32px 0 0;
+  color: rgba(247, 245, 240, 0.48);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.badges a {
+  display: block;
+}
+
+.badges img {
+  display: block;
+  width: 60px;
+  height: 60px;
+}
+
+.copyright {
+  margin: 16px 0 0;
+  color: rgba(247, 245, 240, 0.48);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.linkColumn {
+  min-width: 0;
+}
+
+.columnTitle {
+  margin: 0;
+  color: rgba(247, 245, 240, 0.48);
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.linkList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 32px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.footerLink {
+  color: #f7f5f0;
+  font-size: 14px;
+  line-height: 1.35;
+  transition: color 180ms ease;
+}
+
+.footerLink:hover,
+.footerLink:focus-visible {
+  color: rgba(247, 245, 240, 0.5);
+}
+
+.watermark {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: -24px;
+  opacity: 0.75;
+  pointer-events: none;
+  user-select: none;
+}
+
+@media (max-width: 900px) {
+  .footer {
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+
+  .footerGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .companyColumn {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 620px) {
+  .disclaimerRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footerGrid {
+    grid-template-columns: 1fr;
+    padding-top: 56px;
+  }
+
+  .companyColumn {
+    grid-column: auto;
+  }
+
+  .watermark {
+    width: 160%;
+    max-width: none;
+    margin-left: -30%;
+  }
+}

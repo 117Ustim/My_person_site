@@ -1,0 +1,17 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1552 1552" width="1552" height="1552">
+	<title>AEG_BIG</title>
+	<style>
+		.s0 { fill: #000000 } 
+		.s1 { fill: #ff2800 } 
+		.s2 { fill: #0066ff } 
+		.s3 { fill: #e7ff00 } 
+		.s4 { fill: #ffffff } 
+		.s5 { fill: #fa69ff } 
+	</style>
+	<path class="s0" d="m0 414.1l1137.1-414.1 414.1 1137.9-1137.5 414.1z"/>
+	<path fill-rule="evenodd" class="s1" d="m881.6 283.9v983.8h-208.2v-983.8z"/>
+	<path fill-rule="evenodd" class="s2" d="m621.2 517.8v620.5h-155.6v-620.5z"/>
+	<path fill-rule="evenodd" class="s3" d="m1241.2 724.1v414.2h-102.9v-414.2z"/>
+	<path fill-rule="evenodd" class="s4" d="m413.4 413v414.1h-103v-414.1z"/>
+	<path class="s5" d="m932 413h155.5v620.4h-155.5z"/>
+</svg>

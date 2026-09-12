@@ -1,0 +1,46 @@
+.section {
+  width: min(100% - 48px, 1432px);
+  margin: 0 auto;
+  padding: 0 0 61px;
+  text-align: center;
+}
+
+.label {
+  margin: 0;
+  color: rgba(247, 245, 240, 0.48);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.logos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 52px;
+  margin-top: 28px;
+}
+
+.logo {
+  display: grid;
+  place-items: center;
+  opacity: 0.82;
+  filter: grayscale(1) brightness(0) invert(1);
+}
+
+.logo img {
+  width: auto;
+  height: 20px;
+  object-fit: contain;
+}
+
+@media (max-width: 600px) {
+  .section {
+    width: min(100% - 32px, 1120px);
+    padding-bottom: 44px;
+  }
+
+  .logos {
+    gap: 22px;
+  }
+}

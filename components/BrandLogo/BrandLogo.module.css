@@ -1,0 +1,16 @@
+.logo {
+  display: block;
+  width: 168px;
+  height: 32px;
+  color: currentColor;
+}
+
+.logo > path:not(:first-child) {
+  display: none;
+}
+
+.word {
+  font-family: var(--font-heading), Georgia, serif;
+  font-size: 27px;
+  letter-spacing: -0.8px;
+}
