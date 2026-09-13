@@ -1,19 +1,7 @@
 import type { Metadata } from 'next'
-import localFont from 'next/font/local'
+import '@fontsource-variable/source-serif-4/opsz.css'
 import type { ReactNode } from 'react'
 import styles from './layout.module.css'
-
-const inter = localFont({
-  src: './fonts/InterVariable.woff2',
-  variable: '--font-body',
-  display: 'swap',
-})
-
-const ivory = localFont({
-  src: './fonts/IvoryLLWeb-Light.woff2',
-  variable: '--font-heading',
-  display: 'swap',
-})
 
 export const metadata: Metadata = {
   title: {
@@ -27,7 +15,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${styles.body} ${inter.variable} ${ivory.variable}`}>{children}</body>
+      <body className={styles.body}>{children}</body>
     </html>
   )
 }

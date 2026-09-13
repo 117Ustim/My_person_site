@@ -3,7 +3,7 @@
   margin: 0;
   background: #171615;
   color: #f7f5f0;
-  font-family: var(--font-body), sans-serif;
+  font-family: "Source Serif 4 Variable", Georgia, serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

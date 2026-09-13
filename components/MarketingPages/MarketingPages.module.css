@@ -88,7 +88,7 @@ section.homeAudienceSection {
 }
 
 .nextLink span {
-  font-family: var(--font-heading), Georgia, serif;
+  font-family: "Source Serif 4 Variable", Georgia, serif;
   font-size: 28px;
 }
 
@@ -126,7 +126,7 @@ section.homeAudienceSection {
 .securityGroups h2 {
   margin: 0 0 22px;
   color: #f7f5f0;
-  font-family: var(--font-heading), Georgia, serif;
+  font-family: "Source Serif 4 Variable", Georgia, serif;
   font-size: clamp(32px, 4vw, 48px);
   font-weight: 300;
   letter-spacing: -0.035em;
@@ -223,7 +223,7 @@ section.homeAudienceSection {
 
 .downloadCard h3 {
   margin-top: 70px;
-  font-family: var(--font-heading), Georgia, serif;
+  font-family: "Source Serif 4 Variable", Georgia, serif;
   font-size: 32px;
   font-weight: 300;
 }

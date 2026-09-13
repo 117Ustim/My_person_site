@@ -56,7 +56,7 @@
   max-width: 1000px;
   margin: 0;
   color: #f7f5f0;
-  font-family: var(--font-heading), Georgia, serif;
+  font-family: "Source Serif 4 Variable", Georgia, serif;
   font-size: clamp(48px, 7vw, 104px);
   font-weight: 300;
   letter-spacing: -0.04em;
@@ -137,6 +137,15 @@
   object-position: left bottom;
 }
 
+.globeFrame {
+  position: absolute;
+  z-index: 3;
+  bottom: -4%;
+  width: 44vw;
+  height: 65%;
+  pointer-events: none;
+}
+
 .rightRock {
   right: -7%;
   object-position: right bottom;
@@ -147,6 +156,23 @@
   align-items: flex-start;
 }
 
+.homeHero::after {
+  top: 656px;
+  right: -218px;
+  bottom: 0;
+  left: -218px;
+  z-index: 4;
+  height: auto;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.18) 30%,
+    rgba(0, 0, 0, 0.82) 60%,
+    #000 100%
+  );
+  pointer-events: none;
+}
+
 .homeHero .content {
   width: 100%;
   padding: 160px 24px 0;
@@ -155,16 +181,23 @@
 .homeHero .title {
   width: min(100%, 960px);
   max-width: 960px;
+  font-family: "Source Serif 4 Variable", Georgia, serif;
   font-size: clamp(52px, 4.72vw, 80px);
+  font-optical-sizing: auto;
+  font-weight: 400;
   letter-spacing: -1.6px;
   line-height: 86px;
 }
 
 .homeHero .description {
-  max-width: 424px;
-  margin-top: 20px;
-  font-size: 14px;
-  line-height: 20px;
+  max-width: 680px;
+  margin-top: 56px;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
+  font-size: 28px;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  letter-spacing: -0.5px;
+  line-height: 34px;
 }
 
 .homeHero .action {
@@ -177,12 +210,20 @@
 .homeHero .heroImageFrame {
   top: 31.39vw;
   right: 50%;
-  width: min(67.59vw, 1145.6px);
+  width: min(64vw, 1084.8px);
   height: auto;
-  aspect-ratio: 1368 / 619;
+  aspect-ratio: 1586 / 992;
   transform: translateX(50%);
-  opacity: 1;
+  overflow: hidden;
+  border: 1px solid rgba(247, 245, 240, 0.16);
+  border-radius: clamp(18px, 1.45vw, 28px);
+  background: rgba(15, 16, 17, 0.3);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 28px 68px rgba(0, 0, 0, 0.28);
   mask-image: none;
+}
+
+.homeHero .heroImage {
+  opacity: 0.74;
 }
 
 .homeHero .rockFrame {
@@ -198,11 +239,19 @@
   height: 49.8vw;
 }
 
+.homeHero .globeFrame {
+  top: 26vw;
+  left: 2vw;
+  width: min(26vw, 420px);
+  height: min(26vw, 420px);
+}
+
 .homeHero .rightRock {
   top: 18.11vw;
   right: -40.59vw;
-  width: 81.24vw;
-  height: 50.97vw;
+  width: 76.4vw;
+  height: 47.9vw;
+  transform: translateY(-50px);
 }
 
 .homeHero .founderRock .rock {
@@ -259,6 +308,12 @@
     left: -24%;
   }
 
+  .globeFrame {
+    bottom: 0;
+    width: 66vw;
+    height: 46%;
+  }
+
   .rightRock {
     right: -24%;
   }
@@ -278,8 +333,8 @@
   }
 
   .homeHero .heroImageFrame {
-    top: 44%;
-    width: 130vw;
+    top: 67%;
+    width: 122vw;
   }
 
   .homeHero .leftRock {
@@ -289,10 +344,19 @@
     height: 46%;
   }
 
+  .homeHero .globeFrame {
+    top: 52%;
+    bottom: auto;
+    left: 5%;
+    width: 50vw;
+    height: 50vw;
+    z-index: 4;
+  }
+
   .homeHero .rightRock {
     top: auto;
     right: -24%;
-    width: 66vw;
-    height: 46%;
+    width: 62vw;
+    height: 43%;
   }
 }

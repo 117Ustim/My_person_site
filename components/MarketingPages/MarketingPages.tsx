@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { aiPracticeFeatures, asset, consolidatorFeatures, custodyFeatures, homeLogos, homeModules, homeSlides, independentFeatures, pricingFeatures, securityCards, securityGroups, teamMembers, principles } from '../../lib/page-data'
+import { aiPracticeFeatures, asset, consolidatorFeatures, custodyFeatures, homeLogos, homeModules, homeSlides, homeTechnologies, independentFeatures, pricingFeatures, securityCards, securityGroups, teamMembers, principles } from '../../lib/page-data'
 import BookingCta from '../BookingCta/BookingCta'
 import FeatureGrid from '../FeatureGrid/FeatureGrid'
 import FeatureSlider from '../FeatureSlider/FeatureSlider'
@@ -10,6 +10,7 @@ import MarketingHero from '../MarketingHero/MarketingHero'
 import ModuleShowcase from '../ModuleShowcase/ModuleShowcase'
 import PageSection from '../PageSection/PageSection'
 import SectionHeading from '../SectionHeading/SectionHeading'
+import TechnologyMarquee from '../TechnologyMarquee/TechnologyMarquee'
 import styles from './MarketingPages.module.css'
 
 export function HomePageContent() {
@@ -17,14 +18,15 @@ export function HomePageContent() {
     <main className={styles.main}>
       <MarketingHero
         variant="home"
-        title="The all-in-one platform for financial advisers"
-        description="AI-powered practice management available now — with integrated custody and execution launching soon."
-        image={asset('home-hero.CYi88F0I_1KN365.avif')}
-        imageAlt="Obsidian practice management workspace"
-        leftImage={asset('0408-stone-left.bG7f73ao_1bzuE6-57a94d6eb0.webp')}
+        title="Перетворюю ідеї на готові цифрові продукти"
+        description="Full-stack розробник. Сайти, CRM-системи та мобільні застосунки для реальних бізнес-завдань"
+        actionLabel=""
+        image={asset('vetscanct-dashboard-anna-14-uniform.png')}
+        imageAlt="Головна панель VetScanCT для керування записами, пацієнтами та оплатами Ани"
+        showEarthGlobe
         rightImage={asset('hero-founder-transparent-graphite-v2.png')}
       />
-      <LogoStrip logos={homeLogos} label="Made by the people behind" />
+      <TechnologyMarquee technologies={homeTechnologies} label="Технології, з якими я працюю" withHeroFade />
       <PageSection>
         <SectionHeading title="Save Time & Grow AUM" />
         <ModuleShowcase items={homeModules} />

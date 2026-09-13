@@ -188,7 +188,7 @@
 }
 
 .dropdownTitle {
-  font-family: var(--font-heading), Georgia, serif;
+  font-family: "Source Serif 4 Variable", Georgia, serif;
   font-size: 22px;
   line-height: 1.05;
 }
@@ -370,7 +370,7 @@
     border: 0;
     background: transparent;
     color: #f7f5f0;
-    font-family: var(--font-heading), Georgia, serif;
+    font-family: "Source Serif 4 Variable", Georgia, serif;
     font-size: 30px;
     line-height: 1.1;
     text-align: left;

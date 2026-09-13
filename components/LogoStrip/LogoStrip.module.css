@@ -5,11 +5,43 @@
   text-align: center;
 }
 
+.withHeroFade {
+  position: relative;
+  z-index: 1;
+}
+
+.withHeroFade::before {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: calc((100% - 100vw) / 2);
+  width: 100vw;
+  height: 180px;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.88) 0%,
+    rgba(0, 0, 0, 0.64) 32%,
+    rgba(0, 0, 0, 0.28) 68%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  content: '';
+  pointer-events: none;
+}
+
+.withHeroFade > * {
+  position: relative;
+  z-index: 1;
+}
+
 .label {
   margin: 0;
   color: rgba(247, 245, 240, 0.48);
   font-size: 14px;
   line-height: 20px;
+}
+
+.withHeroFade .label {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
 }
 
 .logos {
@@ -42,5 +74,9 @@
 
   .logos {
     gap: 22px;
+  }
+
+  .withHeroFade::before {
+    height: 140px;
   }
 }

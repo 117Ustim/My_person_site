@@ -1,0 +1,165 @@
+.section {
+  width: min(100% - 96px, 800px);
+  margin: 0 auto;
+  padding: 0 0 61px;
+  text-align: center;
+}
+
+.withHeroFade {
+  position: relative;
+  z-index: 1;
+}
+
+.withHeroFade::before {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: calc((100% - 100vw) / 2);
+  width: 100vw;
+  height: 180px;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.88) 0%,
+    rgba(0, 0, 0, 0.64) 32%,
+    rgba(0, 0, 0, 0.28) 68%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  content: '';
+  pointer-events: none;
+}
+
+.withHeroFade > * {
+  position: relative;
+  z-index: 1;
+}
+
+.label {
+  margin: 0;
+  color: rgba(247, 245, 240, 0.48);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.viewport {
+  width: 100%;
+  margin-top: 28px;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent 0%, #000 5%, #000 95%, transparent 100%);
+}
+
+.track {
+  --gap: 12px;
+  --item-width: calc((min(100vw - 96px, 800px) - (var(--gap) * 4)) / 5);
+  display: flex;
+  width: max-content;
+  animation: technology-marquee 34s linear infinite;
+  will-change: transform;
+}
+
+.track > div:last-child {
+  display: flex;
+}
+
+.group {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--gap);
+  padding-right: var(--gap);
+}
+
+.item {
+  display: flex;
+  flex: 0 0 var(--item-width);
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-width: 0;
+  color: rgba(247, 245, 240, 0.8);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
+  font-size: 17px;
+  line-height: 28px;
+  white-space: nowrap;
+}
+
+.icon {
+  display: grid;
+  flex: 0 0 28px;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  color: rgba(247, 245, 240, 0.74);
+}
+
+.icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.iconReact,
+.iconReactNative {
+  color: #61dafb;
+}
+
+.iconNextjs,
+.iconGitHub {
+  color: #f7f5f0;
+}
+
+.iconTypeScript {
+  color: #3178c6;
+}
+
+.iconNodejs {
+  color: #83cd29;
+}
+
+.iconSwift {
+  color: #f05138;
+}
+
+.iconFirebase {
+  color: #ffca28;
+}
+
+.iconPostgreSQL {
+  color: #699eca;
+}
+
+@keyframes technology-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation-play-state: paused;
+  }
+}
+
+@media (max-width: 600px) {
+  .section {
+    width: min(100% - 32px, 1120px);
+    padding-bottom: 44px;
+  }
+
+  .withHeroFade::before {
+    height: 140px;
+  }
+
+  .track {
+    --gap: 16px;
+    --item-width: 170px;
+    animation-duration: 28s;
+  }
+
+  .item {
+    font-size: 16px;
+  }
+}

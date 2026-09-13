@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { CSSProperties, ReactNode } from 'react'
+import EarthGlobe from '../EarthGlobe/EarthGlobe'
 import styles from './MarketingHero.module.css'
 
 type MarketingHeroProps = {
@@ -10,6 +11,7 @@ type MarketingHeroProps = {
   image?: string
   imageAlt?: string
   leftImage?: string
+  showEarthGlobe?: boolean
   rightImage?: string
   actionLabel?: string
   actionHref?: string
@@ -25,6 +27,7 @@ export default function MarketingHero({
   image,
   imageAlt = '',
   leftImage,
+  showEarthGlobe = false,
   rightImage,
   actionLabel = 'Get Started For Free',
   actionHref = 'mailto:support@obsidianos.com',
@@ -38,6 +41,7 @@ export default function MarketingHero({
   return (
     <section className={`${styles.hero} ${compact ? styles.compact : ''} ${variant === 'home' ? styles.homeHero : ''}`}>
       <div className={styles.backgroundGlow} aria-hidden="true" />
+      {showEarthGlobe ? <div className={styles.globeFrame}><EarthGlobe /></div> : null}
       {leftImage ? <div className={`${styles.rockFrame} ${styles.leftRock}`}><Image className={styles.rock} src={leftImage} alt="" fill sizes="42vw" priority /></div> : null}
       {rightImage ? <div className={`${styles.rockFrame} ${styles.rightRock} ${isFounderRock ? styles.founderRock : ''}`}><Image className={styles.rock} src={rightImage} alt="" fill sizes="42vw" priority /></div> : null}
       {image ? <div className={styles.heroImageFrame}><Image className={styles.heroImage} src={image} alt={imageAlt} fill sizes="min(100vw, 1000px)" priority /></div> : null}

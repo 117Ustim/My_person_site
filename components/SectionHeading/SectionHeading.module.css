@@ -17,7 +17,7 @@
 .title {
   margin: 0;
   color: #f7f5f0;
-  font-family: var(--font-heading), Georgia, serif;
+  font-family: "Source Serif 4 Variable", Georgia, serif;
   font-size: clamp(38px, 4.3vw, 58px);
   font-weight: 300;
   letter-spacing: -0.04em;

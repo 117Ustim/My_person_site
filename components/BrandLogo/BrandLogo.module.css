@@ -10,7 +10,7 @@
 }
 
 .word {
-  font-family: var(--font-heading), Georgia, serif;
+  font-family: "Source Serif 4 Variable", Georgia, serif;
   font-size: 27px;
   letter-spacing: -0.8px;
 }

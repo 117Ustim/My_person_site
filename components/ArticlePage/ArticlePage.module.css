@@ -20,7 +20,7 @@
   max-width: 840px;
   margin: 0;
   color: #f7f5f0;
-  font-family: var(--font-heading), Georgia, serif;
+  font-family: "Source Serif 4 Variable", Georgia, serif;
   font-size: clamp(54px, 8vw, 108px);
   font-weight: 300;
   letter-spacing: -0.05em;
@@ -51,7 +51,7 @@
 .section h2 {
   margin: 0;
   color: #e7e5e0;
-  font-family: var(--font-heading), Georgia, serif;
+  font-family: "Source Serif 4 Variable", Georgia, serif;
   font-size: clamp(32px, 4vw, 48px);
   font-weight: 300;
   letter-spacing: -0.035em;

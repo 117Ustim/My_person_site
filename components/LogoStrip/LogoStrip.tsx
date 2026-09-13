@@ -4,11 +4,12 @@ import styles from './LogoStrip.module.css'
 type LogoStripProps = {
   logos: ReadonlyArray<readonly [string, string]>
   label?: string
+  withHeroFade?: boolean
 }
 
-export default function LogoStrip({ logos, label = 'Trusted by people from' }: LogoStripProps) {
+export default function LogoStrip({ logos, label = 'Trusted by people from', withHeroFade = false }: LogoStripProps) {
   return (
-    <section className={styles.section} aria-label={label}>
+    <section className={`${styles.section} ${withHeroFade ? styles.withHeroFade : ''}`} aria-label={label}>
       <p className={styles.label}>{label}</p>
       <div className={styles.logos}>
         {logos.map(([name, image]) => (

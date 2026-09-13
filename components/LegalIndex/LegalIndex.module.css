@@ -32,7 +32,7 @@
 .card h3 {
   margin: 0;
   color: #e7e5e0;
-  font-family: var(--font-heading), Georgia, serif;
+  font-family: "Source Serif 4 Variable", Georgia, serif;
   font-size: 28px;
   font-weight: 300;
 }

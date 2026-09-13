@@ -113,6 +113,18 @@ export const homeLogos = [
   ['Wise', asset('0034-wise.CX8Tml1r_1pkwdO-dca5795ebb.svg')],
 ] as const
 
+export const homeTechnologies = [
+  'React',
+  'Next.js',
+  'TypeScript',
+  'Node.js',
+  'React Native',
+  'Swift',
+  'Firebase',
+  'PostgreSQL',
+  'GitHub',
+] as const
+
 export const independentFeatures: FeatureItem[] = [
   {
     title: 'Day plan',
