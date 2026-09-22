@@ -19,10 +19,10 @@
   height: 180px;
   background: linear-gradient(
     180deg,
-    rgba(0, 0, 0, 0.88) 0%,
-    rgba(0, 0, 0, 0.64) 32%,
-    rgba(0, 0, 0, 0.28) 68%,
-    rgba(0, 0, 0, 0) 100%
+    rgb(var(--color-overlay-rgb) / 0.88) 0%,
+    rgb(var(--color-overlay-rgb) / 0.64) 32%,
+    rgb(var(--color-overlay-rgb) / 0.28) 68%,
+    rgb(var(--color-overlay-rgb) / 0) 100%
   );
   content: '';
   pointer-events: none;
@@ -35,7 +35,7 @@
 
 .label {
   margin: 0;
-  color: rgba(247, 245, 240, 0.48);
+  color: rgb(var(--color-text-rgb) / 0.48);
   font-size: 14px;
   line-height: 20px;
 }

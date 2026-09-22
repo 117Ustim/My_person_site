@@ -1,16 +1,26 @@
 .logo {
+  --brand-mark-width: 45px;
+  --brand-studio-width: 68px;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: flex-end;
+  gap: 6px;
+  height: 28px;
+  transform: translateY(-5px);
+}
+
+.auMark,
+.studioWordmark {
   display: block;
-  width: 168px;
-  height: 32px;
-  color: currentColor;
+  object-fit: contain;
 }
 
-.logo > path:not(:first-child) {
-  display: none;
+.auMark {
+  width: var(--brand-mark-width);
+  height: auto;
 }
 
-.word {
-  font-family: "Source Serif 4 Variable", Georgia, serif;
-  font-size: 27px;
-  letter-spacing: -0.8px;
+.studioWordmark {
+  width: var(--brand-studio-width);
+  height: auto;
 }

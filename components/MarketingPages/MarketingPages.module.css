@@ -1,6 +1,14 @@
 .main {
   overflow: hidden;
-  background: #171615;
+  background: var(--color-bg);
+}
+
+.capabilitySection {
+  scroll-margin-top: 104px;
+}
+
+.capabilitiesSection {
+  padding-top: 72px;
 }
 
 .audienceGrid,
@@ -18,8 +26,10 @@
 .pricingCards > article {
   min-height: 190px;
   padding: 24px;
-  border: 1px solid rgba(247, 245, 240, 0.1);
-  background: #201e1c;
+  border: 1px solid rgb(var(--color-text-rgb) / 0.1);
+  background: var(--color-surface-2);
+  box-shadow: 0 18px 40px rgba(31, 28, 24, 0.06), inset 0 1px 0 rgb(var(--color-text-rgb) / 0.08);
+  backdrop-filter: blur(18px) saturate(1.06);
 }
 
 .audienceCard img {
@@ -30,7 +40,7 @@
 .trustPoint h3,
 .pricingCards h3 {
   margin: 24px 0 0;
-  color: #e7e5e0;
+  color: var(--color-text-strong);
   font-size: 18px;
   font-weight: 500;
 }
@@ -43,13 +53,28 @@
 .teamGrid p,
 .principleGrid p {
   margin: 10px 0 0;
-  color: rgba(247, 245, 240, 0.52);
+  color: rgb(var(--color-text-rgb) / 0.52);
   font-size: 14px;
   line-height: 1.5;
 }
 
 .sliderWrap {
   margin-top: 52px;
+}
+
+.aboutCopy {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+  max-width: 900px;
+  margin-top: 48px;
+}
+
+.aboutCopy p {
+  margin: 0;
+  color: rgb(var(--color-text-rgb) / 0.62);
+  font-size: 18px;
+  line-height: 1.55;
 }
 
 .homeSliderWrap {
@@ -61,15 +86,11 @@ section.homeAudienceSection {
   padding-bottom: 48px;
 }
 
-.audienceSectionHeading {
-  margin-bottom: 80px;
-}
-
 .nextLink,
 .downloadCard a {
   display: inline-flex;
   margin-top: 28px;
-  color: #f7f5f0;
+  color: var(--color-text);
   font-size: 15px;
 }
 
@@ -84,11 +105,11 @@ section.homeAudienceSection {
   align-items: center;
   justify-content: space-between;
   padding-top: 22px;
-  border-top: 1px solid rgba(247, 245, 240, 0.12);
+  border-top: 1px solid rgb(var(--color-text-rgb) / 0.12);
 }
 
 .nextLink span {
-  font-family: "Source Serif 4 Variable", Georgia, serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
   font-size: 28px;
 }
 
@@ -101,8 +122,10 @@ section.homeAudienceSection {
 .securityCards article,
 .securityList article {
   padding: 24px;
-  border: 1px solid rgba(247, 245, 240, 0.1);
-  background: #201e1c;
+  border: 1px solid rgb(var(--color-text-rgb) / 0.1);
+  background: var(--color-surface-2);
+  box-shadow: 0 18px 40px rgba(31, 28, 24, 0.06), inset 0 1px 0 rgb(var(--color-text-rgb) / 0.08);
+  backdrop-filter: blur(18px) saturate(1.06);
 }
 
 .securityCards h3,
@@ -111,7 +134,7 @@ section.homeAudienceSection {
 .principleGrid h3,
 .downloadCard h3 {
   margin: 0;
-  color: #e7e5e0;
+  color: var(--color-text-strong);
   font-size: 17px;
   font-weight: 500;
 }
@@ -125,8 +148,8 @@ section.homeAudienceSection {
 
 .securityGroups h2 {
   margin: 0 0 22px;
-  color: #f7f5f0;
-  font-family: "Source Serif 4 Variable", Georgia, serif;
+  color: var(--color-text);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
   font-size: clamp(32px, 4vw, 48px);
   font-weight: 300;
   letter-spacing: -0.035em;
@@ -146,7 +169,7 @@ section.homeAudienceSection {
 
 .featureTable {
   margin-top: 48px;
-  border-top: 1px solid rgba(247, 245, 240, 0.14);
+  border-top: 1px solid rgb(var(--color-text-rgb) / 0.14);
 }
 
 .featureTable div {
@@ -154,17 +177,17 @@ section.homeAudienceSection {
   grid-template-columns: 1fr 1.4fr 100px;
   gap: 20px;
   padding: 20px 0;
-  border-bottom: 1px solid rgba(247, 245, 240, 0.14);
+  border-bottom: 1px solid rgb(var(--color-text-rgb) / 0.14);
 }
 
 .featureTable strong {
-  color: #e7e5e0;
+  color: var(--color-text-strong);
   font-weight: 500;
 }
 
 .featureTable span,
 .featureTable b {
-  color: rgba(247, 245, 240, 0.52);
+  color: rgb(var(--color-text-rgb) / 0.52);
   font-size: 14px;
   font-weight: 400;
 }
@@ -185,7 +208,7 @@ section.homeAudienceSection {
   position: relative;
   min-height: 260px;
   overflow: hidden;
-  background: #242220;
+  background: var(--color-surface-3);
 }
 
 .teamImage img {
@@ -212,18 +235,20 @@ section.homeAudienceSection {
 .principleGrid article,
 .downloadCard {
   padding: 26px;
-  border: 1px solid rgba(247, 245, 240, 0.1);
-  background: #242220;
+  border: 1px solid rgb(var(--color-text-rgb) / 0.1);
+  background: var(--color-surface-3);
+  box-shadow: 0 18px 40px rgba(31, 28, 24, 0.06), inset 0 1px 0 rgb(var(--color-text-rgb) / 0.08);
+  backdrop-filter: blur(18px) saturate(1.06);
 }
 
 .downloadCard span {
-  color: rgba(247, 245, 240, 0.42);
+  color: rgb(var(--color-text-rgb) / 0.42);
   font-size: 13px;
 }
 
 .downloadCard h3 {
   margin-top: 70px;
-  font-family: "Source Serif 4 Variable", Georgia, serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
   font-size: 32px;
   font-weight: 300;
 }
@@ -242,6 +267,10 @@ section.homeAudienceSection {
 }
 
 @media (max-width: 720px) {
+  .aboutCopy {
+    grid-template-columns: 1fr;
+  }
+
   .faqLayout {
     grid-template-columns: 1fr;
   }
@@ -273,5 +302,9 @@ section.homeAudienceSection {
   .trustPoint,
   .pricingCards > article {
     min-height: 0;
+  }
+
+  .capabilitiesSection {
+    padding-top: 56px;
   }
 }

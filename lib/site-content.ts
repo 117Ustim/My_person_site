@@ -46,9 +46,14 @@ export const siteRoutes: SiteRoute[] = [
   {
     path: '/',
     kind: 'page',
-    title: 'Obsidian — The all-in-one platform for financial advisers',
-    description:
-      'AI-powered practice management available now, with integrated custody and execution launching soon.',
+    title: 'Головна — цифрові продукти та розробка',
+    description: 'Сайти, CRM-системи та мобільні застосунки для реальних бізнес-завдань.',
+  },
+  {
+    path: '/portfolio',
+    kind: 'page',
+    title: 'Портфоліо — цифрові продукти та розробка',
+    description: 'Вибрані сайти, CRM-системи, мобільні застосунки та backend-рішення.',
   },
   {
     path: '/what-we-offer/ai-crm-for-financial-advisors',
@@ -95,8 +100,8 @@ export const siteRoutes: SiteRoute[] = [
   {
     path: '/about',
     kind: 'page',
-    title: 'About Us — Obsidian',
-    description: 'A Family Office For Every Family.',
+    title: 'Про мене — full-stack розробник',
+    description: 'Створюю сайти, CRM-системи та мобільні застосунки від ідеї до запуску.',
   },
   {
     path: '/press/media-center',

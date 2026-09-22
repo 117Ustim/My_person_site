@@ -3,8 +3,8 @@
   min-height: 100vh;
   place-items: center;
   padding: 24px;
-  background: #171615;
-  color: #f7f5f0;
+  background: var(--color-bg);
+  color: var(--color-text);
   text-align: center;
 }
 
@@ -18,18 +18,18 @@
 
 .title {
   margin: 0;
-  font-family: "Source Serif 4 Variable", Georgia, serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
   font-size: clamp(40px, 8vw, 72px);
   font-weight: 400;
 }
 
 .copy {
   margin: 0;
-  color: rgba(247, 245, 240, 0.62);
+  color: rgb(var(--color-text-rgb) / 0.62);
 }
 
 .link {
-  color: #f7f5f0;
+  color: var(--color-text);
   text-decoration: underline;
   text-underline-offset: 4px;
 }

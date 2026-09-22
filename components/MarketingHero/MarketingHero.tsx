@@ -1,6 +1,9 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import type { CSSProperties, ReactNode } from 'react'
+import { useI18n } from '../../lib/i18n'
 import EarthGlobe from '../EarthGlobe/EarthGlobe'
 import styles from './MarketingHero.module.css'
 
@@ -17,7 +20,7 @@ type MarketingHeroProps = {
   actionHref?: string
   children?: ReactNode
   compact?: boolean
-  variant?: 'default' | 'home'
+  variant?: 'default' | 'home' | 'portfolio'
 }
 
 export default function MarketingHero({
@@ -29,17 +32,19 @@ export default function MarketingHero({
   leftImage,
   showEarthGlobe = false,
   rightImage,
-  actionLabel = 'Get Started For Free',
-  actionHref = 'mailto:support@obsidianos.com',
+  actionLabel,
+  actionHref = 'mailto:ustik72@gmail.com',
   children,
   compact = false,
   variant = 'default',
 }: MarketingHeroProps) {
+  const { locale, t } = useI18n()
   const words = title.split(' ')
   const isFounderRock = rightImage?.includes('hero-founder-transparent')
+  const resolvedActionLabel = actionLabel === undefined ? t('common.getStartedFree') : actionLabel
 
   return (
-    <section className={`${styles.hero} ${compact ? styles.compact : ''} ${variant === 'home' ? styles.homeHero : ''}`}>
+    <section className={`${styles.hero} ${compact ? styles.compact : ''} ${variant === 'home' ? styles.homeHero : ''} ${variant === 'portfolio' ? styles.portfolioHero : ''}`}>
       <div className={styles.backgroundGlow} aria-hidden="true" />
       {showEarthGlobe ? <div className={styles.globeFrame}><EarthGlobe /></div> : null}
       {leftImage ? <div className={`${styles.rockFrame} ${styles.leftRock}`}><Image className={styles.rock} src={leftImage} alt="" fill sizes="42vw" priority /></div> : null}
@@ -48,7 +53,7 @@ export default function MarketingHero({
 
       <div className={styles.content}>
         {eyebrow ? <span className={styles.eyebrow}>{eyebrow}</span> : null}
-        <h1 className={styles.title} aria-label={title}>
+        <h1 className={`${styles.title} ${variant === 'home' && locale === 'ru' ? styles.russianTitle : ''}`} aria-label={title}>
           {words.map((word, index) => (
             <span
               className={styles.word}
@@ -61,7 +66,7 @@ export default function MarketingHero({
           ))}
         </h1>
         <p className={styles.description}>{description}</p>
-        {actionLabel ? <Link className={styles.action} href={actionHref}>{actionLabel}</Link> : null}
+        {resolvedActionLabel ? <Link className={styles.action} href={actionHref}>{resolvedActionLabel}</Link> : null}
         {children}
       </div>
     </section>

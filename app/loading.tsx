@@ -1,5 +1,5 @@
-import styles from './loading.module.css'
+import LoadingContent from '../components/LoadingContent/LoadingContent'
 
 export default function Loading() {
-  return <main className={styles.loading}>Loading…</main>
+  return <LoadingContent />
 }

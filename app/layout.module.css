@@ -1,11 +1,40 @@
 .body {
+  --color-bg: #171615;
+  --color-surface-1: #1e1c1b;
+  --color-surface-2: #201e1c;
+  --color-surface-3: #242220;
+  --color-surface-4: #2f2c2a;
+  --color-surface-5: #2b2927;
+  --color-surface-6: #23211f;
+  --color-button: #3a3938;
+  --color-button-hover: #4d4b49;
+  --color-button-text: #f7f5f0;
+  --color-text: #f7f5f0;
+  --color-text-strong: #e7e5e0;
+  --color-text-rgb: 247 245 240;
+  --color-on-accent: #201f1e;
+  --color-accent: #ff877a;
+  --color-hero-top: #090909;
+  --color-glass: rgba(47, 44, 42, 0.8);
+  --color-glass-soft: rgba(247, 245, 240, 0.06);
+  --color-border-rgb: 247 245 240;
+  --color-overlay: rgba(0, 0, 0, 0.8);
+  --color-overlay-rgb: 0 0 0;
+  --color-image-overlay-rgb: 0 0 0;
+  --color-cookie-bg: rgba(0, 0, 0, 0.9);
+  --color-glow: rgba(92, 74, 61, 0.32);
+  color-scheme: dark;
+}
+
+.body {
   min-height: 100vh;
   margin: 0;
-  background: #171615;
-  color: #f7f5f0;
-  font-family: "Source Serif 4 Variable", Georgia, serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 300ms ease, color 300ms ease;
 }
 
 .body :global(*) {

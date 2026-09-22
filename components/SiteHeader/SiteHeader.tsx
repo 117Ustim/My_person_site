@@ -1,58 +1,26 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
+import { localeLabels, type Locale, useI18n } from '../../lib/i18n'
 import BrandLogo from '../BrandLogo/BrandLogo'
+import { useProjectInquiry } from '../ProjectInquiry/ProjectInquiry'
 import styles from './SiteHeader.module.css'
 
-type MenuKey = 'offer' | 'audience' | null
-
-const offerLinks = [
-  {
-    label: 'AI Practice Management',
-    href: '/what-we-offer/ai-crm-for-financial-advisors',
-    image: '/sitegrab/assets/0001-nav-ai-practice-management.DOLrS83x_1qYFPm-59a6813ee9.webp',
-    description: 'Your clients, meetings, and tasks — captured by AI, searchable in seconds, ready to act on.',
-  },
-  {
-    label: 'Custody & Execution',
-    href: '/what-we-offer/custody-and-execution',
-    image: '/sitegrab/assets/0004-nav-custody-execution.BBzLjn3v_ZHMNdI-3b5e8eeec9.webp',
-    description: 'Trade, rebalance, and custody — all in one place, with instant account opening.',
-  },
-]
-
-const audienceLinks = [
-  {
-    label: 'Independent firms',
-    href: '/whos-it-for/independent-firms',
-    image: '/sitegrab/assets/0010-nav-independent-firms.BlA20NJs_5rWs8-0f84e63066.webp',
-    description: 'Spend less time on admin and more time delivering advice that matters.',
-  },
-  {
-    label: 'Consolidators',
-    href: '/whos-it-for/consolidators',
-    image: '/sitegrab/assets/0007-nav-consolidators.CkmIfV3m_Z1EIYiR-0438f13718.webp',
-    description: 'Unify firms, data, and controls to scale faster — without operational drag.',
-  },
-]
-
 const simpleLinks = [
-  { label: 'Integrations', href: '/integrations' },
-  { label: 'Security', href: '/security' },
-  { label: 'Pricing', href: '/pricing' },
-  { label: 'About', href: '/about' },
+  { labelKey: 'nav.home', href: '/' },
+  { labelKey: 'nav.portfolio', href: '/portfolio' },
+  { labelKey: 'nav.aboutMe', href: '/about' },
+  { labelKey: 'nav.contacts', href: '/#contacts' },
 ]
 
 export default function SiteHeader() {
   const pathname = usePathname()
-  const [openMenu, setOpenMenu] = useState<MenuKey>(null)
+  const { t, locale, setLocale } = useI18n()
+  const { openInquiry } = useProjectInquiry()
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [mobileExpanded, setMobileExpanded] = useState<MenuKey>(null)
   const [scrolled, setScrolled] = useState(false)
-  const menuTimer = useRef<number | null>(null)
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50)
@@ -64,7 +32,7 @@ export default function SiteHeader() {
   }, [])
 
   useEffect(() => {
-    if (!openMenu && !mobileOpen) return
+    if (!mobileOpen) return
 
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
@@ -72,84 +40,25 @@ export default function SiteHeader() {
     return () => {
       document.body.style.overflow = previousOverflow
     }
-  }, [openMenu, mobileOpen])
-
-  useEffect(() => () => {
-    if (menuTimer.current) window.clearTimeout(menuTimer.current)
-  }, [])
-
-  const clearMenuTimer = () => {
-    if (menuTimer.current) window.clearTimeout(menuTimer.current)
-    menuTimer.current = null
-  }
-
-  const scheduleMenu = (menu: MenuKey, delay: number) => {
-    clearMenuTimer()
-    menuTimer.current = window.setTimeout(() => setOpenMenu(menu), delay)
-  }
-
-  const handleMenuToggle = (menu: Exclude<MenuKey, null>) => {
-    clearMenuTimer()
-    setOpenMenu(current => (current === menu ? null : menu))
-  }
+  }, [mobileOpen])
 
   const handleMobileToggle = () => {
-    clearMenuTimer()
     setMobileOpen(current => !current)
-    setOpenMenu(null)
   }
 
   const closeMenus = () => {
-    clearMenuTimer()
-    setOpenMenu(null)
     setMobileOpen(false)
   }
 
   return (
-    <header className={`${styles.header} ${scrolled && !openMenu ? styles.scrolled : ''}`}>
+    <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
       <div className={styles.inner}>
-        <nav className={styles.nav} aria-label="Main navigation">
-          <Link className={styles.brand} href="/" aria-label="Obsidian home" onClick={closeMenus}>
-            <BrandLogo className={styles.brandLogo} aria-label="Obsidian" />
+        <nav className={styles.nav} aria-label={t('common.mainNavigation')}>
+          <Link className={styles.brand} href="/" aria-label={t('common.auHome')} onClick={closeMenus}>
+            <BrandLogo className={styles.brandLogo} aria-label={t('common.auStudio')} />
           </Link>
 
           <div className={styles.desktopNav}>
-            <div
-              className={styles.menuGroup}
-              onMouseEnter={() => scheduleMenu('offer', 80)}
-              onMouseLeave={() => scheduleMenu(null, 180)}
-            >
-              <button
-                className={styles.navButton}
-                type="button"
-                aria-expanded={openMenu === 'offer'}
-                aria-haspopup="menu"
-                onClick={() => handleMenuToggle('offer')}
-              >
-                What we offer
-                <span className={styles.chevron} aria-hidden="true" />
-              </button>
-              <NavMenu links={offerLinks} open={openMenu === 'offer'} onNavigate={closeMenus} />
-            </div>
-
-            <div
-              className={styles.menuGroup}
-              onMouseEnter={() => scheduleMenu('audience', 80)}
-              onMouseLeave={() => scheduleMenu(null, 180)}
-            >
-              <button
-                className={styles.navButton}
-                type="button"
-                aria-expanded={openMenu === 'audience'}
-                aria-haspopup="menu"
-                onClick={() => handleMenuToggle('audience')}
-              >
-                Who&apos;s it for
-                <span className={styles.chevron} aria-hidden="true" />
-              </button>
-              <NavMenu links={audienceLinks} open={openMenu === 'audience'} onNavigate={closeMenus} />
-            </div>
-
             {simpleLinks.map(link => (
               <Link
                 className={`${styles.navLink} ${pathname === link.href ? styles.activeLink : ''}`}
@@ -157,19 +66,21 @@ export default function SiteHeader() {
                 href={link.href}
                 onClick={closeMenus}
               >
-                {link.label}
+                {t(link.labelKey)}
               </Link>
             ))}
           </div>
 
-          <Link className={styles.cta} href="mailto:support@obsidianos.com" onClick={closeMenus}>
-            Get started
-          </Link>
+          <LanguageSwitcher locale={locale} onChange={setLocale} label={t('common.language')} variant="desktop" />
+
+          <button className={styles.cta} type="button" onClick={() => { closeMenus(); openInquiry() }}>
+            {t('nav.discussProject')}
+          </button>
 
           <button
             className={styles.mobileButton}
             type="button"
-            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+            aria-label={mobileOpen ? t('common.closeMenu') : t('common.openMenu')}
             aria-expanded={mobileOpen}
             onClick={handleMobileToggle}
           >
@@ -178,110 +89,85 @@ export default function SiteHeader() {
         </nav>
       </div>
 
-      <MobileMenu
-        expanded={mobileExpanded}
-        open={mobileOpen}
-        onClose={closeMenus}
-        onToggle={menu => setMobileExpanded(current => (current === menu ? null : menu))}
-      />
-
-      <div className={`${styles.dropdownBackdrop} ${openMenu ? styles.dropdownBackdropOpen : ''}`} aria-hidden="true" />
-      <div className={`${styles.dropdownBar} ${openMenu ? styles.dropdownBarOpen : ''}`} aria-hidden="true" />
+      <MobileMenu open={mobileOpen} onClose={closeMenus} onOpenInquiry={openInquiry} />
     </header>
   )
 }
 
-type NavMenuProps = {
-  links: typeof offerLinks
-  open: boolean
-  onNavigate: () => void
-}
+function LanguageSwitcher({
+  locale,
+  onChange,
+  label,
+  variant,
+}: {
+  locale: Locale
+  onChange: (locale: Locale) => void
+  label: string
+  variant: 'desktop' | 'mobile'
+}) {
+  const [motion, setMotion] = useState<'left' | 'right' | null>(null)
+  const languageOptions = Object.keys(localeLabels) as Locale[]
 
-function NavMenu({ links, open, onNavigate }: NavMenuProps) {
+  const handleLanguageChange = (nextLocale: Locale) => {
+    if (nextLocale === locale) return
+
+    setMotion(languageOptions.indexOf(nextLocale) > languageOptions.indexOf(locale) ? 'right' : 'left')
+    onChange(nextLocale)
+  }
+
   return (
-    <div className={`${styles.dropdown} ${open ? styles.dropdownOpen : ''}`} aria-hidden={!open}>
-      {links.map(link => (
-        <Link className={styles.dropdownLink} key={link.href} href={link.href} onClick={onNavigate} tabIndex={open ? 0 : -1}>
-          <div className={styles.dropdownImageFrame}>
-            <Image className={styles.dropdownImage} src={link.image} alt="" width={270} height={280} />
-          </div>
-          <span className={styles.dropdownText}>
-            <span className={styles.dropdownTitle}>{link.label}</span>
-            <span className={styles.dropdownDescription}>{link.description}</span>
-          </span>
-        </Link>
+    <div
+      className={`${styles.languageSwitcher} ${variant === 'desktop' ? styles.desktopLanguageSwitcher : styles.mobileLanguageSwitcher} ${motion === 'right' ? styles.languageSwitchRight : motion === 'left' ? styles.languageSwitchLeft : ''}`}
+      data-active-locale={locale}
+      aria-label={label}
+      role="group"
+    >
+      <span className={styles.languageIndicator} aria-hidden="true" onAnimationEnd={() => setMotion(null)} />
+      {languageOptions.map(item => (
+        <button
+          className={`${styles.languageButton} ${locale === item ? styles.activeLanguage : ''}`}
+          type="button"
+          key={item}
+          aria-pressed={locale === item}
+          onClick={() => handleLanguageChange(item)}
+        >
+          {localeLabels[item]}
+        </button>
       ))}
     </div>
   )
 }
 
 type MobileMenuProps = {
-  expanded: MenuKey
   open: boolean
   onClose: () => void
-  onToggle: (menu: Exclude<MenuKey, null>) => void
+  onOpenInquiry: () => void
 }
 
-function MobileMenu({ expanded, open, onClose, onToggle }: MobileMenuProps) {
+function MobileMenu({ open, onClose, onOpenInquiry }: MobileMenuProps) {
+  const { t, locale, setLocale } = useI18n()
+
   if (!open) return null
 
   return (
     <div className={styles.mobilePanel}>
-      <nav className={styles.mobileNav} aria-label="Mobile navigation">
-        <div className={styles.mobileMenuItem}>
-          <button
-            className={styles.mobileNavButton}
-            type="button"
-            aria-expanded={expanded === 'offer'}
-            onClick={() => onToggle('offer')}
-          >
-            What we offer
-            <span className={styles.mobileChevron} aria-hidden="true" />
-          </button>
-          {expanded === 'offer' ? <MobileChildren links={offerLinks} onNavigate={onClose} /> : null}
-        </div>
-
-        <div className={styles.mobileMenuItem}>
-          <button
-            className={styles.mobileNavButton}
-            type="button"
-            aria-expanded={expanded === 'audience'}
-            onClick={() => onToggle('audience')}
-          >
-            Who&apos;s it for
-            <span className={styles.mobileChevron} aria-hidden="true" />
-          </button>
-          {expanded === 'audience' ? <MobileChildren links={audienceLinks} onNavigate={onClose} /> : null}
-        </div>
-
+      <nav className={styles.mobileNav} aria-label={t('common.mobileNavigation')}>
         {simpleLinks.map(link => (
           <div className={styles.mobileMenuItem} key={link.href}>
             <Link className={styles.mobileNavLink} href={link.href} onClick={onClose}>
-              {link.label}
+              {t(link.labelKey)}
             </Link>
           </div>
         ))}
+
+        <div className={styles.mobileLanguageRow}>
+          <span>{t('common.language')}</span>
+          <LanguageSwitcher locale={locale} onChange={setLocale} label={t('common.language')} variant="mobile" />
+        </div>
+        <button className={styles.mobileCta} type="button" onClick={() => { onClose(); onOpenInquiry() }}>
+          {t('nav.discussProject')}
+        </button>
       </nav>
-    </div>
-  )
-}
-
-type MobileChildrenProps = {
-  links: typeof offerLinks
-  onNavigate: () => void
-}
-
-function MobileChildren({ links, onNavigate }: MobileChildrenProps) {
-  return (
-    <div className={styles.mobileChildren}>
-      {links.map(link => (
-        <Link className={styles.mobileChild} key={link.href} href={link.href} onClick={onNavigate}>
-          <span className={styles.mobileChildImage}>
-            <Image src={link.image} alt="" width={40} height={40} />
-          </span>
-          <span className={styles.mobileChildLabel}>{link.label}</span>
-        </Link>
-      ))}
     </div>
   )
 }

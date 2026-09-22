@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { useI18n } from '../../lib/i18n'
 import {
   AmbientLight,
   BufferGeometry,
@@ -20,6 +21,7 @@ import {
   WebGLRenderer,
 } from 'three'
 import styles from './EarthGlobe.module.css'
+import { createProjectNetwork } from './projectNetwork'
 import { applyStoneMaterial, createStoneTexture } from './stoneMaterial'
 
 const LAND_DATA = '/geo/ne-110m-land.json'
@@ -164,6 +166,7 @@ function disposeObject(object: Object3D) {
 }
 
 export default function EarthGlobe() {
+  const { t } = useI18n()
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -201,6 +204,11 @@ export default function EarthGlobe() {
     gridGroup.renderOrder = 2
     axialGroup.add(gridGroup)
     const gridMaterial = addGraticule(gridGroup)
+
+    const compactNetwork = window.matchMedia('(max-width: 820px)').matches
+    const projectNetwork = createProjectNetwork(EARTH_RADIUS, compactNetwork, ROTATION_SPEED)
+    projectNetwork.group.rotation.y = -0.2
+    axialGroup.add(projectNetwork.group)
 
     const landMaterial = new MeshStandardMaterial({
       color: '#ffffff',
@@ -277,6 +285,8 @@ export default function EarthGlobe() {
       earth.rotation.y -= elapsed * ROTATION_SPEED
       landSurface.rotation.y -= elapsed * ROTATION_SPEED
       gridGroup.rotation.y -= elapsed * ROTATION_SPEED
+      projectNetwork.group.rotation.y -= elapsed * ROTATION_SPEED
+      projectNetwork.update(elapsed)
       renderer.render(scene, camera)
       animationFrame = window.requestAnimationFrame(render)
     }
@@ -295,6 +305,8 @@ export default function EarthGlobe() {
       disposed = true
       window.cancelAnimationFrame(animationFrame)
       resizeObserver.disconnect()
+      axialGroup.remove(projectNetwork.group)
+      projectNetwork.dispose()
       disposeObject(axialGroup)
       gridMaterial.dispose()
       landTexture?.dispose()
@@ -306,7 +318,7 @@ export default function EarthGlobe() {
   }, [])
 
   return (
-    <div className={styles.globe} aria-label="Анимированный глобус Земли с контурами материков">
+    <div className={styles.globe} aria-label={t('globe.label')}>
       <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
     </div>
   )

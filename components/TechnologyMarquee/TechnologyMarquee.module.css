@@ -1,7 +1,9 @@
 .section {
+  position: relative;
+  top: -35px;
   width: min(100% - 96px, 800px);
   margin: 0 auto;
-  padding: 0 0 61px;
+  padding: 0 0 41px;
   text-align: center;
 }
 
@@ -19,10 +21,10 @@
   height: 180px;
   background: linear-gradient(
     180deg,
-    rgba(0, 0, 0, 0.88) 0%,
-    rgba(0, 0, 0, 0.64) 32%,
-    rgba(0, 0, 0, 0.28) 68%,
-    rgba(0, 0, 0, 0) 100%
+    rgb(var(--color-overlay-rgb) / 0.88) 0%,
+    rgb(var(--color-overlay-rgb) / 0.64) 32%,
+    rgb(var(--color-overlay-rgb) / 0.28) 68%,
+    rgb(var(--color-overlay-rgb) / 0) 100%
   );
   content: '';
   pointer-events: none;
@@ -35,7 +37,7 @@
 
 .label {
   margin: 0;
-  color: rgba(247, 245, 240, 0.48);
+  color: rgb(var(--color-text-rgb) / 0.48);
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
   font-size: 14px;
   line-height: 20px;
@@ -76,7 +78,7 @@
   justify-content: center;
   gap: 7px;
   min-width: 0;
-  color: rgba(247, 245, 240, 0.8);
+  color: rgb(var(--color-text-rgb) / 0.8);
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
   font-size: 17px;
   line-height: 28px;
@@ -89,7 +91,7 @@
   place-items: center;
   width: 28px;
   height: 28px;
-  color: rgba(247, 245, 240, 0.74);
+  color: rgb(var(--color-text-rgb) / 0.74);
 }
 
 .icon svg {
@@ -104,7 +106,7 @@
 
 .iconNextjs,
 .iconGitHub {
-  color: #f7f5f0;
+  color: var(--color-text);
 }
 
 .iconTypeScript {
@@ -146,7 +148,7 @@
 @media (max-width: 600px) {
   .section {
     width: min(100% - 32px, 1120px);
-    padding-bottom: 44px;
+    padding-bottom: 24px;
   }
 
   .withHeroFade::before {

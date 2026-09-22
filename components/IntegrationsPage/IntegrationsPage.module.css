@@ -1,5 +1,5 @@
 .main {
   padding-bottom: 110px;
   overflow: hidden;
-  background: #171615;
+  background: var(--color-bg);
 }

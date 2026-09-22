@@ -4,7 +4,7 @@ import ArticlePage from '../ArticlePage/ArticlePage'
 import IntegrationDetail from '../IntegrationDetail/IntegrationDetail'
 import IntegrationsPage from '../IntegrationsPage/IntegrationsPage'
 import LegalIndex from '../LegalIndex/LegalIndex'
-import { AboutPageContent, AiPracticePageContent, ConsolidatorsPageContent, CustodyPageContent, HomePageContent, IndependentFirmsPageContent, MediaPageContent, PricingPageContent, SecurityPageContent } from '../MarketingPages/MarketingPages'
+import { AboutPageContent, AiPracticePageContent, ConsolidatorsPageContent, CustodyPageContent, HomePageContent, IndependentFirmsPageContent, MediaPageContent, PortfolioPageContent, PricingPageContent, SecurityPageContent } from '../MarketingPages/MarketingPages'
 
 type PageRendererProps = {
   route: SiteRoute
@@ -12,6 +12,7 @@ type PageRendererProps = {
 
 export default function PageRenderer({ route }: PageRendererProps) {
   if (route.path === '/') return <HomePageContent />
+  if (route.path === '/portfolio') return <PortfolioPageContent />
   if (route.path === '/what-we-offer/ai-crm-for-financial-advisors') return <AiPracticePageContent />
   if (route.path === '/what-we-offer/custody-and-execution') return <CustodyPageContent />
   if (route.path === '/whos-it-for/independent-firms') return <IndependentFirmsPageContent />

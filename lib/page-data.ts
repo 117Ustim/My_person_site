@@ -2,10 +2,25 @@ import { integrationRoutes } from './site-content'
 
 export const asset = (file: string) => `/sitegrab/assets/${file}`
 
+export type PortfolioCategory = 'sites' | 'crm' | 'mobile'
+
 export type FeatureItem = {
   title: string
   description: string
   image: string
+  liveUrl?: string
+  previewImage?: string
+  previewImageMobile?: string
+  scrollable?: boolean
+  imageWidth?: number
+  imageHeight?: number
+  imageFit?: 'cover' | 'contain'
+  imagePosition?: 'center' | 'top'
+  imageSized?: boolean
+  frameTone?: 'default' | 'coral'
+  showPortfolioCard?: boolean
+  category?: PortfolioCategory
+  portfolioProject?: string
   imageAlt: string
 }
 
@@ -18,6 +33,18 @@ export type ModuleShowcaseItem = {
   backgroundImage?: string
   imageAlt: string
   href: string
+}
+
+export type CapabilityItem = {
+  number: string
+  category: string
+  title: string
+  description: string
+  image: string
+  imageAlt: string
+  imagePosition?: 'center' | 'top'
+  imageDimmed?: 'light' | 'medium' | 'strong'
+  technologies: string[]
 }
 
 export type FaqItem = {
@@ -41,46 +68,54 @@ export type ArticleDefinition = {
 
 export const homeSlides: FeatureItem[] = [
   {
-    title: 'Day plan',
-    description: 'Kanban view of meetings, tasks, and client communications.',
-    image: asset('0413-day-plan.pRAWub-J_Z1EnmSo-cf85045a33.webp'),
-    imageAlt: 'Obsidian day plan with meetings and tasks',
+    title: 'CRM-система ветеринарної клініки',
+    description: 'Записи, пацієнти, платежі та керування персоналом в одному робочому просторі.',
+    image: '/assets/portfolio/vetscanct-home-crm.png',
+    imageAlt: 'CRM-система ветеринарної клініки VetScanCT',
+    imageFit: 'contain',
+    portfolioProject: 'vetscanct',
   },
   {
     title: 'AI search',
     description: 'Find relevant client information in seconds, with intelligent unified search.',
     image: asset('0414-ai-search.BMM0yPyY_Z5gSex-d370fc1f32.webp'),
     imageAlt: 'Obsidian AI search interface',
+    portfolioProject: 'vetscanct',
   },
   {
     title: 'AI meeting assistant',
     description: 'Every client meeting becomes context, insight, and action automatically.',
     image: asset('0415-ai-meeting-assistant.CwDhRG_r_22SBpv-6c48e41a43.webp'),
     imageAlt: 'Obsidian AI meeting assistant',
+    portfolioProject: 'vetscanct',
   },
   {
     title: 'Document digitisation',
     description: 'Turn paper records and scanned documents into searchable structured data.',
     image: asset('0416-document-digitisation.BD5uC3Ah_fVJAt-fc101b6519.webp'),
     imageAlt: 'Obsidian document digitisation workflow',
+    portfolioProject: 'vetscanct',
   },
   {
     title: 'Suitability report',
     description: 'Generate compliant suitability reports with AI assistance.',
     image: asset('0417-suitability-report.B5TTyTgk_iOimB-661a8e7779.webp'),
     imageAlt: 'Obsidian suitability report workflow',
+    portfolioProject: 'vetscanct',
   },
   {
     title: 'Portfolio aggregation',
     description: "See every client's full portfolio across custodians and platforms in one view.",
     image: asset('0418-portfolio-aggregation.PunMrhnF_2epFa9-74c9f5780f.webp'),
     imageAlt: 'Obsidian portfolio aggregation view',
+    portfolioProject: 'vetscanct',
   },
   {
     title: 'Client-ready emails in your voice',
     description: 'Personalised drafts that match your tone and are ready to send.',
     image: asset('0419-client-emails.CKSV3bjd_evzaG-bf6ff661c0.webp'),
     imageAlt: 'Obsidian client email assistant',
+    portfolioProject: 'vetscanct',
   },
 ]
 
@@ -102,6 +137,51 @@ export const homeModules: ModuleShowcaseItem[] = [
     image: asset('custody-execution.dmFQEtaJ_Z1BGlHK.avif'),
     imageAlt: 'Execution & Custody',
     href: '/what-we-offer/custody-and-execution',
+  },
+]
+
+export const homeCapabilities: CapabilityItem[] = [
+  {
+    number: '01',
+    category: 'Веб',
+    title: 'Вебсайти та вебзастосунки',
+    description: 'Сучасні сайти й цифрові продукти для бізнесу, експертів і персональних брендів.',
+    image: '/assets/portfolio/luxury-travel.png',
+    imageAlt: 'Преміумсайт туристичної агенції Luxury Travel',
+    imagePosition: 'top',
+    imageDimmed: 'light',
+    technologies: ['Next.js', 'React', 'TypeScript'],
+  },
+  {
+    number: '02',
+    category: 'CRM',
+    title: 'CRM-системи та внутрішні кабінети',
+    description: 'Цифрові інструменти для записів, клієнтів, оплат, задач і внутрішніх процесів.',
+    image: '/assets/portfolio/beauty-master-crm.png',
+    imageAlt: 'Beauty Master CRM для керування записами, клієнтами та оплатами',
+    imageDimmed: 'medium',
+    technologies: ['React', 'Node.js', 'PostgreSQL', 'Firebase'],
+  },
+  {
+    number: '03',
+    category: 'Mobile',
+    title: 'Мобільні застосунки',
+    description: 'Зручні мобільні продукти для iOS та Android із продуманим користувацьким досвідом.',
+    image: '/assets/portfolio/fitness-mobile-app.png',
+    imageAlt: 'Мобільний застосунок для тренерів і клієнтів, синхронізований із CRM',
+    imagePosition: 'top',
+    technologies: ['React Native', 'Swift', 'Firebase'],
+  },
+  {
+    number: '04',
+    category: 'Backend',
+    title: 'Серверна частина та інфраструктура',
+    description: 'API, бази даних, авторизація, деплой і стабільна робота цифрових продуктів.',
+    image: '/assets/portfolio/docker-desktop.png',
+    imageAlt: 'Docker Desktop для керування контейнерами та образами',
+    imagePosition: 'top',
+    imageDimmed: 'strong',
+    technologies: ['Node.js', 'PostgreSQL', 'Firebase', 'GitHub', 'Docker'],
   },
 ]
 
@@ -177,6 +257,33 @@ export const consolidatorFeatures: FeatureItem[] = [
     description: 'Built on the full Independent Firm feature set, with additional layers for oversight, scale, and control.',
     image: asset('0425-everything-independent-firms.B6vOtnnu_Z2q8llE-15ba5757ae.webp'),
     imageAlt: 'Everything for Independent Firms and more',
+  },
+]
+
+export const mobileFeatures: FeatureItem[] = [
+  {
+    title: 'Мобільний кабінет',
+    description: 'Доступ до потрібної інформації та основних дій у зручному форматі з будь-якого пристрою.',
+    image: asset('0605-ai-chat.Byp0uBUa_1n7G6E-ce8c9072af.webp'),
+    imageAlt: 'Інтерфейс мобільного застосунку',
+  },
+  {
+    title: 'Швидкі дії',
+    description: 'Ключові сценарії доступні в кілька дотиків — без зайвих кроків і складної навігації.',
+    image: asset('0604-automated-task-generation.CJA3PVKW_Z2rq9Dt-00ba617109.webp'),
+    imageAlt: 'Інтерфейс мобільного застосунку',
+  },
+  {
+    title: 'Розумні функції',
+    description: 'AI та автоматизація допомагають швидше виконувати щоденні завдання.',
+    image: asset('0602-smart-meeting-prep.Czp4G2bj_petKR-3b02a32490.webp'),
+    imageAlt: 'Інтерфейс мобільного застосунку',
+  },
+  {
+    title: 'Персональний досвід',
+    description: 'Інтерфейс адаптується до потреб користувача та залишається зручним на будь-якому екрані.',
+    image: asset('0603-client-household-view.BKldGp32_Z1K51Bu-f83dfb8bf1.webp'),
+    imageAlt: 'Інтерфейс мобільного застосунку',
   },
 ]
 

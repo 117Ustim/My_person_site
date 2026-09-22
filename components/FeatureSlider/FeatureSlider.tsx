@@ -1,7 +1,10 @@
 'use client'
 
 import Image from 'next/image'
+import Link from 'next/link'
+import { ArrowUpRight } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { useI18n } from '../../lib/i18n'
 import type { FeatureItem } from '../../lib/page-data'
 import styles from './FeatureSlider.module.css'
 
@@ -11,11 +14,16 @@ type FeatureSliderProps = {
   title?: string
   description?: string
   reverse?: boolean
+  compact?: boolean
+  headingGap?: 'spacious'
+  scrollableControls?: boolean
 }
 
 const duration = 10_000
 
-export default function FeatureSlider({ items, label = 'Features', title, description, reverse = false }: FeatureSliderProps) {
+export default function FeatureSlider({ items, label, title, description, reverse = false, compact = false, headingGap, scrollableControls = false }: FeatureSliderProps) {
+  const { t } = useI18n()
+  const resolvedLabel = label ?? t('common.features')
   const sliderRef = useRef<HTMLDivElement>(null)
   const [activeIndex, setActiveIndex] = useState(0)
   const [progress, setProgress] = useState(0)
@@ -63,8 +71,10 @@ export default function FeatureSlider({ items, label = 'Features', title, descri
     setActiveIndex(index)
   }
 
+  const imageSized = items.some(item => item.imageFit === 'contain' || item.imageSized)
+
   return (
-    <div className={`${styles.slider} ${reverse ? styles.reversed : ''}`} ref={sliderRef} aria-label={label}>
+    <div className={`${styles.slider} ${reverse ? styles.reversed : ''} ${compact ? styles.compact : ''} ${imageSized ? styles.imageSized : ''} ${headingGap === 'spacious' ? styles.spaciousHeadingGap : ''}`} ref={sliderRef} aria-label={resolvedLabel}>
       <div className={styles.leftColumn}>
         {title ? (
           <div className={styles.sliderHeading}>
@@ -72,7 +82,7 @@ export default function FeatureSlider({ items, label = 'Features', title, descri
             {description ? <p>{description}</p> : null}
           </div>
         ) : null}
-        <div className={styles.controls} role="tablist" aria-label={label}>
+        <div className={`${styles.controls} ${scrollableControls ? styles.scrollableControls : ''}`} role="tablist" aria-label={resolvedLabel}>
           {items.map((item, index) => {
             const isActive = index === activeIndex
             return (
@@ -84,14 +94,14 @@ export default function FeatureSlider({ items, label = 'Features', title, descri
                 aria-selected={isActive}
                 onClick={() => chooseSlide(index)}
               >
-                <span className={styles.track} aria-hidden="true">
-                  {isActive ? <span className={styles.progress} style={{ transform: `scaleX(${progress})` }} /> : null}
-                </span>
                 <span className={styles.controlContent}>
                   <span className={styles.controlTitle}>{item.title}</span>
                   <span className={styles.controlDescription}>
                     <span className={styles.descriptionInner}>{item.description}</span>
                   </span>
+                </span>
+                <span className={styles.track} aria-hidden="true">
+                  {isActive ? <span className={styles.progress} style={{ transform: `scaleX(${progress})` }} /> : null}
                 </span>
               </button>
             )
@@ -99,10 +109,23 @@ export default function FeatureSlider({ items, label = 'Features', title, descri
         </div>
       </div>
 
-      <div className={styles.visual}>
+      <div className={`${styles.visual} ${items[activeIndex].frameTone === 'coral' ? styles.coralVisual : ''}`}>
         {items.map((item, index) => (
           <div className={`${styles.slide} ${index === activeIndex ? styles.activeSlide : ''}`} key={`${item.title}-${item.image}`} aria-hidden={index !== activeIndex}>
-            <Image src={item.image} alt={item.imageAlt} fill sizes="(max-width: 820px) 100vw, 58vw" />
+            <Image className={`${item.imageFit === 'contain' ? styles.containImage : ''} ${item.imagePosition === 'top' ? styles.topImage : ''}`} src={item.image} alt={item.imageAlt} fill sizes="(max-width: 820px) 100vw, 58vw" />
+            {item.portfolioProject || item.showPortfolioCard ? (
+              <Link
+                className={styles.portfolioCard}
+                href={item.portfolioProject ? `/portfolio?category=${item.category ?? 'crm'}&project=${encodeURIComponent(item.portfolioProject)}` : '/portfolio'}
+                aria-label={`${t('portfolio.selectProject')}: ${item.title}`}
+              >
+                <span className={styles.portfolioCardCopy}>
+                  <span className={styles.portfolioCardTitle}>{item.title}</span>
+                  <span className={styles.portfolioCardAction}>{t('portfolio.selectProject')}</span>
+                </span>
+                <ArrowUpRight className={styles.portfolioCardIcon} aria-hidden="true" strokeWidth={1.6} />
+              </Link>
+            ) : null}
           </div>
         ))}
       </div>

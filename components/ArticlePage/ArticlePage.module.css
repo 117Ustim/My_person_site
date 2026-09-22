@@ -1,7 +1,7 @@
 .main {
   min-height: 100vh;
   padding: 190px 24px 120px;
-  background: #171615;
+  background: var(--color-bg);
 }
 
 .article {
@@ -12,15 +12,15 @@
 .updated,
 .eyebrow {
   margin: 0 0 14px;
-  color: rgba(247, 245, 240, 0.45);
+  color: rgb(var(--color-text-rgb) / 0.45);
   font-size: 14px;
 }
 
 .article h1 {
   max-width: 840px;
   margin: 0;
-  color: #f7f5f0;
-  font-family: "Source Serif 4 Variable", Georgia, serif;
+  color: var(--color-text);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
   font-size: clamp(54px, 8vw, 108px);
   font-weight: 300;
   letter-spacing: -0.05em;
@@ -30,7 +30,7 @@
 .intro {
   max-width: 700px;
   margin: 32px 0 0;
-  color: rgba(247, 245, 240, 0.64);
+  color: rgb(var(--color-text-rgb) / 0.64);
   font-size: 18px;
   line-height: 1.5;
 }
@@ -50,8 +50,8 @@
 
 .section h2 {
   margin: 0;
-  color: #e7e5e0;
-  font-family: "Source Serif 4 Variable", Georgia, serif;
+  color: var(--color-text-strong);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
   font-size: clamp(32px, 4vw, 48px);
   font-weight: 300;
   letter-spacing: -0.035em;
@@ -60,7 +60,7 @@
 
 .section p,
 .section li {
-  color: rgba(247, 245, 240, 0.56);
+  color: rgb(var(--color-text-rgb) / 0.56);
   font-size: 16px;
   line-height: 1.55;
 }

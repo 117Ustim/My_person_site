@@ -1,9 +1,9 @@
 .list {
-  border-top: 1px solid rgba(247, 245, 240, 0.16);
+  border-top: 1px solid rgb(var(--color-text-rgb) / 0.16);
 }
 
 .item {
-  border-bottom: 1px solid rgba(247, 245, 240, 0.16);
+  border-bottom: 1px solid rgb(var(--color-text-rgb) / 0.16);
 }
 
 .question {
@@ -15,7 +15,7 @@
   padding: 22px 0;
   border: 0;
   background: transparent;
-  color: rgba(247, 245, 240, 0.82);
+  color: rgb(var(--color-text-rgb) / 0.82);
   font: inherit;
   font-size: 16px;
   text-align: left;
@@ -24,7 +24,7 @@
 
 .question:hover,
 .question:focus-visible {
-  color: #f7f5f0;
+  color: var(--color-text);
 }
 
 .icon {
@@ -73,7 +73,7 @@
   min-height: 0;
   overflow: hidden;
   padding: 0 48px 0 0;
-  color: rgba(247, 245, 240, 0.54);
+  color: rgb(var(--color-text-rgb) / 0.54);
   font-size: 15px;
   line-height: 1.55;
 }

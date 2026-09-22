@@ -1,4 +1,7 @@
+'use client'
+
 import Link from 'next/link'
+import { useI18n } from '../../lib/i18n'
 import MarketingHero from '../MarketingHero/MarketingHero'
 import PageSection from '../PageSection/PageSection'
 import SectionHeading from '../SectionHeading/SectionHeading'
@@ -23,15 +26,17 @@ const groups = [
 ] as const
 
 export default function LegalIndex() {
+  const { t, localize } = useI18n()
+
   return (
     <main className={styles.main}>
-      <MarketingHero compact title="Legal" description="Policies, agreements, and regulatory information." actionLabel="" />
+      <MarketingHero compact title={t('legal.title')} description={t('legal.description')} actionLabel="" />
       <PageSection>
         {groups.map(group => (
           <section className={styles.group} key={group.title}>
-            <SectionHeading title={group.title} />
+            <SectionHeading title={localize(group.title)} />
             <div className={styles.cards}>
-              {group.items.map(([title, href, description]) => <Link className={styles.card} href={href} key={href}><h3>{title}</h3><p>{description}</p><span>Read more →</span></Link>)}
+              {group.items.map(([title, href, description]) => <Link className={styles.card} href={href} key={href}><h3>{localize(title)}</h3><p>{localize(description)}</p><span>{t('common.readMore')}</span></Link>)}
             </div>
           </section>
         ))}

@@ -2,11 +2,13 @@
 
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { useI18n } from '../../lib/i18n'
 import styles from './CookieBanner.module.css'
 
 const consentStorageKey = 'obsidian-cookie-consent'
 
 export default function CookieBanner() {
+  const { t } = useI18n()
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
@@ -21,19 +23,18 @@ export default function CookieBanner() {
   if (!visible) return null
 
   return (
-    <aside className={styles.banner} role="dialog" aria-label="Cookie policy">
+    <aside className={styles.banner} role="dialog" aria-label={t('cookie.label')}>
       <div className={styles.content}>
         <div className={styles.copy}>
-          <p>We use cookies to improve your experience, measure site usage, and personalise content.</p>
-          <Link href="/legal/cookie-policy">View our cookie policy</Link>
+          <p>{t('cookie.copy')}</p>
+          <Link href="/legal/cookie-policy">{t('cookie.policy')}</Link>
         </div>
         <div className={styles.actions}>
-          <button className={styles.secondaryButton} type="button" onClick={accept}>Essential Only</button>
-          <button className={styles.secondaryButton} type="button" onClick={accept}>Customise</button>
-          <button className={styles.primaryButton} type="button" onClick={accept}>Accept All</button>
+          <button className={styles.secondaryButton} type="button" onClick={accept}>{t('cookie.essentialOnly')}</button>
+          <button className={styles.secondaryButton} type="button" onClick={accept}>{t('cookie.customise')}</button>
+          <button className={styles.primaryButton} type="button" onClick={accept}>{t('cookie.acceptAll')}</button>
         </div>
       </div>
     </aside>
   )
 }
-

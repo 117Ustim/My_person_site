@@ -4,8 +4,8 @@ import PageRenderer from '../components/PageRenderer/PageRenderer'
 import { getRouteByPath } from '../lib/site-content'
 
 export const metadata: Metadata = {
-  title: 'Obsidian — The all-in-one platform for financial advisers',
-  description: 'AI-powered practice management available now, with integrated custody and execution launching soon.',
+  title: 'Головна',
+  description: 'Сайти, CRM-системи та мобільні застосунки для реальних бізнес-завдань.',
   alternates: { canonical: '/' },
 }
 

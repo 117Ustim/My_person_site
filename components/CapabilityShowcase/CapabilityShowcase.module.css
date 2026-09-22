@@ -1,0 +1,330 @@
+.pairs {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 52px;
+  margin-top: 48px;
+}
+
+.shapeDefinitions {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.pair {
+  position: relative;
+  min-height: 594px;
+}
+
+.card {
+  position: absolute;
+  width: calc(90.909% - 20px);
+  height: 404px;
+  pointer-events: none;
+}
+
+.topCard {
+  top: 0;
+  left: 0;
+}
+
+.bottomCard {
+  top: 190px;
+  right: 0;
+}
+
+.surface {
+  --surface-fill: var(--color-surface-2);
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--surface-fill);
+  box-shadow: inset 0 1px 0 rgb(var(--color-text-rgb) / 0.08), 0 18px 40px rgba(31, 28, 24, 0.08);
+  backdrop-filter: blur(18px) saturate(1.08);
+  pointer-events: auto;
+  transition: background-color 220ms ease;
+}
+
+.topSurface {
+  clip-path: url('#capability-top-shape');
+}
+
+.bottomSurface {
+  clip-path: url('#capability-bottom-shape');
+}
+
+.surface:hover {
+  --surface-fill: var(--color-surface-3);
+  background: var(--surface-fill);
+}
+
+.outline {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.outlinePath {
+  fill: none;
+  stroke: rgb(var(--color-text-rgb) / 0.45);
+  stroke-width: 1px;
+}
+
+.visual,
+.copy {
+  position: absolute;
+}
+
+.visual {
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  height: 100%;
+  overflow: hidden;
+  padding: 20px;
+  background: transparent;
+}
+
+.visualFrame {
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.imageViewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+.topCard .visual {
+  top: 0;
+  left: 0;
+  width: calc(55% + 16px);
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+.topCard .visualFrame {
+  justify-self: start;
+  width: calc(100% - 16px);
+}
+
+.bottomCard .visual {
+  top: 0;
+  right: 0;
+  width: calc(55% + 16px);
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+.bottomCard .visualFrame {
+  justify-self: end;
+  width: calc(100% - 16px);
+}
+
+.image {
+  object-fit: cover;
+  opacity: 1;
+  transition: opacity 220ms ease, transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.imageTop {
+  object-position: center top;
+}
+
+.imageDimmedLight {
+  filter: brightness(0.96);
+}
+
+.imageDimmedMedium {
+  filter: brightness(0.94);
+}
+
+.imageDimmedStrong {
+  filter: brightness(0.9);
+}
+
+.card:hover .image {
+  opacity: 1;
+  transform: scale(1.035);
+}
+
+.copy {
+  z-index: 2;
+  display: grid;
+  min-height: 154px;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 16px;
+  padding: 18px 24px;
+}
+
+.topCard .copy {
+  top: 0;
+  right: 0;
+  width: 45%;
+}
+
+.bottomCard .copy {
+  bottom: 0;
+  left: 0;
+  width: 45%;
+}
+
+.meta {
+  display: flex;
+  min-width: 36px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  transform: translateY(4px);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
+}
+
+.number {
+  color: var(--color-accent);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+}
+
+.category {
+  color: rgb(var(--color-text-rgb) / 0.54);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+}
+
+.copyBody {
+  min-width: 0;
+}
+
+.copy h3 {
+  margin: 0;
+  color: var(--color-accent);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
+  font-size: clamp(21px, 2vw, 30px);
+  font-weight: 300;
+  letter-spacing: -0.035em;
+  line-height: 1.04;
+}
+
+.copy p {
+  margin: 7px 0 0;
+  color: rgb(var(--color-text-rgb) / 0.62);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 10px;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
+}
+
+.stack span {
+  color: rgb(var(--color-text-rgb) / 0.56);
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+.stack span:not(:last-child)::after {
+  margin-left: 5px;
+  color: rgba(255, 135, 122, 0.75);
+  content: '·';
+}
+
+@media (max-width: 900px) {
+  .pairs {
+    gap: 24px;
+    margin-top: 36px;
+  }
+
+  .pair {
+    display: flex;
+    min-height: 0;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .card,
+  .topCard,
+  .bottomCard {
+    position: relative;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    width: 100%;
+    height: auto;
+    pointer-events: auto;
+  }
+
+  .surface,
+  .topSurface,
+  .bottomSurface {
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    flex-direction: column;
+    border: 1px solid rgb(var(--color-text-rgb) / 0.45);
+    border-radius: 22px;
+    clip-path: none;
+  }
+
+  .outline {
+    display: none;
+  }
+
+  .visual,
+  .topCard .visual,
+  .bottomCard .visual {
+    position: relative;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1.42;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .topCard .visualFrame,
+  .bottomCard .visualFrame {
+    justify-self: stretch;
+    width: 100%;
+  }
+
+  .copy,
+  .topCard .copy,
+  .bottomCard .copy {
+    position: relative;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    width: 100%;
+    min-height: 0;
+    padding: 18px 20px 20px;
+  }
+
+  .category {
+    writing-mode: horizontal-tb;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .surface,
+  .image {
+    transition: none;
+  }
+}

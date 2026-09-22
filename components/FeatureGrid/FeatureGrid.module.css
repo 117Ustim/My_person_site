@@ -11,16 +11,18 @@
 .card {
   min-width: 0;
   overflow: hidden;
-  border: 1px solid rgba(247, 245, 240, 0.1);
+  border: 1px solid rgb(var(--color-text-rgb) / 0.12);
   border-radius: 4px;
-  background: linear-gradient(145deg, #2b2927, #1e1c1b);
+  background: linear-gradient(145deg, rgb(var(--color-text-rgb) / 0.045), var(--color-surface-2));
+  box-shadow: 0 18px 40px rgba(31, 28, 24, 0.08), inset 0 1px 0 rgb(var(--color-text-rgb) / 0.08);
+  backdrop-filter: blur(18px) saturate(1.06);
 }
 
 .imageFrame {
   position: relative;
   min-height: 270px;
   overflow: hidden;
-  background: #23211f;
+  background: var(--color-surface-6);
 }
 
 .imageFrame img {
@@ -38,8 +40,8 @@
 
 .copy h3 {
   margin: 0;
-  color: #f7f5f0;
-  font-family: "Source Serif 4 Variable", Georgia, serif;
+  color: var(--color-text);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
   font-size: 24px;
   font-weight: 300;
   line-height: 1.1;
@@ -47,7 +49,7 @@
 
 .copy p {
   margin: 10px 0 0;
-  color: rgba(247, 245, 240, 0.56);
+  color: rgb(var(--color-text-rgb) / 0.56);
   font-size: 14px;
   line-height: 1.45;
 }

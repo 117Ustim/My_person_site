@@ -2,48 +2,35 @@
   position: relative;
   overflow: hidden;
   padding: 32px max(24px, calc((100vw - 1440px) / 2)) 24px;
-  background: #171615;
-  color: #f7f5f0;
+  background: var(--color-bg);
+  color: var(--color-text);
 }
 
-.disclaimerRow {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 32px;
-  padding: 40px 0;
-  border-bottom: 1px solid rgba(247, 245, 240, 0.14);
-}
-
-.disclaimer {
-  max-width: 630px;
-  margin: 0;
-  color: rgba(247, 245, 240, 0.48);
-  font-size: 13px;
-  line-height: 1.45;
-}
-
-.poweredBy {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  gap: 14px;
-  color: rgba(247, 245, 240, 0.48);
-  font-size: 13px;
-}
-
-.poweredBy img {
-  display: block;
-  width: 130px;
-  height: 25px;
+.footer::before {
+  position: absolute;
+  top: 0;
+  right: max(24px, calc((100vw - 1440px) / 2));
+  left: max(24px, calc((100vw - 1440px) / 2));
+  height: 1px;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgb(var(--color-text-rgb) / 0.08) 8%,
+      rgb(var(--color-text-rgb) / 0.16) 78%,
+      rgb(var(--color-text-rgb) / 0.08) 92%,
+      transparent 100%
+    );
+  box-shadow: 0 0 18px rgb(var(--color-text-rgb) / 0.08);
+  content: '';
 }
 
 .footerGrid {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: minmax(280px, 3fr) repeat(3, minmax(130px, 1fr));
-  gap: 32px;
+  grid-template-columns: minmax(320px, 2fr) minmax(0, 3fr);
+  gap: clamp(48px, 6vw, 96px);
   padding: 80px 0 48px;
 }
 
@@ -56,83 +43,159 @@
 }
 
 .footerLogo {
-  display: block;
-  width: 168px;
-  height: 32px;
+  --brand-mark-width: 58px;
+  --brand-studio-width: 87px;
+  width: 151px;
+  height: 35px;
 }
 
 .companyText {
   max-width: 468px;
   margin: 32px 0 0;
-  color: rgba(247, 245, 240, 0.48);
+  color: rgb(var(--color-text-rgb) / 0.48);
   font-size: 13px;
   line-height: 1.5;
 }
 
-.badges {
+.contactBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 28px;
+}
+
+.contactLabel {
+  margin: 0 0 4px;
+  color: rgb(var(--color-text-rgb) / 0.48);
+  font-size: 13px;
+}
+
+.contactLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.contactLink,
+.contactLocation {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+  color: var(--color-text);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.contactLink {
+  transition: color 180ms ease;
+}
+
+.contactLinkLabel {
+  min-width: 48px;
+  color: rgb(var(--color-text-rgb) / 0.48);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.contactSocials {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.contactSocialLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 6px 10px 6px 8px;
+  border: 1px solid rgb(var(--color-text-rgb) / 0.18);
+  border-radius: 999px;
+  color: rgb(var(--color-text-rgb) / 0.78);
+  font-size: 12px;
+  line-height: 1;
+  text-decoration: none;
+  transition: border-color 180ms ease, color 180ms ease, background-color 180ms ease;
+}
+
+.contactIcon {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.contactLink:hover,
+.contactLink:focus-visible,
+.contactSocialLink:hover,
+.contactSocialLink:focus-visible {
+  color: var(--color-text);
+}
+
+.contactSocialLink:hover,
+.contactSocialLink:focus-visible {
+  border-color: rgb(var(--color-text-rgb) / 0.48);
+  background: rgb(var(--color-text-rgb) / 0.06);
+}
+
+.badges {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 10px;
   margin-top: 32px;
 }
 
-.badges a {
-  display: block;
-}
-
-.badges img {
+.badgeImage,
+.badgeImageExpanded {
   display: block;
   width: 60px;
   height: 60px;
 }
 
+.badgeImageExpanded {
+  width: 72px;
+  height: 72px;
+}
+
 .copyright {
-  margin: 16px 0 0;
-  color: rgba(247, 245, 240, 0.48);
+  margin: 0;
+  color: rgb(var(--color-text-rgb) / 0.48);
   font-size: 13px;
   line-height: 1.45;
 }
 
-.linkColumn {
-  min-width: 0;
-}
-
-.columnTitle {
-  margin: 0;
-  color: rgba(247, 245, 240, 0.48);
-  font-size: 14px;
-  font-weight: 400;
-}
-
-.linkList {
+.footerBottom {
+  position: relative;
+  z-index: 1;
   display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin: 32px 0 0;
-  padding: 0;
-  list-style: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 16px 0 0;
+  border-top: 1px solid rgb(var(--color-text-rgb) / 0.08);
 }
 
-.footerLink {
-  color: #f7f5f0;
-  font-size: 14px;
-  line-height: 1.35;
-  transition: color 180ms ease;
+.credit {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: rgb(var(--color-text-rgb) / 0.48);
+  font-size: 13px;
+  line-height: 1.45;
+  white-space: nowrap;
 }
 
-.footerLink:hover,
-.footerLink:focus-visible {
-  color: rgba(247, 245, 240, 0.5);
-}
-
-.watermark {
-  display: block;
-  width: 100%;
-  height: auto;
-  margin-top: -24px;
-  opacity: 0.75;
-  pointer-events: none;
-  user-select: none;
+.creditLogo {
+  --brand-mark-width: 19px;
+  --brand-studio-width: 29px;
+  width: 52px;
+  height: 14px;
+  gap: 2px;
+  transform: translateY(-1px);
 }
 
 @media (max-width: 900px) {
@@ -142,32 +205,37 @@
   }
 
   .footerGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .companyColumn {
-    grid-column: 1 / -1;
-  }
-}
-
-@media (max-width: 620px) {
-  .disclaimerRow {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .footerGrid {
     grid-template-columns: 1fr;
-    padding-top: 56px;
   }
 
   .companyColumn {
     grid-column: auto;
   }
+}
 
-  .watermark {
-    width: 160%;
-    max-width: none;
-    margin-left: -30%;
+@media (max-width: 620px) {
+  .footerGrid {
+    grid-template-columns: 1fr;
+    padding-top: 56px;
+  }
+
+  .badges {
+    gap: 6px;
+  }
+
+  .badgeImage {
+    width: 44px;
+    height: 44px;
+  }
+
+  .badgeImageExpanded {
+    width: 53px;
+    height: 53px;
+  }
+
+  .footerBottom {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
   }
 }

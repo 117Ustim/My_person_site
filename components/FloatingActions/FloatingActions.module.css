@@ -1,0 +1,77 @@
+.actions {
+  position: fixed;
+  z-index: 80;
+  right: calc(clamp(16px, 2.4vw, 36px) - 10px);
+  bottom: clamp(18px, 3vw, 36px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.action {
+  display: inline-grid;
+  width: 50px;
+  height: 50px;
+  place-items: center;
+  border: 1px solid rgb(var(--color-text-rgb) / 0.18);
+  border-radius: 50%;
+  background: rgb(var(--color-text-rgb) / 0.08);
+  color: rgb(var(--color-text-rgb) / 0.78);
+  cursor: pointer;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 12px 30px rgb(0 0 0 / 0.2), inset 0 1px 0 rgb(var(--color-text-rgb) / 0.12);
+  transition: opacity 220ms ease, transform 220ms ease, border-color 220ms ease, background 220ms ease, color 220ms ease;
+}
+
+.action:hover,
+.action:focus-visible {
+  border-color: var(--color-accent);
+  background: rgb(var(--color-text-rgb) / 0.14);
+  color: var(--color-text);
+  outline: none;
+  transform: translateY(-2px);
+}
+
+.scrollAction {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+}
+
+.scrollAction.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.messageAction {
+  border-color: rgb(255 135 122 / 0.56);
+  background: var(--color-button);
+  color: var(--color-button-text);
+}
+
+.messageAction:hover,
+.messageAction:focus-visible {
+  background: var(--color-button-hover);
+  color: var(--color-button-text);
+}
+
+@media (max-width: 560px) {
+  .actions {
+    right: 4px;
+    bottom: 16px;
+    gap: 8px;
+  }
+
+  .action {
+    width: 46px;
+    height: 46px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .action {
+    transition-duration: 1ms;
+  }
+}

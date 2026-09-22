@@ -9,7 +9,7 @@
   padding-top: 52px;
   padding-right: max(24px, calc((100% - 1432px) / 2));
   padding-left: max(24px, calc((100% - 1432px) / 2));
-  background: #1e1c1b;
+  background: var(--color-surface-1);
 }
 
 @media (max-width: 600px) {

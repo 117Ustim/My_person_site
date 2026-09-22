@@ -4,8 +4,8 @@
   right: 0;
   bottom: 0;
   left: 0;
-  border-top: 1px solid rgba(247, 245, 240, 0.14);
-  background: rgba(0, 0, 0, 0.9);
+  border-top: 1px solid rgb(var(--color-text-rgb) / 0.14);
+  background: var(--color-cookie-bg);
   box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.24);
   backdrop-filter: blur(14px);
 }
@@ -22,7 +22,7 @@
 
 .copy {
   max-width: 600px;
-  color: #f7f5f0;
+  color: var(--color-text);
   font-size: 14px;
   line-height: 1.45;
 }
@@ -32,7 +32,7 @@
 }
 
 .copy a {
-  color: #f7f5f0;
+  color: var(--color-text);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -56,20 +56,20 @@
 }
 
 .secondaryButton {
-  border: 1px solid rgba(247, 245, 240, 0.24);
+  border: 1px solid rgb(var(--color-text-rgb) / 0.24);
   background: transparent;
-  color: #f7f5f0;
+  color: var(--color-text);
 }
 
 .primaryButton {
-  border: 1px solid #f7f5f0;
-  background: #f7f5f0;
-  color: #201f1e;
+  border: 1px solid var(--color-text);
+  background: var(--color-text);
+  color: var(--color-on-accent);
 }
 
 .secondaryButton:hover,
 .secondaryButton:focus-visible {
-  background: rgba(247, 245, 240, 0.1);
+  background: rgb(var(--color-text-rgb) / 0.1);
 }
 
 .primaryButton:hover,
@@ -90,4 +90,3 @@
     flex-wrap: wrap;
   }
 }
-
