@@ -1,10 +1,11 @@
 'use client'
 
-import { ArrowLeft, ArrowRight, ChevronDown, ExternalLink } from 'lucide-react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { useCallback, useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent as PointerEventType, type UIEvent } from 'react'
-import type { FeatureItem, PortfolioCategory } from '../../lib/page-data'
+import { ArrowLeft, ArrowRight, ChevronDown, Compass, ExternalLink, Info, Layers3, Sparkles, X } from 'lucide-react'
+import Image, { getImageProps } from 'next/image'
+import { createPortal } from 'react-dom'
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent as PointerEventType, type RefObject, type UIEvent, type WheelEvent as WheelEventType } from 'react'
+import type { FeatureItem, PortfolioCategory, PortfolioImageSection } from '../../lib/page-data'
+import { useProjectInquiry } from '../ProjectInquiry/ProjectInquiry'
 import styles from './PortfolioCarousel.module.css'
 
 type PortfolioCarouselProps = {
@@ -18,6 +19,161 @@ type PortfolioCarouselProps = {
   scrollHintLabel: string
   liveSiteLabel: string
   liveSitePlaceholderLabel: string
+  liveSiteInactiveLabel: string
+  projectDetailsLabel: string
+  closeProjectDetailsLabel: string
+  projectDetailsContextLabel: string
+  projectDetailsSolutionLabel: string
+  projectDetailsResultLabel: string
+  projectDetailsTypeLabel: string
+  projectDetailsPlatformLabel: string
+  projectDetailsRoleLabel: string
+  projectDetailsRoleValue: string
+  projectDetailsPlatforms: Readonly<Record<PortfolioCategory, string>>
+  projectDetailsFallbacks: Readonly<Record<PortfolioCategory, { solution: string; result: string }>>
+}
+
+function splitReadableParagraphs(text: string) {
+  const explicitParagraphs = text
+    .split(/\n+/)
+    .map(paragraph => paragraph.trim())
+    .filter(Boolean)
+
+  if (explicitParagraphs.length > 1) {
+    return explicitParagraphs
+  }
+
+  const sentences = text.match(/[^.!?…]+(?:[.!?…]+|$)/g)?.map(sentence => sentence.trim()).filter(Boolean) ?? [text.trim()]
+
+  if (sentences.length <= 1) {
+    const clauses = text
+      .split(/(?<=[,:;])\s+/)
+      .map(clause => clause.trim())
+      .filter(Boolean)
+
+    return clauses.length > 1 && text.length > 180 ? clauses : [text.trim()]
+  }
+
+  const paragraphs: string[] = []
+  let currentParagraph = ''
+
+  sentences.forEach(sentence => {
+    const nextParagraph = currentParagraph ? `${currentParagraph} ${sentence}` : sentence
+
+    if (currentParagraph && nextParagraph.length > 230) {
+      paragraphs.push(currentParagraph)
+      currentParagraph = sentence
+      return
+    }
+
+    currentParagraph = nextParagraph
+  })
+
+  if (currentParagraph) {
+    paragraphs.push(currentParagraph)
+  }
+
+  return paragraphs
+}
+
+const portfolioBlurDataUrl = "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect width='1' height='1' fill='%23262a2e'/%3E%3C/svg%3E"
+const projectDetailsCloseDuration = 460
+
+type LazyPortfolioImageProps = {
+  section: PortfolioImageSection
+  alt: string
+  sizes: string
+  rootRef: RefObject<HTMLDivElement | null>
+}
+
+function LazyPortfolioImage({ section, alt, sizes, rootRef }: LazyPortfolioImageProps) {
+  const slotRef = useRef<HTMLDivElement>(null)
+  const [isReady, setIsReady] = useState(false)
+
+  useEffect(() => {
+    const slot = slotRef.current
+
+    if (!slot || typeof IntersectionObserver === 'undefined') {
+      setIsReady(true)
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries.some(entry => entry.isIntersecting)) {
+          setIsReady(true)
+          observer.disconnect()
+        }
+      },
+      { root: rootRef.current, rootMargin: '600px 0px' },
+    )
+
+    observer.observe(slot)
+
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <div
+      ref={slotRef}
+      className={styles.scrollableImageSlot}
+      style={{ aspectRatio: `${section.width} / ${section.height}` }}
+    >
+      {isReady ? (
+        <Image
+          className={styles.scrollableImage}
+          src={section.src}
+          alt={alt}
+          width={section.width}
+          height={section.height}
+          loading="lazy"
+          placeholder="blur"
+          blurDataURL={portfolioBlurDataUrl}
+          quality={70}
+          sizes={sizes}
+        />
+      ) : (
+        <span className={styles.scrollableImagePlaceholder} aria-hidden="true" />
+      )}
+    </div>
+  )
+}
+
+type ResponsivePreviewImageProps = {
+  desktopSrc: string
+  mobileSrc?: string
+  className: string
+  sizes: string
+}
+
+function ResponsivePreviewImage({ desktopSrc, mobileSrc, className, sizes }: ResponsivePreviewImageProps) {
+  const desktopImage = getImageProps({
+    src: desktopSrc,
+    alt: '',
+    width: 800,
+    height: 540,
+    loading: 'lazy',
+    quality: 60,
+    sizes,
+  })
+  const mobileImage = mobileSrc
+    ? getImageProps({
+        src: mobileSrc,
+        alt: '',
+        width: 800,
+        height: 540,
+        loading: 'lazy',
+        quality: 60,
+        sizes: '34vw',
+      })
+    : null
+
+  return (
+    <picture className={styles.previewPicture}>
+      {mobileImage ? <source media="(max-width: 700px)" srcSet={mobileImage.props.srcSet} sizes="34vw" /> : null}
+      <img {...desktopImage.props} className={className} />
+    </picture>
+  )
 }
 
 export default function PortfolioCarousel({
@@ -31,18 +187,60 @@ export default function PortfolioCarousel({
   scrollHintLabel,
   liveSiteLabel,
   liveSitePlaceholderLabel,
+  liveSiteInactiveLabel,
+  projectDetailsLabel,
+  closeProjectDetailsLabel,
+  projectDetailsContextLabel,
+  projectDetailsSolutionLabel,
+  projectDetailsResultLabel,
+  projectDetailsTypeLabel,
+  projectDetailsPlatformLabel,
+  projectDetailsRoleLabel,
+  projectDetailsRoleValue,
+  projectDetailsPlatforms,
+  projectDetailsFallbacks,
 }: PortfolioCarouselProps) {
+  const { openInquiry } = useProjectInquiry()
   const [activeCategory, setActiveCategory] = useState<PortfolioCategory>('sites')
   const [activeIndex, setActiveIndex] = useState(0)
   const [scrollProgress, setScrollProgress] = useState(0)
   const [previewRailAtEnd, setPreviewRailAtEnd] = useState(false)
+  const [isProjectDetailsOpen, setIsProjectDetailsOpen] = useState(false)
+  const [isProjectDetailsClosing, setIsProjectDetailsClosing] = useState(false)
+  const [isInactiveSiteNoticeOpen, setIsInactiveSiteNoticeOpen] = useState(false)
   const carouselRef = useRef<HTMLElement>(null)
   const mediaViewportRef = useRef<HTMLDivElement>(null)
   const previewRailRef = useRef<HTMLDivElement>(null)
+  const projectDetailsCloseButtonRef = useRef<HTMLButtonElement>(null)
+  const projectDetailsCloseTimerRef = useRef<number | null>(null)
   const categoryTabsRef = useRef<HTMLDivElement>(null)
   const categoryTabRefs = useRef<Partial<Record<PortfolioCategory, HTMLButtonElement | null>>>({})
-  const prefetchedImagesRef = useRef(new Set<string>())
   const categoryProjects = projects.filter(project => project.category === activeCategory)
+  const openProjectDetails = useCallback(() => {
+    if (projectDetailsCloseTimerRef.current !== null) {
+      window.clearTimeout(projectDetailsCloseTimerRef.current)
+      projectDetailsCloseTimerRef.current = null
+    }
+
+    setIsProjectDetailsClosing(false)
+    setIsProjectDetailsOpen(true)
+  }, [])
+
+  const closeProjectDetails = useCallback(() => {
+    if (!isProjectDetailsOpen || isProjectDetailsClosing) return
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setIsProjectDetailsOpen(false)
+      return
+    }
+
+    setIsProjectDetailsClosing(true)
+    projectDetailsCloseTimerRef.current = window.setTimeout(() => {
+      setIsProjectDetailsOpen(false)
+      setIsProjectDetailsClosing(false)
+      projectDetailsCloseTimerRef.current = null
+    }, projectDetailsCloseDuration)
+  }, [isProjectDetailsClosing, isProjectDetailsOpen])
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -75,6 +273,59 @@ export default function PortfolioCarousel({
     mediaViewport.scrollTop = 0
     setScrollProgress(0)
   }, [activeIndex])
+
+  useEffect(() => {
+    return () => {
+      if (projectDetailsCloseTimerRef.current !== null) {
+        window.clearTimeout(projectDetailsCloseTimerRef.current)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    if (projectDetailsCloseTimerRef.current !== null) {
+      window.clearTimeout(projectDetailsCloseTimerRef.current)
+      projectDetailsCloseTimerRef.current = null
+    }
+
+    setIsProjectDetailsOpen(false)
+    setIsProjectDetailsClosing(false)
+    setIsInactiveSiteNoticeOpen(false)
+  }, [activeCategory, activeIndex])
+
+  useEffect(() => {
+    if (!isInactiveSiteNoticeOpen) return
+
+    const timeoutId = window.setTimeout(() => {
+      setIsInactiveSiteNoticeOpen(false)
+    }, 5200)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [isInactiveSiteNoticeOpen])
+
+  useEffect(() => {
+    if (!isProjectDetailsOpen) return
+
+    const handleDetailsKeyDown = (event: globalThis.KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closeProjectDetails()
+      }
+    }
+
+    const previousBodyOverflow = document.body.style.overflow
+    const previousDocumentOverflow = document.documentElement.style.overflow
+
+    document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+    document.addEventListener('keydown', handleDetailsKeyDown)
+    projectDetailsCloseButtonRef.current?.focus()
+
+    return () => {
+      document.removeEventListener('keydown', handleDetailsKeyDown)
+      document.body.style.overflow = previousBodyOverflow
+      document.documentElement.style.overflow = previousDocumentOverflow
+    }
+  }, [closeProjectDetails, isProjectDetailsOpen])
 
   useEffect(() => {
     const previewRail = previewRailRef.current
@@ -123,15 +374,6 @@ export default function PortfolioCarousel({
     setActiveIndex(nextIndex)
   }, [activeIndex])
 
-  const prefetchProjectImage = useCallback((project: FeatureItem) => {
-    if (prefetchedImagesRef.current.has(project.image)) return
-
-    const image = new window.Image()
-    image.decoding = 'async'
-    image.src = project.image
-    prefetchedImagesRef.current.add(project.image)
-  }, [])
-
   const move = useCallback((direction: -1 | 1) => {
     const nextIndex = (activeIndex + direction + categoryProjects.length) % categoryProjects.length
     changeProject(nextIndex)
@@ -161,6 +403,24 @@ export default function PortfolioCarousel({
     const maximumScroll = target.scrollHeight - target.clientHeight
 
     setPreviewRailAtEnd(maximumScroll <= 2 || target.scrollTop >= maximumScroll - 4)
+  }
+
+  const handlePreviewRailWheel = (event: WheelEventType<HTMLDivElement>) => {
+    const target = event.currentTarget
+    const hasVerticalOverflow = target.scrollHeight > target.clientHeight
+    const hasHorizontalOverflow = target.scrollWidth > target.clientWidth
+
+    if (!hasVerticalOverflow && !hasHorizontalOverflow) return
+
+    event.preventDefault()
+    event.stopPropagation()
+
+    if (hasVerticalOverflow) {
+      target.scrollTop += event.deltaY
+      return
+    }
+
+    target.scrollLeft += event.deltaY
   }
 
   const handleTabPointerMove = (event: PointerEventType<HTMLButtonElement>) => {
@@ -195,6 +455,41 @@ export default function PortfolioCarousel({
   }
 
   const activeProject = categoryProjects[activeIndex]
+  const activeProjectCategory = activeProject.category ?? 'sites'
+  const activeProjectTypeLabel = categoryOptions.find(option => option.id === activeProjectCategory)?.label ?? ''
+  const activeProjectPreview = activeProject.previewImage ?? activeProject.image
+  const isVetScanProject = activeProject.portfolioProject === 'vetscanct'
+  const isVetScanSiteProject = activeProject.portfolioProject === 'vetscanct-site'
+  const isLuxuryTravelProject = activeProject.portfolioProject === 'luxury-travel'
+  const isOliveOilProject = activeProject.portfolioProject === 'olive-oil'
+  const isModularHouseProject = activeProject.portfolioProject === 'modular-house'
+  const isBoostifyProject = activeProject.portfolioProject === 'boostify'
+  const isDiamantProject = activeProject.portfolioProject === 'diamant'
+  const isBeautyMasterProject = activeProject.portfolioProject === 'beauty-master-crm'
+  const isAutoServiceProject = activeProject.portfolioProject === 'auto-service-crm'
+  const isSportBaseProject = activeProject.portfolioProject === 'sport-base-crm'
+  const isInactiveSiteProject = ['luxury-travel', 'childrens-party', 'diamant', 'boostify'].includes(activeProject.portfolioProject ?? '')
+  const detailParagraphs = (activeProject.details ?? '')
+    .split(/\n\s*\n/)
+    .map(paragraph => paragraph.trim())
+    .filter(Boolean)
+  const fallbackDetails = projectDetailsFallbacks[activeProjectCategory]
+  const teamContribution = activeProject.portfolioProject === 'olive-oil' ? detailParagraphs[4] : undefined
+  const projectDetailSections = [
+    {
+      label: projectDetailsContextLabel,
+      description: detailParagraphs[1] ?? activeProject.description,
+    },
+    {
+      label: projectDetailsSolutionLabel,
+      description: detailParagraphs[2] ?? fallbackDetails.solution,
+    },
+    {
+      label: projectDetailsResultLabel,
+      description: [detailParagraphs[3] ?? fallbackDetails.result, teamContribution].filter(Boolean).join('\n\n'),
+    },
+  ]
+  const projectDetailSectionIcons = [Compass, Layers3, Sparkles]
   const previewIndexes = categoryProjects.map((_, projectIndex) => projectIndex)
   const previewRailScrollable = categoryProjects.length > 4
 
@@ -210,40 +505,69 @@ export default function PortfolioCarousel({
         <div className={styles.content}>
           <div className={styles.projectCopy}>
             <div className={styles.projectTopAction}>
-              {activeProject.liveUrl ? (
-                <a
-                  className={styles.liveSiteAction}
-                  href={activeProject.liveUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={liveSiteLabel}
-                  data-tooltip={liveSiteLabel}
-                >
-                  <ExternalLink size={15} strokeWidth={1.8} aria-hidden="true" />
-                </a>
-              ) : (
+              <div className={styles.projectActions}>
+                {activeProject.category === 'sites' ? (
+                  activeProject.liveUrl ? (
+                    <a
+                      className={styles.liveSiteAction}
+                      href={activeProject.liveUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={liveSiteLabel}
+                      data-tooltip={liveSiteLabel}
+                    >
+                      <ExternalLink size={15} strokeWidth={1.8} aria-hidden="true" />
+                    </a>
+                  ) : (
+                    <button
+                      className={styles.liveSiteAction}
+                      type="button"
+                      aria-disabled={!isInactiveSiteProject ? 'true' : undefined}
+                      aria-label={liveSitePlaceholderLabel}
+                      data-tooltip={isInactiveSiteProject ? liveSiteLabel : liveSitePlaceholderLabel}
+                      onClick={isInactiveSiteProject ? () => setIsInactiveSiteNoticeOpen(true) : undefined}
+                    >
+                      <ExternalLink size={15} strokeWidth={1.8} aria-hidden="true" />
+                    </button>
+                  )
+                ) : null}
                 <button
-                  className={styles.liveSiteAction}
+                  className={`${styles.liveSiteAction} ${styles.projectDetailsAction}`}
                   type="button"
-                  aria-disabled="true"
-                  aria-label={liveSitePlaceholderLabel}
-                  data-tooltip={liveSiteLabel}
+                  aria-haspopup="dialog"
+                  aria-label={projectDetailsLabel}
+                  data-tooltip={projectDetailsLabel}
+                  onClick={openProjectDetails}
                 >
-                  <ExternalLink size={15} strokeWidth={1.8} aria-hidden="true" />
+                  <Info size={16} strokeWidth={1.8} aria-hidden="true" />
                 </button>
-              )}
+              </div>
+              {isInactiveSiteNoticeOpen ? (
+                <div className={styles.inactiveSiteNotice} role="status">
+                  <Info size={15} strokeWidth={1.8} aria-hidden="true" />
+                  <span>{liveSiteInactiveLabel}</span>
+                  <button
+                    className={styles.inactiveSiteNoticeClose}
+                    type="button"
+                    aria-label={closeProjectDetailsLabel}
+                    onClick={() => setIsInactiveSiteNoticeOpen(false)}
+                  >
+                    <X size={13} strokeWidth={1.8} aria-hidden="true" />
+                  </button>
+                </div>
+              ) : null}
             </div>
             <div className={styles.meta}>
-              <h1 className={styles.heading}>{heading}</h1>
+              <h2 className={styles.heading}>{heading}</h2>
               <span className={styles.counter} aria-live="polite">
                 {String(activeIndex + 1).padStart(2, '0')} / {String(categoryProjects.length).padStart(2, '0')}
               </span>
             </div>
             <h2 className={styles.title}>{activeProject.title}</h2>
             <p className={styles.description}>{activeProject.description}</p>
-            <Link className={styles.action} href="#contacts">
+            <button className={styles.action} type="button" onClick={openInquiry}>
               {actionLabel}
-            </Link>
+            </button>
           </div>
         </div>
 
@@ -275,10 +599,23 @@ export default function PortfolioCarousel({
           <div
             ref={mediaViewportRef}
             className={`${styles.mediaViewport} ${activeProject.scrollable ? styles.scrollableViewport : ''}`}
+            data-lenis-prevent={activeProject.scrollable || undefined}
             onScroll={activeProject.scrollable ? handleMediaScroll : undefined}
             tabIndex={activeProject.scrollable ? 0 : undefined}
           >
-            {activeProject.scrollable ? (
+            {activeProject.scrollable && activeProject.imageSections?.length ? (
+              <div className={styles.scrollableImageStack}>
+                {activeProject.imageSections.map((section, sectionIndex) => (
+                  <LazyPortfolioImage
+                    key={section.src}
+                    section={section}
+                    alt={sectionIndex === 0 ? activeProject.imageAlt : ''}
+                    sizes="(max-width: 700px) calc(100vw - 32px), 960px"
+                    rootRef={mediaViewportRef}
+                  />
+                ))}
+              </div>
+            ) : activeProject.scrollable ? (
               <Image
                 className={styles.scrollableImage}
                 key={activeProject.image}
@@ -287,9 +624,10 @@ export default function PortfolioCarousel({
                 width={activeProject.imageWidth ?? 1640}
                 height={activeProject.imageHeight ?? 5037}
                 loading="lazy"
+                placeholder="blur"
+                blurDataURL={portfolioBlurDataUrl}
                 quality={70}
-                unoptimized
-                sizes="(max-width: 700px) calc(100vw - 32px), 52vw"
+                sizes="(max-width: 700px) calc(100vw - 32px), 960px"
               />
             ) : (
               <Image
@@ -299,9 +637,10 @@ export default function PortfolioCarousel({
                 alt={activeProject.imageAlt}
                 fill
                 loading="lazy"
+                placeholder="blur"
+                blurDataURL={portfolioBlurDataUrl}
                 quality={70}
-                unoptimized
-                sizes="(max-width: 700px) calc(100vw - 32px), 52vw"
+                sizes="(max-width: 700px) calc(100vw - 32px), 960px"
               />
             )}
           </div>
@@ -328,7 +667,9 @@ export default function PortfolioCarousel({
             ref={previewRailRef}
             className={`${styles.previewRail} ${previewRailScrollable ? styles.previewRailScrollable : ''}`}
             aria-label={heading}
+            data-lenis-prevent={previewRailScrollable || undefined}
             onScroll={previewRailScrollable ? handlePreviewRailScroll : undefined}
+            onWheel={previewRailScrollable ? handlePreviewRailWheel : undefined}
             tabIndex={previewRailScrollable ? 0 : undefined}
           >
           {previewIndexes.map(projectIndex => {
@@ -343,54 +684,24 @@ export default function PortfolioCarousel({
                 key={project.previewImage ?? project.image}
                 type="button"
                 onClick={() => changeProject(projectIndex)}
-                onPointerEnter={() => prefetchProjectImage(project)}
-                onFocus={() => prefetchProjectImage(project)}
                 aria-label={`${selectProjectLabel}: ${project.title}`}
                 aria-pressed={projectIndex === activeIndex}
               >
                 <span className={styles.previewMedia} aria-hidden="true">
                   {!usesCardFrame ? (
-                    <Image
+                    <ResponsivePreviewImage
+                      desktopSrc={previewSource}
+                      mobileSrc={project.previewImageMobile ? previewSourceMobile : undefined}
                       className={styles.previewBackdrop}
-                      src={previewSource}
-                      alt=""
-                      fill
-                      loading="lazy"
-                      quality={60}
-                      sizes="(max-width: 700px) 34vw, (max-width: 980px) 18vw, 18vw"
+                      sizes="(max-width: 700px) 34vw, 190px"
                     />
                   ) : null}
-                  {!usesCardFrame && project.previewImageMobile ? (
-                    <Image
-                      className={styles.previewBackdropMobile}
-                      src={previewSourceMobile}
-                      alt=""
-                      fill
-                      loading="lazy"
-                      quality={60}
-                      sizes="34vw"
-                    />
-                  ) : null}
-                  <Image
+                  <ResponsivePreviewImage
+                    desktopSrc={previewSource}
+                    mobileSrc={project.previewImageMobile ? previewSourceMobile : undefined}
                     className={styles.previewImage}
-                    src={previewSource}
-                    alt=""
-                    fill
-                    loading="lazy"
-                    quality={60}
-                    sizes="(max-width: 700px) 34vw, (max-width: 980px) 18vw, 18vw"
+                    sizes="(max-width: 700px) 34vw, 190px"
                   />
-                  {project.previewImageMobile ? (
-                    <Image
-                      className={styles.previewImageMobile}
-                      src={previewSourceMobile}
-                      alt=""
-                      fill
-                      loading="lazy"
-                      quality={60}
-                      sizes="34vw"
-                    />
-                  ) : null}
                 </span>
               </button>
             )
@@ -406,6 +717,93 @@ export default function PortfolioCarousel({
           ) : null}
         </div>
       </div>
+
+      {isProjectDetailsOpen && typeof document !== 'undefined' ? createPortal(
+        <div
+          className={`${styles.projectDetailsOverlay} ${isProjectDetailsClosing ? styles.projectDetailsOverlayClosing : ''}`}
+          data-lenis-prevent="true"
+          role="presentation"
+          onMouseDown={event => {
+            if (event.target === event.currentTarget) {
+              closeProjectDetails()
+            }
+          }}
+        >
+          <article
+            className={`${styles.projectDetailsDialog} ${isProjectDetailsClosing ? styles.projectDetailsDialogClosing : ''} ${isVetScanProject ? styles.projectDetailsDialogVet : ''} ${isVetScanSiteProject ? styles.projectDetailsDialogVetSite : ''} ${isLuxuryTravelProject ? styles.projectDetailsDialogLuxury : ''} ${isOliveOilProject ? styles.projectDetailsDialogOlive : ''} ${isModularHouseProject ? styles.projectDetailsDialogModularHouse : ''} ${isBoostifyProject ? styles.projectDetailsDialogBoostify : ''} ${isDiamantProject ? styles.projectDetailsDialogDiamant : ''} ${isBeautyMasterProject ? styles.projectDetailsDialogBeauty : ''} ${isAutoServiceProject ? styles.projectDetailsDialogAuto : ''} ${isSportBaseProject ? styles.projectDetailsDialogSport : ''}`}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="project-details-title"
+          >
+            <button
+              ref={projectDetailsCloseButtonRef}
+              className={styles.projectDetailsClose}
+              type="button"
+              aria-label={closeProjectDetailsLabel}
+              onClick={closeProjectDetails}
+            >
+              <X size={18} strokeWidth={1.7} aria-hidden="true" />
+            </button>
+
+            <div className={styles.projectDetailsHero}>
+              <div className={styles.projectDetailsVisual}>
+                <Image
+                  className={styles.projectDetailsVisualImage}
+                  src={activeProjectPreview}
+                  alt={activeProject.imageAlt}
+                  fill
+                  sizes="(max-width: 980px) calc(100vw - 72px), 600px"
+                  quality={75}
+                />
+                <span className={styles.projectDetailsEyebrow}>{projectDetailsLabel}</span>
+              </div>
+
+              <div className={styles.projectDetailsIntro}>
+                <span className={styles.projectDetailsRibbon} aria-hidden="true" />
+                <span className={styles.projectDetailsType}>{activeProjectTypeLabel}</span>
+                <h2 id="project-details-title" className={styles.projectDetailsTitle}>{activeProject.title}</h2>
+                <p className={styles.projectDetailsDescription}>{activeProject.description}</p>
+              </div>
+            </div>
+
+            <div className={styles.projectDetailsSections}>
+              {projectDetailSections.map((section, index) => (
+                <section className={styles.projectDetailsSection} key={section.label}>
+                  <span className={styles.projectDetailsSectionIndex}>
+                    <span>{String(index + 1).padStart(2, '0')}</span>
+                    {(() => {
+                      const SectionIcon = projectDetailSectionIcons[index]
+                      return <SectionIcon size={14} strokeWidth={1.5} aria-hidden="true" />
+                    })()}
+                  </span>
+                  <h3 className={styles.projectDetailsSectionTitle}>{section.label}</h3>
+                  <div className={styles.projectDetailsSectionDescription}>
+                    {splitReadableParagraphs(section.description).map((paragraph, paragraphIndex) => (
+                      <p key={`${section.label}-${paragraphIndex}`}>{paragraph}</p>
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
+
+            <dl className={styles.projectDetailsMeta}>
+              <div className={styles.projectDetailsMetaItem}>
+                <dt>{projectDetailsTypeLabel}</dt>
+                <dd>{activeProjectTypeLabel}</dd>
+              </div>
+              <div className={styles.projectDetailsMetaItem}>
+                <dt>{projectDetailsPlatformLabel}</dt>
+                <dd>{projectDetailsPlatforms[activeProjectCategory]}</dd>
+              </div>
+              <div className={styles.projectDetailsMetaItem}>
+                <dt>{projectDetailsRoleLabel}</dt>
+                <dd>{projectDetailsRoleValue}</dd>
+              </div>
+            </dl>
+          </article>
+        </div>,
+        document.body,
+      ) : null}
 
       <nav className={styles.controls} aria-label={heading}>
         <button className={styles.control} type="button" onClick={() => move(-1)} aria-label={previousLabel}>

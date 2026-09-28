@@ -86,6 +86,794 @@
 
 final result: passed
 
+## Project inquiry modal — selected conversation portal — 2026-09-27
+
+### Source visual truth
+
+- Selected third Image Gen concept: `/Users/ustim/.codex/generated_images/01a0e2a6-d0e9-7040-baac-0eeab7c2dc21/exec-e3333d0b-c5b2-4e92-a9d1-7e98c16315ed.png`, 1487 × 1058 px.
+- Required visual language: a large graphite dialog rather than a generic centered card; editorial headline, a small circular founder portrait with coral ring, a conversation path, and the real inquiry form as a distinct right-side block.
+- Decorative reference details added in the final iteration: a large lower-left coral semicircle, a thin upper sweep, an upper route line and coral point, a compact lower-left signature, and a footnote with a short rule.
+
+### Implementation evidence
+
+- Local route: `http://localhost:3000/`.
+- Desktop browser capture: `/private/tmp/project-inquiry-modal-desktop-final.png`, 1710 × 896 px; CSS viewport 1710 × 952 px, DPR 1; dialog open in Ukrainian locale.
+- Mobile browser state: CSS viewport 390 × 844 px; dialog width 370 px, no page-level horizontal overflow, and dialog scroll area `931 / 822 px` so all fields and CTA remain reachable.
+- Combined source-and-rendered comparison: `/private/tmp/project-inquiry-modal-final-comparison.png`, normalized to 520 px height per side.
+- Final decorative linework asset: `public/assets/project-inquiry-linework.png`, 1586 × 992 px with alpha; generated from the selected reference’s linework only and rendered behind live, localized UI.
+- Primary interactions: open from CTA, close control, locale switching UA → RU → EN, and responsive modal scroll. Browser console had no error-level entries.
+
+### Findings
+
+- P0/P1/P2 расхождений не обнаружено после итерации сетки.
+- Typography: the large light headline, compact uppercase eyebrow, coral italic last word, quiet labels and restrained secondary copy preserve the reference hierarchy. Ukrainian, Russian and English copy has equivalent hierarchy.
+- Spacing and layout: the dialog uses a three-part desktop composition—intro, portrait/steps, form—and folds to a single vertical reading path on mobile. The initial QA issue where the form was placed in a second implicit grid row was fixed by assigning all three regions to the same first grid row.
+- Colors and visual tokens: graphite surface, fine coral perimeter, coral avatar ring and outlined coral CTA match the selected direction. Form fields remain low-contrast until focus, then receive a coral border for clear affordance.
+- Image quality and asset fidelity: the supplied `public/assets/home-founder-avatar.png` is rendered through `next/image`, cropped as a small circular portrait without a placeholder or generated substitute.
+- Copy and content: all new labels, steps, portrait alt text, supporting line and mail subject are translated for UA, RU and EN. The generated `mailto:` subject and field labels now follow the active locale.
+
+### Comparison history
+
+- Initial implementation capture showed the form below the fold because CSS Grid placed it in an implicit second row.
+- Fix: assigned `grid-row: 1` to the intro, portrait path and form; reduced the top offset of the two right-side regions. The revised desktop capture keeps all core inputs and CTA in the primary modal frame.
+- Second comparison showed the selected concept’s key headline treatment was missing.
+- Fix: split the title into localizable lead and accent fragments and styled the final word in coral italic. The final combined comparison confirms the editorial accent, portrait, conversation path and form are visible in one composition.
+- Final comparison found that the reference’s arcs, thin route line and microcopy were still absent. A transparent dedicated linework asset was generated and placed behind the dialog UI; the lower signature and short footnote were added as localized DOM text. On screens below `620px` the decorative layer is hidden so the wide lower-left arc cannot cut through the form.
+
+### Implementation checklist
+
+- [x] Selected third visual direction recreated as a responsive code-based modal.
+- [x] Provided founder photo added as a circular `next/image` portrait.
+- [x] Large semicircle, upper curve, route line, lower signature and note added to desktop composition.
+- [x] Real form behavior and keyboard Escape close preserved.
+- [x] UA, RU and EN modal copy and generated mail content checked.
+- [x] Desktop and mobile layouts checked; no page-level horizontal overflow.
+- [x] Browser console checked for errors.
+- [x] `git diff --check` and production build passed.
+
+final result: passed
+
+## About — handwritten hero accent reveal — 2026-09-24
+
+### Source visual truth
+
+- User-provided reference: `/Users/ustim/Downloads/Снимок экрана — 2026-09-24 в 16.31.21.png`.
+- Motion reference: `https://www.pinterest.com/pin/14003448838659137/` (`Animate Your Handwritten Signature Or Text`).
+- Captured Pinterest reference phase: `/private/tmp/pinterest-handwriting-reference-phase.png`, browser viewport `1696 × 957px`.
+- Required treatment: the existing coral handwritten `Turning ideas into products` accent should begin immediately on page load and be written letter by letter over 6–7 seconds, with every letter completed before the next begins. The `T` top stroke precedes its vertical stroke; each `i` dot and `t` crossbar is completed before moving on.
+
+### Implementation evidence
+
+- Local route: `http://localhost:3000/about`.
+- Existing source asset preserved: `public/assets/about/variant-4-hero-accent-turning-ideas.png`, `1343 × 1171px`, transparent RGBA.
+- Browser-rendered implementation captures: `/private/tmp/about-handwriting-immediate-start.png`, `/private/tmp/about-handwriting-strict-progress-browser.png` and `/private/tmp/about-handwriting-strict-final-browser.png`, viewport `1696 × 957px`, DPR `1`.
+- Deterministic path-order captures: `/private/tmp/handwriting-t-complete.png`, `/private/tmp/handwriting-u-start.png`, `/private/tmp/handwriting-first-i-body.png`, `/private/tmp/handwriting-first-i-dot.png`, `/private/tmp/handwriting-second-line-t-body.png`, `/private/tmp/handwriting-second-line-t-cross.png` and `/private/tmp/handwriting-final.png`.
+- The original raster artwork remains the only visible source. A generated `672 × 586px` RGB reveal map stores a 16-bit writing timestamp for every visible source pixel; canvas reveals the exact source pixels along explicit per-stroke trajectories.
+- Animation starts immediately on page load, writes for `6.96s`, retains completed ink, and ends on the exact original bitmap without a separate fade or replacement frame. The higher-precision map and deliberate pen-lift gaps prevent the next letter from appearing before the previous stroke is complete. Browser console returned no errors or warnings.
+- `prefers-reduced-motion` displays the complete accent immediately.
+
+### Findings
+
+- P0/P1/P2 расхождений не обнаружено.
+- Motion: the reference and implementation both leave persistent ink behind a continuously advancing pen path. `T → u`, `i` body → dot and `t` body → crossbar were checked in separate consecutive frames; no next-letter leakage remains.
+- Spacing and layout: the hero accent keeps its existing position, aspect ratio and responsive width; no horizontal overflow was introduced.
+- Fonts and typography: lettering is not recreated with a substitute font; the exact user-approved raster lettering is preserved.
+- Colors and visual tokens: the original coral pixels and existing `mix-blend-mode: screen` treatment are unchanged.
+- Image quality and asset fidelity: the source stays sharp at its rendered `207px` desktop width; the reveal map affects timing only and never replaces visible pixels.
+- Copy and content: `Turning ideas into products` and its underline are unchanged.
+
+### Comparison history
+
+- Earlier implementation: an approximate SVG mask and then an 8-bit timing map could reveal broad fragments or slightly pre-feather pixels from the next letter.
+- Fix: replaced visible SVG geometry with exact-source canvas rendering and upgraded the timing map to 16-bit precision with explicit letter/stroke boundaries.
+- Post-fix evidence: `T` is fully complete before `u` starts, `i` dots and `t` crossbars appear only after their letter bodies, and the final capture matches the original artwork without a transition jump.
+
+### Implementation checklist
+
+- [x] Pinterest motion inspected at intermediate playback state.
+- [x] Existing local animation inspected before replacement.
+- [x] Approximate SVG mask removed.
+- [x] Exact-source reveal map and canvas renderer implemented.
+- [x] Immediate start, `6.96s` write duration and reduced-motion fallback implemented.
+- [x] Strict per-letter order, `i` dots and `t` crossbars verified frame by frame.
+- [x] Browser console checked with no errors or warnings.
+
+final result: passed
+
+## About CTA — pulse center alignment — 2026-09-24
+
+### Implementation evidence
+
+- The moving pulse now stops with its geometric center on the horizontal line: its endpoint is adjusted to the rendered pulse box and the wave’s center coordinate.
+- The impact ring remains centered on the same axis, and the lower wave timing is unchanged.
+- Desktop and mobile use the same corrected relative geometry through `--signal-distance`; no fixed viewport-specific offset was introduced.
+
+### Findings
+
+- P0/P1/P2 расхождений не обнаружено.
+- The point no longer finishes below the horizontal line; the marker and impact ring meet the line at the same center axis.
+
+final result: passed
+
+## About CTA — darker border, larger label and touch flash — 2026-09-24
+
+### Source visual truth
+
+- Selected treatment remains the first visual variant: coral pill on graphite, a restrained light keyline, dark inner edge, right arrow and the existing lower signal animation.
+
+### Implementation evidence
+
+- Local route: `http://localhost:3000/about`.
+- Fresh browser screenshot: `/private/tmp/about-cta-viewport-updated.png`.
+- State: Ukrainian locale, dark theme, CTA visible in the contact section.
+- Computed CTA size: `229.4 × 50px`; width remains content-driven and was not hard-coded.
+- Computed label size: `13px`; internal right arrow size: `16px`.
+- Animation evidence: the incoming arrow uses one parent animation for the coral-to-near-white-to-coral touch flash, while the existing head/tail movement keyframes remain unchanged. Browser sampling captured the near-white transition (`rgba(255, 253, 251, 0.95)`) and the return to coral.
+- Primary interaction: CTA button opened the project inquiry form; Escape dismissed it.
+- Runtime evidence: browser console returned no errors or warnings.
+
+### Findings
+
+- P0/P1/P2 расхождений не обнаружено.
+- Typography: the CTA label is slightly larger without changing the button’s centered alignment or responsive width model.
+- Spacing and layout: the button remains a compact centered pill; the larger icon adds only the natural content width required by the updated arrow.
+- Colors and visual tokens: the outer keyline is slightly darker, and the incoming coral arrow flashes near-white exactly at the button touch before returning to coral.
+- Motion: the arrow and tail remain a single visual object; the flash is layered onto the parent so the color transition stays synchronized with the existing travel cycle.
+
+final result: passed
+
+## About CTA — button border contact flash — 2026-09-24
+
+### Implementation evidence
+
+- The CTA border now has a dedicated `actionBorderFlash` animation synchronized to the same `6.8s` cycle as the incoming arrow.
+- At the arrow contact phase the border transitions smoothly to `#fff`, stays bright for approximately one second, then returns smoothly to `rgb(232 213 207 / 0.82)`.
+- Browser sampling captured the complete sequence: original warm border, intermediate white shades, `rgb(255, 255, 255)`, and the return to the original color.
+- The arrow movement, tail erasure, lower signal, button fill, label and layout remain unchanged.
+- CTA interaction still opens the project inquiry form and Escape dismisses it; browser console returned no errors or warnings.
+
+final result: passed
+
+## About — crisp hero lettering — 2026-09-23
+
+### Source visual truth
+
+- User-reported defect: `/Users/ustim/Downloads/Снимок экрана — 2026-09-23 в 22.32.31.png`, `598 × 522px`.
+- The decorative hero phrase was visibly soft because a `158 × 154px` raster crop was enlarged in the page. The required outcome is a sharp handwritten phrase with the same coral tone, three-line copy and underline.
+
+### Implementation evidence
+
+- Replaced the active low-resolution source with `public/assets/about/variant-4-hero-accent-crisp.png`, a `1254 × 1254px` RGBA asset. The existing hero geometry and responsive CSS are unchanged.
+- Desktop browser state: `/about`, UA locale, `1710 × 952px` CSS viewport; rendered capture `/private/tmp/about-hero-crisp-accent-desktop.png`, `1695 × 944px`. The accent renders at `230 × 230px`; no horizontal overflow.
+- Mobile browser state: `/about`, UA locale, `390 × 844px` CSS viewport; rendered capture `/private/tmp/about-hero-crisp-accent-mobile.png`, `375 × 812px`. The accent renders at `88 × 88px`; no horizontal overflow.
+- Full and focused comparison evidence: `/private/tmp/about-hero-accent-comparison.png`, `1110 × 572px`. It places the user’s blurry source and the rendered hero crop side by side at a normalized review size.
+
+### Findings
+
+- P0/P1/P2: none.
+- Fonts and typography: the phrase remains handwritten and compact; its letter edges are clean at desktop and mobile display sizes rather than softened by source upscaling.
+- Spacing and layout rhythm: the accent preserves the established upper-right placement and does not alter the hero title, portrait, header, dividers, rail or footer.
+- Colors and visual tokens: the warm coral lettering remains on the existing graphite `--color-bg` background.
+- Image quality and asset fidelity: the replacement is a high-resolution transparent raster asset, avoiding the prior undersized crop and its blur. The phrase, three-line composition and underline remain intact.
+- Copy and content: `Good ideas build a kinder world` is retained verbatim.
+- Runtime: desktop and mobile navigation completed without a visible client error state; the changed asset loaded completely in both captures.
+
+### Implementation checklist
+
+- [x] Replaced only the decorative hero asset; header, footer and layout CSS are unchanged.
+- [x] Compared the supplied source and browser-rendered accent together in a focused composite.
+- [x] Verified desktop and mobile rendering, completed image load and absent horizontal overflow.
+- [x] Ran `npx tsc --noEmit`, `git diff --check`, CSS `!important` scan and `npm run build`.
+
+final result: passed
+
+## About — centered contact CTA — 2026-09-23
+
+### Source visual truth
+
+- User-provided target: `/Users/ustim/Downloads/Снимок экрана — 2026-09-23 в 23.10.52.png`.
+- Required change: move the `Обговорити проєкт` button below the contact text, center it within the text area, and leave visible breathing room above it.
+
+### Implementation evidence
+
+- Desktop focused capture: `/private/tmp/about-contact-centered-focus.png`; the button is on its own row, centered within the text column, with a measured `34px` gap after the final paragraph.
+- Desktop full capture: `/private/tmp/about-contact-centered-desktop.png`; no horizontal overflow.
+- Mobile capture: `/private/tmp/about-contact-centered-mobile.png`; the button uses a centered responsive width capped at `320px`, with a `24px` top gap and no horizontal overflow.
+- Latest spacing correction: the CTA was lowered by a further `40px`; the final top gaps are `74px` on desktop and `64px` on mobile.
+- Follow-up spacing correction: the CTA was lowered by another `40px`; final top gaps are now `114px` on desktop and `104px` on mobile.
+- Latest bottom-gap correction: the distance from the CTA bottom to the footer divider was reduced by `20px` via the contact section bottom padding (`34px → 14px` desktop, `26px → 6px` mobile); the CTA top position remains unchanged.
+- Browser measurement after the correction: CTA-bottom to footer-divider gap is `98px` on desktop (previously `118px`), with `overflow: false`.
+
+### Findings
+
+- P0/P1/P2: none.
+- Layout: the former two-column contact grid is now a single readable text flow followed by a centered CTA.
+- Responsive behavior: desktop and mobile retain the same hierarchy; the mobile button stays centered in its content column without clipping.
+- Interaction: the existing button action and focus/hover styles are unchanged.
+
+### Implementation checklist
+
+- [x] Moved the contact CTA below the text.
+- [x] Centered the CTA and added the requested top spacing.
+- [x] Checked desktop and mobile renders without horizontal overflow.
+- [x] Ran `npx tsc --noEmit`, `git diff --check`, CSS `!important` scan and `npm run build`.
+
+final result: passed
+
+## About CTA — continuous Axis Pulse — 2026-09-24
+
+### Source visual truth
+
+- Selected generated direction: `/Users/ustim/.codex/generated_images/01a0ca93-3916-7333-b7bd-bade662bf1fc/exec-81690553-dd98-4396-9772-262646d62c92.png`, `2109 × 745px`.
+- User correction: the signal animation must run automatically in a loop rather than start on hover.
+- Intersection correction reference: `/Users/ustim/Downloads/Снимок экрана — 2026-09-24 в 00.17.29.png`, `1336 × 472px`; the impact circle must sit on the exact center of the horizontal line.
+- Visibility defect reference: `/Users/ustim/Downloads/Снимок экрана — 2026-09-24 в 13.20.19.png`, `1336 × 472px` at DPR `2`; only the upper half of the centered circle is visible because the page/footer boundary covers the lower half.
+
+### Implementation evidence
+
+- Browser-rendered active-state capture: `/private/tmp/about-cta-axis-pulse-final.png`, normalized browser screenshot `1695 × 944px`; runtime viewport check `1710 × 952 CSS px`, DPR `2`.
+- Focused source/implementation comparison: `/private/tmp/about-cta-axis-pulse-comparison.png`, two `800 × 450px` crops placed in one `1620 × 450px` image.
+- Corrected maximum-width phase: `/private/tmp/about-cta-wave-fade-max.png`; both halves reach their full width while the outer tips dissolve into the page background.
+- Corrected center-erasure phase: `/private/tmp/about-cta-wave-fade-center.png`; the gap opens at the button axis and expands symmetrically toward the soft outer tails.
+- Centered-intersection capture: `/private/tmp/about-cta-circle-centered.png`, `1695 × 888px`; runtime viewport `1710 × 952 CSS px`, DPR `2`.
+- Focused intersection comparison: `/private/tmp/about-cta-circle-centered-comparison.png`, `2692 × 472px`; the `1336 × 472px` source and an equally sized implementation crop are placed side by side. The comparison is scoped to the line/circle geometry because the source is a cropped interaction-state screenshot rather than a full matching viewport.
+- Runtime evidence: the line animation reports `4.8s` and `infinite`; desktop signal distance is `98px`, the CTA remains `215.87 × 50px`, and horizontal overflow is absent.
+- Intersection metrics: impact center, horizontal-line center and filament endpoint all resolve to `598.46875px`; `centerDelta: 0`, `lineEndDelta: 0`.
+- Full-circle capture: `/private/tmp/about-cta-circle-fully-visible-final.png`, `1695 × 888px`; the ring extends across the boundary without clipping or footer overpainting.
+- Normalized visibility comparison: `/private/tmp/about-cta-circle-full-visibility-comparison.png`, `1356 × 236px`; the DPR-2 source was normalized to `668 × 236px` and compared with an equally sized implementation crop in the same image.
+- Visibility metrics: the active ring spans `563.48–577.46px` around the horizontal center at `570.47px`; page overflow computes to `clip visible`, page stacking level is `1`, and horizontal viewport overflow remains absent.
+- Interaction evidence: the lower CTA opens the existing project dialog; the automatic animation does not block pointer interaction.
+
+### Findings
+
+- P0/P1/P2: none.
+- Typography and copy: the existing localized CTA label, SF Pro stack, weight, spacing and Lucide arrow remain unchanged.
+- Spacing and layout rhythm: the button keeps its approved position and size; decorative layers are absolutely positioned and do not alter section height. The signal reaches the footer divider while preserving the previously approved `98px` resting gap.
+- Intersection geometry: the impact circle, vertical filament and one-pixel horizontal wave now share one exact center coordinate; the previous `0.5px` CSS offset has been removed.
+- Circle visibility: both halves of the impact ring remain visible across the page/footer boundary; the change affects clipping and stacking only, not the ring position or animation timing.
+- Colors and tokens: the effect uses the existing coral accent and graphite background. Glow is limited to the moving pulse, impact ring and temporary divider wave.
+- Image quality and asset fidelity: the selected visual is an interaction reference rather than a new raster asset; the implementation uses crisp browser-rendered linework at the existing page scale.
+- Motion: every `4.8s` cycle lifts the CTA by `2px`, sends a pulse down the filament, reveals an impact ring and spreads two mirrored horizontal halves. Each half has a transparent outer gradient; after the maximum span, mirrored `clip-path` masks erase the wave from the center toward the outer edges. The cycle then pauses. `prefers-reduced-motion` removes all decorative animation.
+- Responsive behavior: mobile uses the same sequence with a `62px` signal distance and the existing button width cap; no additional page width is introduced.
+
+### Comparison history
+
+- Initial browser pass: the footer boundary clipped the lower half of the impact ring and hid the horizontal wave.
+- Fix: moved the ring fully inside the About surface, ended the filament at its center and positioned the wave `1px` above the boundary.
+- Post-fix evidence: `/private/tmp/about-cta-axis-pulse-final.png` shows the full ring and visible coral wave touching the divider without changing content flow.
+- User correction: the wave looked too solid; its outer ends needed to dissolve continuously, and the completed line needed to disappear progressively from the center outward.
+- Final fix: replaced the single solid wave with independently animated left/right pseudo-elements, symmetric edge gradients and mirrored center-out masks. Runtime sampling confirmed matching scale, opacity and clipping on both sides.
+- Later user correction: the impact circle appeared above the horizontal-line center. Initial post-adjustment measurement still showed `centerDelta: -0.5px`, which equals one physical pixel at DPR `2`.
+- Intersection fix: moved the ring anchor, filament endpoint and pulse destination by the remaining `0.5px`. Post-fix measurement reports `centerDelta: 0` and `lineEndDelta: 0`; `/private/tmp/about-cta-circle-centered-comparison.png` is the visual evidence.
+- Latest user correction: after centering, the lower half of the ring was hidden at the boundary. Removing vertical clipping alone was insufficient because the later footer layer still painted over the overflow.
+- Visibility fix: kept horizontal clipping, allowed vertical overflow and raised the About page stacking layer above the footer background. `/private/tmp/about-cta-circle-full-visibility-comparison.png` shows the formerly hidden lower half fully rendered while the center remains fixed on the line.
+
+### Implementation checklist
+
+- [x] Automatic infinite cycle implemented without hover dependency.
+- [x] Button action preserved and dialog opening verified.
+- [x] Selected source and rendered implementation inspected in one focused comparison.
+- [x] Horizontal overflow absent; reduced-motion fallback added.
+- [x] Outer tips fade into the background and the completed wave erases from the center outward.
+- [x] Impact circle, vertical filament and horizontal line share the same measured center coordinate.
+- [x] Impact circle remains fully visible across the page/footer boundary without horizontal overflow.
+- [x] `npx tsc --noEmit`, `git diff --check`, no-`!important` scan and `npm run build` passed.
+
+final result: passed
+
+## About — fading horizontal divider ends — 2026-09-23
+
+### Source visual truth
+
+- User-provided references: `/Users/ustim/Downloads/Снимок экрана — 2026-09-23 в 23.06.00.png` and `/Users/ustim/Downloads/Снимок экрана — 2026-09-23 в 23.07.08.png`.
+- Required change: horizontal section rules should retain their center but gradually dissolve at both ends, while the central vertical axis and marker circles remain sharp.
+
+### Implementation evidence
+
+- The solid `border-top` on `.readingSection` was replaced with a one-pixel `::before` gradient: transparent at `0%` and `100%`, softly emerging by `6%`/`94%`, and fully visible through the central `15%`–`85%` region.
+- Desktop capture: `/private/tmp/about-faded-section-lines-desktop.png`, `1710 × 952px` CSS viewport; computed pseudo-element height `1px`, no horizontal overflow.
+- Mobile capture: `/private/tmp/about-faded-section-lines-mobile.png`, `390 × 844px` CSS viewport; the same fade rule is preserved responsively, no horizontal overflow, viewport reset after capture.
+
+### Findings
+
+- P0/P1/P2: none.
+- The chapter dividers now match the reference's softer edge treatment without weakening the central line or moving the marker circles.
+
+### Implementation checklist
+
+- [x] Applied a fading gradient to every horizontal chapter divider.
+- [x] Preserved the vertical rail and circle markers.
+- [x] Checked desktop and mobile rendering without horizontal overflow.
+- [x] Ran `npx tsc --noEmit`, `git diff --check`, CSS `!important` scan and `npm run build`.
+
+final result: passed
+
+## About — intro copy moved beside portrait — 2026-09-23
+
+### Source visual truth
+
+- User-provided layout reference: `/Users/ustim/Downloads/Снимок экрана — 2026-09-23 в 22.48.05.png`.
+- Required change: move the complete `Про мене` introduction block — heading plus all four supplied paragraphs — to the right of the hero portrait, keep it readable, remove the duplicated intro section below, and start the project numbering at `01`.
+
+### Implementation evidence
+
+- Desktop capture: `/private/tmp/about-intro-in-hero-desktop.png`, `1710 × 952px` CSS viewport. The portrait occupies `400 × 400px` at the left; the intro copy sits beside it at `760px` maximum width. The first lower section is `01 / ПРОЄКТИ`.
+- Mobile capture: `/private/tmp/about-intro-in-hero-mobile.png`, `390 × 844px` CSS viewport. The portrait and intro copy stack into one readable column; the project section remains `01 / ПРОЄКТИ`.
+- Runtime geometry: desktop intro bounds `x: 614.5, y: 271.6, w: 760, h: 255.3`; first chapter begins at `y: 610`. Mobile intro bounds `x: 16, y: 432.8, w: 343, h: 444.8`; first chapter begins at `y: 915.7`. Both states have no horizontal overflow.
+
+### Findings
+
+- P0/P1/P2: none.
+- Typography and copy: the heading and all supplied localized paragraphs remain intact and readable; the text is no longer repeated as a separate introductory chapter.
+- Spacing and layout: the portrait remains left-aligned, the copy sits in the right hero column on desktop, and the existing accent, header, rails and dividers remain in place.
+- Navigation structure: the lower numbered sequence now begins with `01 ПРОЄКТИ`, followed by `02 ПРОЦЕС` through `10 КОНТАКТ`.
+
+### Implementation checklist
+
+- [x] Moved the complete intro block into the hero beside the portrait.
+- [x] Removed the duplicate intro `ReadingSection`.
+- [x] Renumbered the remaining sections so projects start at `01`.
+- [x] Checked desktop and mobile captures without horizontal overflow.
+- [x] Ran `npx tsc --noEmit`, `git diff --check`, CSS `!important` scan and `npm run build`.
+
+final result: passed
+
+## About — diagonal “Turning ideas into products” hero accent — 2026-09-23
+
+### Source visual truth
+
+- User-provided composition reference: `/Users/ustim/Downloads/Снимок экрана — 2026-09-23 в 22.32.31.png`.
+- Required change: replace the prior phrase with `Turning ideas into products`, retain the coral handwritten lettering, and make the three-line grouping rise diagonally rather than sit horizontally.
+
+### Implementation evidence
+
+- Active asset: `public/assets/about/variant-4-hero-accent-turning-ideas.png`, `1343 × 1171px`, transparent RGBA.
+- Desktop capture: `/private/tmp/about-hero-turning-ideas-desktop.png`; `1710 × 952px` CSS viewport. The asset has fully loaded and displays at `230 × 200.5px` in the existing upper-right hero slot. No horizontal overflow.
+- Mobile capture: `/private/tmp/about-hero-turning-ideas-mobile.png`; `390 × 844px` CSS viewport. The asset has fully loaded and displays at `88 × 76.7px`. No horizontal overflow; the viewport override was reset after the capture.
+- Latest placement correction: the accent is 10% smaller and positioned `30px` higher and `15px` farther right. Updated desktop capture: `/private/tmp/about-hero-turning-ideas-compact-desktop.png`, rendered `207 × 180.5px` at `left: 1438.5px`, `top: 86px`. Updated mobile capture: `/private/tmp/about-hero-turning-ideas-compact-mobile.png`, rendered `79 × 68.9px` at `left: 295px`, `top: 126px`. Neither state has horizontal overflow.
+
+### Findings
+
+- P0/P1/P2: none.
+- Typography and copy: the exact requested phrase is presented in three lines — `Turning`, `ideas into`, `products` — with the requested hand-drawn coral character.
+- Spacing and layout: the letterforms themselves have a visible rising diagonal, while the existing upper-right slot, portrait, title, menu, rail, dividers and footer remain unchanged.
+- Image quality: source is high-resolution with alpha and is sharp at both rendered sizes.
+
+### Implementation checklist
+
+- [x] Replaced only the decorative phrase asset and preserved the earlier version on disk.
+- [x] Desktop and mobile visual checks completed; no overflow detected.
+- [x] Ran `npx tsc --noEmit`, `git diff --check`, CSS `!important` scan and `npm run build`.
+
+final result: passed
+
+## About — smaller portrait and sharper accent placement — 2026-09-23
+
+### Source visual truth
+
+- User-provided target: `/Users/ustim/Downloads/Снимок экрана — 2026-09-23 в 22.27.11.png`.
+- Target changes: reduce the left portrait by 15%; make the right handwritten accent smaller and move it to the upper-right hero area so its raster enlargement is less noticeable.
+
+### Implementation evidence
+
+- Desktop portrait frame: `400 × 400px` (from `470 × 470px`).
+- Desktop accent: `230px` wide, top-aligned at `24px`, right-aligned at `0`; responsive sizes are reduced consistently at tablet/mobile breakpoints.
+- Desktop capture: `/private/tmp/about-hero-photo-15-smaller-accent-top-right.png`.
+- Mobile capture: `/private/tmp/about-hero-photo-accent-mobile.png`; document width remains `375 = 375` at a requested `390px` viewport.
+
+### Findings
+
+- P0/P1/P2 расхождений не обнаружено.
+- The portrait keeps the existing circle and grid position; the accent is smaller, higher and less stretched while header, rail, dividers and footer remain unchanged.
+
+### Verification
+
+- [x] Desktop hero geometry checked.
+- [x] Mobile hero geometry and overflow checked.
+- [x] `npx tsc --noEmit` and `git diff --check` passed.
+
+final result: passed
+
+## About — match homepage background — 2026-09-23
+
+### Source visual truth
+
+- Target: the About page background must use the same surface color as the homepage.
+
+### Implementation evidence
+
+- `components/AboutLongform/AboutLongform.module.css` now uses `background: var(--color-bg)` for `.page` and the same token for circle masking layers.
+- Browser comparison: homepage and `/about` both compute to `rgb(23, 22, 21)` (`#171615`). About document width remains `1695px` without horizontal overflow.
+
+### Findings
+
+- P0/P1/P2 расхождений не обнаружено.
+- The About background now matches the homepage exactly; portrait, rail, circles, header and footer remain unchanged.
+
+### Verification
+
+- [x] Homepage and About computed background colors match.
+- [x] Circle masks use the same background token.
+- [x] `npx tsc --noEmit` and `git diff --check` passed.
+
+final result: passed
+
+## About — remove outer portrait circle — 2026-09-23
+
+### Source visual truth
+
+- User-provided reference: `/Users/ustim/Downloads/Снимок экрана — 2026-09-23 в 22.19.29.png`.
+- Target: remove only the extra outer CSS circle and keep the circle drawn in the supplied portrait asset.
+
+### Implementation evidence
+
+- `.portraitWrap` now uses `border: 0`; its circular clipping, `470 × 470px` geometry and `object-fit: cover` remain unchanged.
+- Fresh capture: `/private/tmp/about-new-portrait-no-external-circle.png`.
+- Browser computed state confirms `border: 0px none`, `border-radius: 50%`, and document width `1695px` without overflow.
+
+### Findings
+
+- P0/P1/P2 расхождений не обнаружено.
+- The duplicate outer ring is removed; the supplied portrait's own circle remains visible and the rest of the hero layout is unchanged.
+
+### Verification
+
+- [x] Outer CSS circle removed.
+- [x] Inner portrait circle preserved.
+- [x] Desktop geometry and document width checked.
+- [x] `npx tsc --noEmit` and `git diff --check` passed.
+
+final result: passed
+
+## About — portrait replacement — 2026-09-23
+
+### Source visual truth
+
+- User-provided portrait: `/Users/ustim/Desktop/НЕ УДАЛЯТЬ/Фото/portrait-ustim-black-and-white.png`, 1254 × 1254 px.
+- Target: use this portrait inside the existing circular hero frame without changing the page grid, rail, chapter dividers or header/footer.
+
+### Implementation evidence
+
+- The provided image now replaces `public/assets/founder-avatar.png`, preserving the existing component URL and `next/image` pipeline.
+- Rendered hero frame remains circular at `470 × 470px`, with `object-fit: cover`, no horizontal overflow, and the existing surrounding geometry unchanged.
+- Fresh capture: `/private/tmp/about-new-portrait-top.png`.
+
+### Findings
+
+- P0/P1/P2 расхождений не обнаружено.
+- The supplied black-and-white portrait is centered and fully contained by the existing circular frame; no unrelated layout changes were introduced.
+
+### Verification
+
+- [x] New portrait loaded in the browser.
+- [x] Circular frame and crop verified visually.
+- [x] Desktop document width remains equal to the viewport content width.
+- [x] `npx tsc --noEmit` and `git diff --check` passed.
+
+final result: passed
+
+## About — final 2 px right adjustment — 2026-09-23
+
+### Implementation evidence
+
+- The chapter circles moved 2 px right from the previous pass: desktop `right: 79px`, tablet `right: 49px`, mobile `right: 16px`.
+- Vertical alignment remains unchanged: desktop `top: -6px`, mobile `top: -4px`.
+- Fresh capture: `/private/tmp/about-circles-final-right-2px.png`.
+
+### Verification
+
+- P0/P1/P2 расхождений не обнаружено.
+- `npx tsc --noEmit`, `git diff --check` and the no-`!important` scan passed.
+
+final result: passed
+
+## About — final 3 px left correction — 2026-09-23
+
+### Source visual truth
+
+- User-provided reference: `/Users/ustim/Downloads/Снимок экрана — 2026-09-23 в 22.07.35.png`.
+- Target: move the chapter circles exactly 3 px left from the previous pass while keeping their vertical intersection with the horizontal dividers unchanged.
+
+### Implementation evidence
+
+- Final values in `components/AboutLongform/AboutLongform.module.css`: desktop `right: 81px`, tablet `right: 51px`, mobile `right: 18px`; vertical positions remain desktop `top: -6px` and mobile `top: -4px`.
+- Fresh capture: `/private/tmp/about-circles-final-left-3px.png`.
+- The fresh page retains document width `1695px` at the desktop viewport and no horizontal overflow.
+
+### Findings
+
+- P0/P1/P2 расхождений не обнаружено.
+- The circles are returned 3 px left from the prior pass; divider alignment and all other page geometry remain unchanged.
+
+final result: passed
+
+## About — chapter-node intersection alignment — 2026-09-23
+
+### Source visual truth
+
+- User-provided reference: `/Users/ustim/Downloads/Снимок экрана — 2026-09-23 в 21.54.31.png`.
+- Target: every chapter circle must sit exactly at the crossing of its horizontal divider and the continuous vertical rail.
+
+### Implementation evidence
+
+- Updated selector: `.chapterMarker::after` in `components/AboutLongform/AboutLongform.module.css`.
+- Desktop rendered pixels now show the circle outline centered on the vertical rail and the horizontal divider at the first and second chapter intersections.
+- Mobile rendered pixels show the same alignment at the requested viewport `390 × 844`; document width remains `375 = 375`.
+- Visual captures: `/private/tmp/about-circles-desktop-fixed.png` and `/private/tmp/about-circles-mobile-fixed.png`.
+
+### Findings
+
+- P0/P1/P2 расхождений не обнаружено.
+- Desktop and mobile circles now cover the exact intersection point while preserving the dark masking background, outline and continuous rail.
+- No header, footer, chapter content or CTA behavior was changed.
+
+### Implementation checklist
+
+- [x] Desktop circle centers aligned to horizontal dividers.
+- [x] Desktop circle centers aligned to the vertical rail.
+- [x] Mobile alignment checked at 390 px.
+- [x] No horizontal overflow introduced.
+- [x] `npx tsc --noEmit`, `git diff --check` and `npm run build` passed.
+
+final result: passed
+
+## About — option 4 final visual match — 2026-09-23
+
+### Source visual truth
+
+- Selected reference: `/Users/ustim/.codex/generated_images/01a0c881-bd07-7500-9a7e-2fc036979634/exec-2f80ae4f-700b-4b15-8b1f-330337003c36.png`, 797 × 1973 px.
+- The reference defines the inner page only: portrait-led hero, editorial title, full-width chapter dividers, one uninterrupted vertical rail with dots, eleven coral-numbered chapters, a 2 × 2 certificate grid, and a coral final CTA.
+- Explicit constraints: the site's existing header and footer remain untouched; the real portrait is used instead of the reference portrait; all actual UA/RU/EN content remains rather than being replaced by placeholder lines.
+
+### Implementation evidence
+
+- Route: `http://localhost:3000/about`.
+- Final desktop capture: `/private/tmp/about-v4-final-en-top.png`, 1695 × 888 px; CSS viewport 1710 × 896 px.
+- Final full-page capture: `/private/tmp/about-v4-final-en-full.png`, 1695 × 5658 px.
+- Final focused certificate capture: `/private/tmp/about-v4-final-en-certificates-viewport.png`, 1695 × 888 px.
+- Final mobile capture: `/private/tmp/about-v4-final-mobile-ua-top.png`, 375 × 812 px; requested responsive viewport 390 × 844 px.
+- Same-input top comparison: `/private/tmp/about-v4-final-top-comparison.png`, 3390 × 934 px. Its two 1695 px panels normalize the reference to the implementation width and align the hero, divider, rail, first dot and first chapter.
+- Same-input focused comparison: `/private/tmp/about-v4-final-certificates-comparison.png`, 3390 × 875 px. It compares the source and implementation certificate areas at equal panel widths.
+- Runtime evidence: desktop document width equals content width (`1695 = 1695`); mobile width equals content width (`375 = 375`). The page has 11 chapter sections, one visible rail, four certificate frames and no console errors or warnings.
+- Interaction evidence: the final chapter's `Discuss a project` button opens the existing `Let’s discuss your idea` dialog and `Close form` closes it.
+
+### Findings
+
+- P0/P1/P2 расхождений не осталось.
+- Typography: the hero uses the reference-scale 122 px display title with corrected near-neutral tracking (`-0.01em`), matching the source width and baseline instead of looking compressed.
+- Spacing and layout rhythm: the 470 px portrait, hero divider, 300 px chapter column, continuous rail at 214 px and chapter dots follow the reference geometry. Every chapter begins with its own full-width horizontal rule.
+- Colors and visual tokens: graphite background, off-white type, fine gray rules and restrained coral numbers/accent match the selected variant; no unrelated visual system was introduced.
+- Image fidelity: the only portrait difference is the user-required real photo. The hero script accent and certificate pictograms are exact local crops from the selected reference and are rendered through `next/image`.
+- Certificate composition: the grid is 2 × 2 with reference-matched width, 3.3:1 frames, gaps and visible neutral pictograms. Actual certificate titles and descriptions intentionally make this chapter taller than the reference's placeholder lines.
+- Copy and accessibility: all supplied UA/RU/EN content is retained. The portrait and decorative assets have empty alt text, chapter headings retain semantic hierarchy, and the CTA remains a keyboard-focusable button with a visible focus state.
+
+### Comparison history
+
+- P1 fixed: the display title had over-tight tracking; it was widened to align with the source width while preserving the 122 px scale.
+- P1 fixed: the certificate grid was initially too narrow and its pictograms visually under-scaled. The content width, column gap and source-cropped pictogram size were corrected; the frame ratio was returned to the reference 3.3:1 proportion.
+- Intentional, approved differences: global header/footer stay as they are; real paragraph content replaces the reference's gray placeholder bars, so chapter heights vary with actual copy.
+
+### Implementation checklist
+
+- [x] Source and implementation compared in a normalized top composite and a focused certificate composite.
+- [x] Hero portrait/title/accent, horizontal dividers, continuous rail and all 11 chapter markers checked.
+- [x] Certificate grid, source-derived pictograms and final CTA checked.
+- [x] Header and footer preserved without modification.
+- [x] Desktop and 390 px mobile layouts checked without horizontal overflow.
+- [x] CTA dialog open/close flow and browser console checked.
+- [x] `npx tsc --noEmit`, `git diff --check`, no-`!important` scan and `npm run build` passed.
+
+final result: passed
+
+## About — fourth variant fidelity pass — 2026-09-22
+
+### Source visual truth
+
+- Selected visual reference: `/Users/ustim/.codex/generated_images/01a0c881-bd07-7500-9a7e-2fc036979634/exec-2f80ae4f-700b-4b15-8b1f-330337003c36.png`, 797 × 1973 px.
+- Target composition: small dark header, circular portrait at the left, a dominant display heading to its right, a divider, then eleven numbered editorial chapters on one continuous vertical rail. Chapter 05 has two columns, chapter 09 has a 2 × 2 certificate grid, and chapter 11 ends with a coral action.
+- Content constraint remains in force: the supplied complete text is rendered in Russian, Ukrainian and English. The four certificate frames stay empty by the user's instruction.
+
+### Implementation evidence
+
+- Local route: `http://localhost:3001/about`.
+- Final desktop screenshot: `/private/tmp/about-page-v4-final-desktop.jpg`, 1695 × 888 px. Browser CSS viewport: 1710 × 896 px, DPR 1.
+- Final mobile screenshot: `/private/tmp/about-page-v4-final-mobile-full.jpg`, 375 × 10906 px. Requested viewport: 390 × 844 px; rendered CSS width: 375 px, DPR 1.
+- Full-view comparison: `/private/tmp/about-page-v4-top-comparison.jpg`, 1594 × 414 px. The source top crop and the desktop capture were each normalized to 797 × 414 px and placed side by side.
+- Focused certificate comparison: `/private/tmp/about-page-v4-certificates-comparison.jpg`, 1594 × 417 px. The source certificate crop and the rendered certificate state were normalized to equal 797 × 417 px panels.
+- State: dark theme, Russian locale for capture; the global language switcher and the existing inquiry control were retained as required site functionality.
+- Runtime checks: UA / RU / EN render respectively `Про мене`, `Обо мне`, `About me`; each version has 11 chapter markers and 4 empty certificate frames. The inquiry button opens and closes its dialog. Desktop and mobile have no horizontal overflow; the fresh browser console has 0 errors.
+
+### Findings
+
+- P0/P1/P2 расхождений не осталось.
+- Fonts and typography: the hero title now uses 122 px, weight 600 and compact tracking, matching the strong display hierarchy of the fourth variant. Section headings scale independently from the restrained 16 px reading text, so the complete supplied copy stays readable.
+- Spacing and layout rhythm: the portrait, heading baseline, divider, 300 px chapter column, rail and dots follow the source geometry. The 11 sections use the same left-side number / label / dot sequence, rather than a generic article layout.
+- Colors and visual tokens: the implementation retains the source's graphite field, off-white typography, fine gray dividers and restrained coral chapter numbers; no new decorative palette or surface style was introduced.
+- Image quality and asset fidelity: the real portrait is preserved through `next/image` in the circular crop. The certificate region intentionally uses only empty, thinly outlined frames; there are no generated or fictional credentials.
+- Copy and content: all source sections remain available in all three locales. The small chapter labels are structural navigation markers and do not replace or shorten supplied content.
+- Interaction and accessibility: language controls remain usable, the final CTA is a semantic button that opens the existing dialog, and mobile reflows to a single certificate column without clipping. Screenshot review cannot on its own certify keyboard navigation or contrast ratios under every state.
+
+### Comparison history
+
+- Earlier pass: the page had the right dark editorial language but still read as a conventional long article; the hero display title was too light and too small compared with the selected fourth option.
+- P1 fix: rebuilt the page as an eleven-chapter rail and increased the hero display title to the reference's bold, dominant scale (`122px`, weight `600`). The certificate block was kept as an empty 2 × 2 frame grid by explicit user decision.
+- Post-fix evidence: `/private/tmp/about-page-v4-top-comparison.jpg` shows aligned portrait, divider, title and chapter start; `/private/tmp/about-page-v4-certificates-comparison.jpg` confirms the corresponding certificate composition. No actionable P0/P1/P2 mismatch remains.
+
+### Implementation checklist
+
+- [x] Source and rendered page opened and compared in shared full-view and focused-region images.
+- [x] Fourth-variant portrait / display-heading / vertical-rail composition implemented.
+- [x] Eleven numbered chapters, technical two-column section and 2 × 2 empty certificate frames implemented.
+- [x] Full RU source text and complete UA / EN versions retained.
+- [x] UA, RU and EN versions checked in the browser.
+- [x] Desktop and 390 px mobile reflow checked without horizontal overflow.
+- [x] Inquiry dialog and browser console checked.
+- [x] `npm run build`, `npx tsc --noEmit`, `git diff --check` and the no-`!important` check passed.
+
+final result: passed
+
+## About — editorial long-form page — 2026-09-22
+
+### Source visual truth
+
+- Selected visual reference: `/Users/ustim/.codex/generated_images/01a0c881-bd07-7500-9a7e-2fc036979634/exec-2f80ae4f-700b-4b15-8b1f-330337003c36.png`, 797 × 1973 px.
+- The source defines an editorial dark long-form page: a portrait-led opening, a fine vertical reading line, large lightweight chapter headings, muted readable body copy, restrained coral accents, and a four-cell certificate area.
+- Content constraint: the supplied source text has priority over generated visual copy. Decorative chapter numbers and invented headings in the reference were intentionally not reproduced.
+
+### Implementation evidence
+
+- Local route: `http://localhost:3001/about`.
+- Desktop implementation screenshot: `/private/tmp/about-page-desktop.png`, 1695 × 888 px, default desktop CSS viewport and browser density 1.
+- Combined source/implementation comparison: `/private/tmp/about-page-design-comparison.png`, 1680 × 472 px. Both images were normalized to the same top-of-page 1.78:1 content crop for composition comparison.
+- State: Russian locale, dark theme, default header state, no hover state.
+- Responsive verification: 390 × 844 CSS viewport override; rendered article width 343 px, one certificate column, and no horizontal overflow. The viewport override was reset after testing.
+- Runtime evidence: UA, RU, and EN each render the localized page title, eight primary sections, four empty certificate frames, and seven process rows. The final contact button opens and closes the existing inquiry dialog; console errors list is empty.
+
+### Findings
+
+- P0/P1/P2 расхождений не обнаружено.
+- Typography: the implementation preserves the selected reference's oversized lightweight display heading, small neutral navigation, and muted long-form reading copy. The existing SF Pro system stack is used consistently, with comfortable 17 px desktop body text and a 16 px mobile fallback.
+- Spacing and layout: the portrait, main reading column, persistent fine rail, chapter dividers, and long section rhythm follow the source's editorial structure. The source's fake chapter numbers were omitted to keep the user-provided text as the only page content.
+- Colors and tokens: graphite surfaces, off-white text, low-contrast dividers, and restrained coral process markers map to the AU studio palette without introducing gradients or unrelated visual language.
+- Image quality and asset fidelity: the supplied founder portrait is displayed through `next/image` with a circular crop and grayscale treatment. The certificate region intentionally contains four empty framed slots; no generated, fictional, or placeholder certificate images are shown.
+- Copy and content: the Russian source is present in full as structured content; Ukrainian and English versions retain the same complete section order, list counts, education details, certificate titles, and final invitation.
+- Interaction and accessibility: the inquiry action is a semantic button with visible keyboard focus; certificate hover lift is disabled under `prefers-reduced-motion`; section headings, ordered process steps, list semantics, and a decorative empty-alt portrait are present.
+
+### Comparison history
+
+- Initial implementation: replaced the short generic About page with a content-driven long-form editorial page, including the selected visual structure and all supplied source sections.
+- Certificate direction: temporary generated certificate previews were removed before implementation at the user's request. The final design keeps four empty CSS-framed slots for the future real certificate screenshots.
+- Post-implementation verification: desktop comparison, UA/RU/EN switching, mobile layout, process/certificate counts, dialog open/close behavior, and console state were checked. No actionable P0/P1/P2 findings remain.
+
+### Implementation checklist
+
+- [x] Selected reference opened and combined with the desktop implementation screenshot for comparison.
+- [x] All supplied Russian source sections rendered without shortening or replacement copy.
+- [x] Full faithful UA and EN versions added with identical content structure.
+- [x] Seven work stages, two education entries, four certificates, and final invitation retained.
+- [x] Four empty certificate frames are ready for the user's real screenshots.
+- [x] Desktop and 390 px mobile layouts checked; no horizontal overflow.
+- [x] Locale switcher and inquiry dialog checked.
+- [x] Console errors checked and absent.
+- [x] `npm run build`, `npx tsc --noEmit`, and `git diff --check` passed.
+
+final result: passed
+
+## Portfolio hero — reduced gap before carousel — 2026-09-22
+
+### Source visual truth
+
+- Reference screenshot: `/Users/ustim/Downloads/Снимок экрана — 2026-09-22 в 14.32.12.png`.
+- Target: reduce the distance between the portfolio hero description and the first visible carousel card by approximately half.
+
+### Implementation evidence
+
+- Local route: `http://localhost:3001/portfolio`.
+- The change is scoped to `.portfolioHero.compact`; other compact marketing heroes keep their existing height and spacing.
+- Runtime measurements at the desktop viewport: description-to-card gap reduced from approximately `197px` to `117px`; document width remains equal to the viewport.
+
+### Findings
+
+- P0/P1/P2 расхождений не обнаружено.
+- The lower carousel now starts noticeably closer to the descriptive copy while preserving the hero typography and the card's own internal padding.
+- Responsive override keeps the same compact relationship on mobile without introducing horizontal overflow.
+
+### Implementation checklist
+
+- [x] Desktop gap reduced on the portfolio route.
+- [x] Other compact hero pages remain scoped out.
+- [x] Mobile-specific height override added.
+- [x] No horizontal overflow in the browser capture.
+- [x] No runtime errors; existing Next Image quality notices are unrelated to this spacing change.
+- [x] `npx tsc --noEmit`, `git diff --check`, and `npm run build` passed.
+
+final result: passed
+
+## Нижний CTA «Обговорити проєкт» — recessed dial — 2026-09-22
+
+### Source visual truth
+
+- Selected visual direction: third generated CTA concept from the approved ideation set — graphite capsule with an integrated recessed circular dial and coral arrow.
+- Target location: lower CTA on the right side of the technologies row in `CapabilitiesEssay`; the header CTA is intentionally excluded.
+
+### Implementation evidence
+
+- Local route: `http://localhost:3001/#contacts`.
+- Header and lower CTA were inspected together after the correction: the header retains the previous trace/signal interaction, while the lower CTA contains the new `ctaDial` module.
+- Runtime evidence: lower dial rotates on hover/focus, the coral inner arc remains visible, and the document has no horizontal overflow.
+
+### Findings
+
+- P0/P1/P2 расхождений не обнаружено.
+- The lower button keeps the existing dark graphite palette and localized copy, but gains a more distinctive mechanical detail without becoming visually louder than the technologies row.
+- The circular module is integrated into the button body rather than protruding as a separate badge; its two rings, inset shading, coral arc, and arrow create the selected industrial control feel.
+- Follow-up visual correction first enlarged the lower CTA to match the selected reference, then applied two compact passes: the final capsule is `220×48px` with a `40×40px` dial, positioned close to the right edge. The glossy graphite surface, layered metallic shading, and brighter coral arrow remain intact.
+- The motion is intentionally restrained: the button lifts by `1px`, the dial rotates `18deg`, and the arrow follows with a small diagonal shift.
+- The upper header CTA was restored to the previously approved animation and has no recessed dial markup.
+
+### Implementation checklist
+
+- [x] Selected third visual direction implemented in the lower CTA only.
+- [x] Header CTA restored to its previous visual and interaction.
+- [x] Desktop placement checked beside the technologies list.
+- [x] Hover state and dial rotation checked in Chrome.
+- [x] Mobile stacking remains covered by the existing responsive footer layout.
+- [x] No browser console errors or warnings.
+- [x] `npx tsc --noEmit`, `git diff --check`, and `npm run build` passed.
+
+final result: passed
+
+## Header CTA animation — 2026-09-22
+
+### Source visual truth
+
+- Idle state reference: `/Users/ustim/.codex/generated_images/01a0c881-bd07-7500-9a7e-2fc036979634/exec-50418d62-a175-4a7e-9821-d41788dceff1.png`, 2153 × 730 px.
+- Hover state reference: `/Users/ustim/.codex/generated_images/01a0c881-bd07-7500-9a7e-2fc036979634/exec-054ae9ef-3aed-4fb9-8d48-d417a3f92b2c.png`, 2153 × 730 px.
+- Target: graphite rounded CTA with a calm coral marker moving along the center of its outline in the idle state; hover hides both that marker and the arrow, replacing them with one pulsing coral point.
+- Updated visual references: `/Users/ustim/Downloads/Снимок экрана — 2026-09-22 в 13.07.46.png` for the calmer centered idle trace, and `/Users/ustim/Downloads/Снимок экрана — 2026-09-22 в 13.08.02.png` for the hover state where the arrow is replaced by one pulsing coral point.
+- Visibility reference: `/Users/ustim/Downloads/Снимок экрана — 2026-09-22 в 13.16.30.png`, which shows the marker being clipped at the CTA edge and therefore defines the correction target.
+
+### Implementation evidence
+
+- Local route: `http://localhost:3001/`.
+- Browser-rendered idle capture: `/private/tmp/person-site-cta-idle.png`, 1695 × 944 px, CSS viewport 1695 × 944, DPR 1.
+- Browser-rendered hover capture: `/private/tmp/person-site-cta-hover.png`, 1695 × 944 px, CSS viewport 1695 × 944, DPR 1.
+- Updated idle capture: `/private/tmp/person-site-cta-idle-v2.png`, 1695 × 944 px, CSS viewport 1695 × 944, DPR 1.
+- Updated hover capture: `/private/tmp/person-site-cta-hover-v2.png`, 1695 × 944 px, CSS viewport 1695 × 944, DPR 1.
+- Final idle capture: `/private/tmp/person-site-cta-idle-v3.png`, 1695 × 944 px, CSS viewport 1695 × 944, DPR 1.
+- Focused target: header CTA bounds `183.94 × 38` CSS px.
+- State: dark theme, Russian locale; idle and hover states checked separately.
+- Runtime evidence: the idle trace used the generated CSS animation and its `offset-distance` progressed from `45.8299%` to `67.0413%` over 0.9 seconds. On hover both rings used `ctaSignalPulse`, the signal opacity reached `1`, and the existing CTA opened its dialog. Escape closed the dialog. Chrome console returned no errors.
+
+### Findings
+
+- No P0/P1/P2 implementation issue was found in the separately inspected browser states.
+- Typography: the existing system font, weight and localized label remain intact; the new Lucide arrow is decorative and hidden from assistive technology.
+- Spacing and layout: the button remains in the header without overflow at the captured desktop viewport; only desktop CTA receives hover-specific behavior.
+- Colors and tokens: implementation uses existing graphite, warm-white and `--color-accent` coral tokens.
+- Image and asset fidelity: no raster asset is required by this code-native interaction; the selected references define motion and styling rather than a standalone image asset.
+- Copy: the existing localized `nav.discussProject` string is unchanged.
+
+### Comparison history
+
+- Initial implementation: added an orbiting outline marker, hover signal rings and an arrow motion to the existing CTA; added `prefers-reduced-motion` fallbacks.
+- Browser verification: idle state, hover state, motion progression, modal action and console errors were checked. The same visual treatment is supplied for keyboard focus in CSS.
+- Formal combined comparison: blocked. The browser security policy prevented opening the temporary side-by-side reference/implementation comparison input. No workaround was attempted.
+- Revision after user review: moved the trace path from `inset(3px)` to `inset(1px)` to align the marker with the center of the double border, changed its duration from `4.4s` to `8.8s`, removed expanding rings, and made hover replace both the trace and arrow with a single pulsing coral point. The revised idle and hover states were recaptured in Chrome; the console remained clean and `npm run build` passed.
+- Visibility revision: set the CTA overflow to `visible` and increased the trace diameter from `4px` to `5px`. Chrome confirmed continuous offset progress from `36.7417%` to `48.2939%` over one second, the fully visible marker was captured, the console remained clean, and `npm run build` passed.
+
+### Implementation checklist
+
+- [x] Selected idle and hover visual directions implemented.
+- [x] Desktop idle, hover and modal-action states checked in the browser; focus styling implemented in CSS.
+- [x] Reduced-motion behavior added.
+- [x] Browser console checked without errors.
+- [x] `npx tsc --noEmit`, `git diff --check` and `npm run build` passed.
+- [x] Calm centered idle trace and single-point hover replacement checked in Chrome.
+- [ ] Combined source/implementation visual input could not be opened because of browser policy.
+
+final result: blocked
+
 ## Portfolio CTA — единая чистая геометрия карточек — 2026-09-17
 
 ### Source visual truth
@@ -370,6 +1158,39 @@ final result: passed
 
 final result: passed
 
+## Hero CTA — floating glass button — 2026-09-22
+
+### Source visual truth
+
+- Reference screenshot: `/Users/ustim/Downloads/Снимок экрана — 2026-09-22 в 13.39.20.png`.
+- Target: the homepage CTA `Переглянути роботи` should retain the supplied glass-button depth but cast a natural attached shadow: strongest below, softer to the right and minimal on the left.
+
+### Implementation evidence
+
+- Local route: `http://localhost:3001/`.
+- State: homepage hero, Russian locale in the browser capture, idle and hover states checked separately.
+- Focused target: only `.homeHero .action`; other `MarketingHero` links and the header CTA remain unchanged.
+- Runtime evidence: computed `backdrop-filter: blur(16px) saturate(1.18)`, four attached shadow layers in the idle state, hover `translateY(-5px) scale(1.015)`, and Chrome console returned no errors or warnings.
+
+### Findings
+
+- P0/P1/P2 расхождений не обнаружено.
+- The CTA now uses a translucent warm-white surface, a thin light border, inset top highlight, and layered shadow that separates it from the hero background.
+- Correction after visual review: removed the detached lilac glow, pseudo-layer, and idle motion because they made the button appear to float above a separate surface.
+- The final shadow is neutral and attached to the CTA: the main dense layer falls below, a softer layer extends right, and a minimal layer extends left. All edges dissolve naturally into the hero background.
+- Hover raises the button by `5px` with a small scale increase, retaining the same directional shadow model; keyboard focus uses the same visible state.
+
+### Implementation checklist
+
+- [x] Reference screenshot opened and compared with the rendered hero.
+- [x] Glass surface and natural attached directional shadow implemented.
+- [x] Idle and hover states checked in Chrome.
+- [x] Responsive CSS remains mobile-first; no additional width or overflow was introduced.
+- [x] No browser console errors or warnings.
+- [x] `npx tsc --noEmit`, `git diff --check`, and `npm run build` passed.
+
+final result: passed
+
 ## Portfolio CTA — full project imagery — 2026-09-16
 
 ### Source visual truth
@@ -410,5 +1231,48 @@ final result: passed
 - [x] Mobile horizontal overflow checked.
 - [x] Clean browser console checked after a fresh reload.
 - [x] `npx tsc --noEmit`, `git diff --check`, and `npm run build` remain the required final checks.
+
+final result: passed
+
+## About CTA — first selected button treatment — 2026-09-24
+
+### Source visual truth
+
+- Selected Image Gen reference: `/Users/ustim/.codex/generated_images/01a0d320-b764-7191-96a0-b45a0b34b665/exec-54f18fea-d54f-4272-95df-75abbc50e339.png`, 2129 × 738 px.
+- The selected treatment keeps the existing dark surface, coral pill, black label, right arrow, and lower animation, adding a thin warm-white outer keyline, a restrained darker coral inner edge, and minimal depth.
+
+### Implementation evidence
+
+- Local route: `http://localhost:3000/about`.
+- Browser screenshot: `/private/tmp/about-cta-viewport-final.png`, 1710 × 952 px, CSS viewport 1710 × 952, DPR 1.
+- Focused implementation crop: `/private/tmp/about-cta-implementation-normalized.png`, 864 × 300 px; the 432 × 150 CSS crop was scaled 2× to match the source reference density.
+- Combined comparison input: `/private/tmp/about-cta-comparison.png`, 1728 × 300 px.
+- State: Ukrainian locale, dark theme, idle CTA, lower animation visible, no hover or focus state.
+- Primary interaction: CTA button opened the project inquiry form and the form was dismissed with Escape.
+- Runtime evidence: browser console returned no errors or warnings.
+
+### Findings
+
+- P0/P1/P2 расхождений не обнаружено.
+- Typography: existing SF Pro system typography, Ukrainian copy, black label weight, and arrow placement are preserved; the button treatment does not alter animation timing or copy.
+- Spacing and layout: the existing CTA dimensions, centered position, pill radius, and vertical animation axis remain unchanged. The outer keyline and inner edge stay inside the existing component box.
+- Colors and visual tokens: the coral fill remains `var(--color-accent)`; the new warm-white border separates it from the dark page, while the darker coral inset adds definition without a detached shadow.
+- Image quality and asset fidelity: no new raster or decorative image asset is required; the existing Lucide arrow icon and CSS animation remain in place.
+- Copy and content: `Обговорити проєкт` remains unchanged.
+
+### Comparison history
+
+- Initial implementation: kept the existing CTA geometry and added the selected first treatment through the button border and layered inset/edge shadow.
+- Focused comparison: source and rendered CTA were normalized to the same 864 × 300 visual density and reviewed together in `/private/tmp/about-cta-comparison.png`.
+- No P0/P1/P2 follow-up fixes were required after comparison.
+
+### Implementation checklist
+
+- [x] Selected reference opened and compared with the rendered CTA.
+- [x] Outer keyline, inner coral edge, and restrained depth implemented.
+- [x] Existing arrow and lower animation preserved.
+- [x] CTA form interaction tested.
+- [x] Browser console checked with no errors or warnings.
+- [x] `npx tsc --noEmit`, `git diff --check`, and `npm run build` passed.
 
 final result: passed

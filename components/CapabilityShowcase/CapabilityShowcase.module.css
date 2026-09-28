@@ -245,6 +245,52 @@
   content: '·';
 }
 
+.pair.isEntered .topCard {
+  animation: capabilityTopEntrance 1900ms cubic-bezier(0.33, 1, 0.68, 1) both;
+}
+
+.pair.isEntered .bottomCard {
+  animation: capabilityBottomEntrance 1900ms cubic-bezier(0.33, 1, 0.68, 1) 170ms both;
+}
+
+.topCard,
+.bottomCard {
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.topCard {
+  transform: translateX(-110px);
+}
+
+.bottomCard {
+  transform: translateX(110px);
+}
+
+@keyframes capabilityTopEntrance {
+  0% {
+    opacity: 1;
+    transform: translateX(-110px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes capabilityBottomEntrance {
+  0% {
+    opacity: 1;
+    transform: translateX(110px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 @media (max-width: 900px) {
   .pairs {
     gap: 24px;
@@ -326,5 +372,10 @@
   .surface,
   .image {
     transition: none;
+  }
+
+  .pair.isEntered .topCard,
+  .pair.isEntered .bottomCard {
+    animation: none;
   }
 }

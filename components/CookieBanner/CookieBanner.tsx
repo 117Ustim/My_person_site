@@ -1,11 +1,10 @@
 'use client'
 
-import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useI18n } from '../../lib/i18n'
 import styles from './CookieBanner.module.css'
 
-const consentStorageKey = 'obsidian-cookie-consent'
+const consentStorageKey = 'person-site-cookie-consent'
 
 export default function CookieBanner() {
   const { t } = useI18n()
@@ -27,7 +26,6 @@ export default function CookieBanner() {
       <div className={styles.content}>
         <div className={styles.copy}>
           <p>{t('cookie.copy')}</p>
-          <Link href="/legal/cookie-policy">{t('cookie.policy')}</Link>
         </div>
         <div className={styles.actions}>
           <button className={styles.secondaryButton} type="button" onClick={accept}>{t('cookie.essentialOnly')}</button>

@@ -51,6 +51,7 @@
   align-items: center;
   gap: 32px;
   margin: 0 auto;
+  transform: translateX(90px);
 }
 
 .menuGroup {
@@ -73,7 +74,7 @@
   align-items: center;
   gap: 4px;
   color: rgb(var(--color-text-rgb) / 0.62);
-  font-size: 15px;
+  font-size: 17px;
   line-height: 1.25;
   white-space: nowrap;
   transition: color 200ms ease;
@@ -111,26 +112,117 @@
 }
 
 .cta {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 36px;
-  padding: 0 16px;
+  min-height: 38px;
+  gap: 9px;
+  padding: 0 14px 0 16px;
+  overflow: visible;
+  border: 1px solid rgb(var(--color-text-rgb) / 0.74);
   border-radius: 999px;
   background: var(--color-button);
   color: var(--color-button-text);
+  cursor: pointer;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
   font-size: 15px;
   font-weight: 600;
+  isolation: isolate;
   white-space: nowrap;
+  animation: ctaEntrance 1200ms cubic-bezier(0.22, 1, 0.36, 1) 180ms backwards;
   box-shadow: inset 0 0 0 1px var(--color-accent);
-  transition: background 180ms ease, transform 180ms ease;
+  transition: background 220ms ease, border-color 220ms ease, box-shadow 220ms ease, transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ctaLabel,
+.ctaIcon {
+  position: relative;
+  z-index: 2;
+}
+
+.ctaTrace {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 1px rgb(255 135 122 / 0.12), 0 0 8px 2px rgb(255 135 122 / 0.42);
+  offset-path: inset(1px round 999px);
+  offset-rotate: 0deg;
+  animation: ctaTraceOrbit 8.8s linear infinite;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+.ctaIcon {
+  width: 15px;
+  height: 15px;
+  color: var(--color-accent);
+  transition: opacity 180ms ease, transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ctaSignal {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  right: 18px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-50%) scale(0.7);
+  transition: opacity 180ms ease, transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ctaSignal::before {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--color-accent);
+  box-shadow: 0 0 8px 1px rgb(255 135 122 / 0.46);
+  content: '';
+  transform: scale(0.82);
 }
 
 .cta:hover,
 .cta:focus-visible {
   background: var(--color-button-hover);
+  border-color: rgb(var(--color-text-rgb) / 0.95);
+  box-shadow: inset 0 0 0 1px var(--color-accent), 0 8px 22px rgb(255 135 122 / 0.18);
   transform: translateY(-1px);
+}
+
+.cta:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.cta:hover .ctaTrace,
+.cta:focus-visible .ctaTrace {
+  animation-play-state: paused;
+  opacity: 0;
+}
+
+.cta:hover .ctaIcon,
+.cta:focus-visible .ctaIcon {
+  opacity: 0;
+  transform: scale(0.72);
+}
+
+.cta:hover .ctaSignal,
+.cta:focus-visible .ctaSignal {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+
+.cta:hover .ctaSignal::before,
+.cta:focus-visible .ctaSignal::before {
+  animation: ctaSignalPulse 1.8s ease-in-out infinite;
 }
 
 .languageSwitcher {
@@ -145,6 +237,10 @@
   border-radius: 999px;
   background: rgb(var(--color-text-rgb) / 0.06);
   isolation: isolate;
+}
+
+.desktopLanguageSwitcher {
+  margin-right: 70px;
 }
 
 .languageIndicator {
@@ -226,6 +322,41 @@
 .languageSwitchLeft .languageIndicator::after {
   transform-origin: right center;
   animation: languageMagneticStretchLeft 560ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes ctaTraceOrbit {
+  to {
+    offset-distance: 100%;
+  }
+}
+
+@keyframes ctaEntrance {
+  0% {
+    opacity: 0;
+    filter: blur(3px);
+    transform: translateY(-7px) scale(0.97);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes ctaSignalPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 6px 1px rgb(255 135 122 / 0.34);
+    opacity: 0.68;
+    transform: scale(0.78);
+  }
+
+  50% {
+    box-shadow: 0 0 12px 4px rgb(255 135 122 / 0.64);
+    opacity: 1;
+    transform: scale(1.16);
+  }
 }
 
 @keyframes languageMagneticStretchRight {
@@ -441,6 +572,10 @@
   .languageSwitcher {
     margin-right: 20px;
   }
+
+  .desktopLanguageSwitcher {
+    margin-right: 70px;
+  }
 }
 
 @media (max-width: 820px) {
@@ -601,9 +736,23 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .cta,
   .languageIndicator,
   .languageButton {
     transition-duration: 1ms;
+  }
+
+  .cta {
+    animation: none;
+  }
+
+  .ctaTrace,
+  .ctaSignal::before {
+    animation: none;
+  }
+
+  .ctaTrace {
+    opacity: 0;
   }
 
   .languageSwitchRight .languageIndicator::after,

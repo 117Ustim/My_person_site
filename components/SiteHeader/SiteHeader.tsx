@@ -1,8 +1,9 @@
 'use client'
 
 import Link from 'next/link'
+import { ArrowUpRight } from 'lucide-react'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { type MouseEvent, useEffect, useState } from 'react'
 import { localeLabels, type Locale, useI18n } from '../../lib/i18n'
 import BrandLogo from '../BrandLogo/BrandLogo'
 import { useProjectInquiry } from '../ProjectInquiry/ProjectInquiry'
@@ -12,8 +13,9 @@ const simpleLinks = [
   { labelKey: 'nav.home', href: '/' },
   { labelKey: 'nav.portfolio', href: '/portfolio' },
   { labelKey: 'nav.aboutMe', href: '/about' },
-  { labelKey: 'nav.contacts', href: '/#contacts' },
 ]
+
+type NavigationLink = (typeof simpleLinks)[number]
 
 export default function SiteHeader() {
   const pathname = usePathname()
@@ -21,6 +23,10 @@ export default function SiteHeader() {
   const { openInquiry } = useProjectInquiry()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const navigationLinks: NavigationLink[] = [
+    ...simpleLinks,
+    { labelKey: 'nav.contacts', href: `${pathname ?? '/'}#contacts` },
+  ]
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50)
@@ -50,6 +56,46 @@ export default function SiteHeader() {
     setMobileOpen(false)
   }
 
+  const handleContactClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault()
+    closeMenus()
+
+    window.requestAnimationFrame(() => {
+      const contacts = document.getElementById('contacts')
+
+      if (!contacts) return
+
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      const startY = window.scrollY
+      const maxScrollY = document.documentElement.scrollHeight - window.innerHeight
+      const targetY = Math.min(Math.max(contacts.getBoundingClientRect().top + startY - 104, 0), maxScrollY)
+
+      if (prefersReducedMotion || Math.abs(targetY - startY) < 1) {
+        window.scrollTo(0, targetY)
+      } else {
+        const animationDuration = 900
+        const animationStart = performance.now()
+
+        const animateScroll = (timestamp: number) => {
+          const progress = Math.min((timestamp - animationStart) / animationDuration, 1)
+          const easedProgress = progress < 0.5
+            ? 4 * progress ** 3
+            : 1 - Math.pow(-2 * progress + 2, 3) / 2
+
+          window.scrollTo(0, startY + (targetY - startY) * easedProgress)
+
+          if (progress < 1) window.requestAnimationFrame(animateScroll)
+        }
+
+        window.requestAnimationFrame(animateScroll)
+      }
+
+      const url = new URL(window.location.href)
+      url.hash = 'contacts'
+      window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`)
+    })
+  }
+
   return (
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
       <div className={styles.inner}>
@@ -59,22 +105,24 @@ export default function SiteHeader() {
           </Link>
 
           <div className={styles.desktopNav}>
-            {simpleLinks.map(link => (
-              <Link
-                className={`${styles.navLink} ${pathname === link.href ? styles.activeLink : ''}`}
-                key={link.href}
-                href={link.href}
-                onClick={closeMenus}
-              >
-                {t(link.labelKey)}
-              </Link>
-            ))}
+            {navigationLinks.map(link => {
+              const className = `${styles.navLink} ${pathname === link.href ? styles.activeLink : ''}`
+
+              if (link.labelKey === 'nav.contacts') {
+                return <a className={className} key={link.href} href={link.href} onClick={handleContactClick}>{t(link.labelKey)}</a>
+              }
+
+              return <Link className={className} key={link.href} href={link.href} onClick={closeMenus}>{t(link.labelKey)}</Link>
+            })}
           </div>
 
           <LanguageSwitcher locale={locale} onChange={setLocale} label={t('common.language')} variant="desktop" />
 
           <button className={styles.cta} type="button" onClick={() => { closeMenus(); openInquiry() }}>
-            {t('nav.discussProject')}
+            <span className={styles.ctaTrace} aria-hidden="true" />
+            <span className={styles.ctaLabel}>{t('nav.discussProject')}</span>
+            <span className={styles.ctaSignal} aria-hidden="true" />
+            <ArrowUpRight className={styles.ctaIcon} aria-hidden="true" strokeWidth={1.8} />
           </button>
 
           <button
@@ -89,7 +137,13 @@ export default function SiteHeader() {
         </nav>
       </div>
 
-      <MobileMenu open={mobileOpen} onClose={closeMenus} onOpenInquiry={openInquiry} />
+      <MobileMenu
+        links={navigationLinks}
+        open={mobileOpen}
+        onClose={closeMenus}
+        onContactClick={handleContactClick}
+        onOpenInquiry={openInquiry}
+      />
     </header>
   )
 }
@@ -139,12 +193,14 @@ function LanguageSwitcher({
 }
 
 type MobileMenuProps = {
+  links: NavigationLink[]
   open: boolean
   onClose: () => void
+  onContactClick: (event: MouseEvent<HTMLAnchorElement>) => void
   onOpenInquiry: () => void
 }
 
-function MobileMenu({ open, onClose, onOpenInquiry }: MobileMenuProps) {
+function MobileMenu({ links, open, onClose, onContactClick, onOpenInquiry }: MobileMenuProps) {
   const { t, locale, setLocale } = useI18n()
 
   if (!open) return null
@@ -152,11 +208,13 @@ function MobileMenu({ open, onClose, onOpenInquiry }: MobileMenuProps) {
   return (
     <div className={styles.mobilePanel}>
       <nav className={styles.mobileNav} aria-label={t('common.mobileNavigation')}>
-        {simpleLinks.map(link => (
+        {links.map(link => (
           <div className={styles.mobileMenuItem} key={link.href}>
-            <Link className={styles.mobileNavLink} href={link.href} onClick={onClose}>
-              {t(link.labelKey)}
-            </Link>
+            {link.labelKey === 'nav.contacts' ? (
+              <a className={styles.mobileNavLink} href={link.href} onClick={onContactClick}>{t(link.labelKey)}</a>
+            ) : (
+              <Link className={styles.mobileNavLink} href={link.href} onClick={onClose}>{t(link.labelKey)}</Link>
+            )}
           </div>
         ))}
 

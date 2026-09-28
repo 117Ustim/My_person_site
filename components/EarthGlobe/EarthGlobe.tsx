@@ -25,7 +25,7 @@ import { createProjectNetwork } from './projectNetwork'
 import { applyStoneMaterial, createStoneTexture } from './stoneMaterial'
 
 const LAND_DATA = '/geo/ne-110m-land.json'
-const STONE_TEXTURE_DATA = '/sitegrab/assets/0739-about-stone.CIU_KC6y_Z1peJd0-c9c65b3996.webp'
+const STONE_TEXTURE_DATA = '/site-assets/assets/0739-about-stone.CIU_KC6y_Z1peJd0-c9c65b3996.webp'
 const AXIAL_TILT = 23.5 * (Math.PI / 180)
 const ROTATION_SPEED = 0.12
 const EARTH_RADIUS = 1.42
@@ -241,6 +241,7 @@ export default function EarthGlobe() {
 
     let animationFrame = 0
     let previousTime = performance.now()
+    let isVisible = false
     let landTexture: CanvasTexture | null = null
     let stoneTexture: CanvasTexture | null = null
     let disposed = false
@@ -263,7 +264,7 @@ export default function EarthGlobe() {
         landMaterial.map = landTexture
         landMaterial.opacity = 1
         landMaterial.needsUpdate = true
-        if (reducedMotion) renderer.render(scene, camera)
+        if (reducedMotion && isVisible) renderer.render(scene, camera)
       })
       .catch(() => {
         // При ошибке загрузки остаются основа и сетка, без белой вспышки.
@@ -279,7 +280,17 @@ export default function EarthGlobe() {
       camera.updateProjectionMatrix()
     }
 
+    const stopAnimation = () => {
+      if (!animationFrame) return
+
+      window.cancelAnimationFrame(animationFrame)
+      animationFrame = 0
+    }
+
     const render = (time: number) => {
+      animationFrame = 0
+      if (!isVisible || document.hidden || disposed) return
+
       const elapsed = Math.min((time - previousTime) / 1000, 0.05)
       previousTime = time
       earth.rotation.y -= elapsed * ROTATION_SPEED
@@ -291,19 +302,41 @@ export default function EarthGlobe() {
       animationFrame = window.requestAnimationFrame(render)
     }
 
+    const startAnimation = () => {
+      if (reducedMotion || !isVisible || document.hidden || disposed || animationFrame) return
+
+      previousTime = performance.now()
+      animationFrame = window.requestAnimationFrame(render)
+    }
+
+    const intersectionObserver = new IntersectionObserver(([entry]) => {
+      isVisible = entry.isIntersecting
+
+      if (!isVisible) {
+        stopAnimation()
+        return
+      }
+
+      if (reducedMotion) renderer.render(scene, camera)
+      else startAnimation()
+    }, { threshold: 0.01 })
+    intersectionObserver.observe(canvas)
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) stopAnimation()
+      else startAnimation()
+    }
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
     const resizeObserver = new ResizeObserver(resize)
     resizeObserver.observe(canvas)
     resize()
 
-    if (reducedMotion) {
-      renderer.render(scene, camera)
-    } else {
-      animationFrame = window.requestAnimationFrame(render)
-    }
-
     return () => {
       disposed = true
-      window.cancelAnimationFrame(animationFrame)
+      stopAnimation()
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      intersectionObserver.disconnect()
       resizeObserver.disconnect()
       axialGroup.remove(projectNetwork.group)
       projectNetwork.dispose()

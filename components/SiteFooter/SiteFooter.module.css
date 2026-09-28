@@ -1,6 +1,7 @@
 .footer {
   position: relative;
   overflow: hidden;
+  scroll-margin-top: 104px;
   padding: 32px max(24px, calc((100vw - 1440px) / 2)) 24px;
   background: var(--color-bg);
   color: var(--color-text);

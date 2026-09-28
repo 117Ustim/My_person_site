@@ -37,7 +37,9 @@ export default function FeatureSlider({ items, label, title, description, revers
       return
     }
 
-    const observer = new IntersectionObserver(([entry]) => setIsVisible(entry.isIntersecting), { threshold: 0.1 })
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsVisible(entry.isIntersecting && entry.intersectionRatio >= 0.45)
+    }, { threshold: 0.45 })
     observer.observe(slider)
 
     return () => observer.disconnect()

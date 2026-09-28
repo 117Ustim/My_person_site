@@ -36,6 +36,9 @@ export default function FooterProcess() {
   const [activeStep, setActiveStep] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
   const [reduceMotion, setReduceMotion] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+  const [pageVisible, setPageVisible] = useState(true)
+  const processRef = useRef<HTMLElement>(null)
   const processElapsed = useRef(0)
   const lastFrameTimestamp = useRef<number | null>(null)
   const lightPulseRef = useRef<HTMLSpanElement>(null)
@@ -51,7 +54,24 @@ export default function FooterProcess() {
   }, [])
 
   useEffect(() => {
-    if (reduceMotion) {
+    const element = processRef.current
+    if (!element) return
+
+    const observer = new IntersectionObserver(([entry]) => setIsVisible(entry.isIntersecting), { rootMargin: '120px' })
+    observer.observe(element)
+
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const handleVisibilityChange = () => setPageVisible(!document.hidden)
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
+  }, [])
+
+  useEffect(() => {
+    if (reduceMotion || !isVisible || !pageVisible) {
       return
     }
 
@@ -88,7 +108,7 @@ export default function FooterProcess() {
     let frameId = window.requestAnimationFrame(animateProcess)
 
     return () => window.cancelAnimationFrame(frameId)
-  }, [isPaused, reduceMotion])
+  }, [isPaused, isVisible, pageVisible, reduceMotion])
 
   const handleBlur = (event: FocusEvent<HTMLElement>) => {
     const nextTarget = event.relatedTarget
@@ -100,6 +120,7 @@ export default function FooterProcess() {
 
   return (
     <section
+      ref={processRef}
       className={`${styles.process} ${isPaused ? styles.paused : ''}`}
       aria-labelledby="footer-process-title"
       onMouseEnter={() => setIsPaused(true)}

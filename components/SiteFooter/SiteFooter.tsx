@@ -15,7 +15,7 @@ type FooterBadge = {
 
 const badges: ReadonlyArray<FooterBadge> = [
   {
-    src: '/sitegrab/assets/0060-badge-gdpr.BEZxU5Ip_1Km20W-5977f7086e.svg',
+    src: '/site-assets/assets/0060-badge-gdpr.BEZxU5Ip_1Km20W-5977f7086e.svg',
     label: 'footer.gdpr',
     isI18nKey: true,
   },

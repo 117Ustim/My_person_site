@@ -1,5 +1,5 @@
 {
-  "name": "obsidianos.com-1789069359186",
+  "name": "person-site",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,7 +8,7 @@
     "start": "NEXT_DIST_DIR=.next-build next start"
   },
   "dependencies": {
-    "@types/three": "^0.186.0",
+    "lenis": "^1.3.26",
     "lucide-react": "^1.46.0",
     "next": "15.5.25",
     "react": "^19.0.0",
@@ -19,6 +19,7 @@
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "@types/three": "^0.186.0",
     "typescript": "^5.0.0"
   }
 }

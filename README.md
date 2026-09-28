@@ -1,8 +1,8 @@
-# obsidianos.com-1789069359186 — Next.js
+# person-site — Next.js
 
 Проект перенесён в Next.js App Router с компонентной JSX-архитектурой.
 
-Исходный URL: https://obsidianos.com/
+Персональный сайт разработчика на Next.js.
 
 ## Запуск
 

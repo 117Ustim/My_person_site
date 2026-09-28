@@ -2,10 +2,15 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import type { CSSProperties, ReactNode } from 'react'
 import { useI18n } from '../../lib/i18n'
-import EarthGlobe from '../EarthGlobe/EarthGlobe'
 import styles from './MarketingHero.module.css'
+
+const EarthGlobe = dynamic(() => import('../EarthGlobe/EarthGlobe'), {
+  ssr: false,
+  loading: () => <span className={styles.globePlaceholder} aria-hidden="true" />,
+})
 
 type MarketingHeroProps = {
   eyebrow?: string
@@ -66,7 +71,11 @@ export default function MarketingHero({
           ))}
         </h1>
         <p className={styles.description}>{description}</p>
-        {resolvedActionLabel ? <Link className={styles.action} href={actionHref}>{resolvedActionLabel}</Link> : null}
+        {resolvedActionLabel ? (
+          <Link className={styles.action} href={actionHref}>
+            <span className={styles.actionLabel}>{resolvedActionLabel}</span>
+          </Link>
+        ) : null}
         {children}
       </div>
     </section>

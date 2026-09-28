@@ -1,6 +1,9 @@
 'use client'
 
 import Image from 'next/image'
+import type { ReactNode } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { ArrowUpRight } from 'lucide-react'
 import { useI18n } from '../../lib/i18n'
 import { useProjectInquiry } from '../ProjectInquiry/ProjectInquiry'
 import styles from './CapabilitiesEssay.module.css'
@@ -70,7 +73,7 @@ export default function CapabilitiesEssay() {
 
   return (
     <div className={styles.essay}>
-      <div className={styles.headingBlock}>
+      <RevealBlock className={styles.headingBlock}>
         <div className={styles.headingCopy}>
           <p className={styles.eyebrow}>{localize('Мій підхід')}</p>
           <h2>{localize('Від ідеї до продукту, яким хочеться користуватися')}</h2>
@@ -78,15 +81,15 @@ export default function CapabilitiesEssay() {
         <div className={styles.portraitFrame}>
           <Image
             className={styles.portrait}
-            src="/assets/founder-avatar.png"
+            src="/assets/home-founder-avatar.png?v=20260926"
             alt={localize('Портрет автора')}
             fill
             sizes="132px"
           />
         </div>
-      </div>
+      </RevealBlock>
 
-      <div className={styles.intro}>
+      <RevealBlock className={styles.intro}>
         <div className={styles.introMeta}>
           <span>00</span>
           <span>{localize('ПІДХІД')}</span>
@@ -95,11 +98,11 @@ export default function CapabilitiesEssay() {
           <p className={styles.lead}>{localize('Мені завжди було мало просто «написати код і щоб працювало». Перед початком я намагаюся зрозуміти саму логіку проєкту: як людина буде ним користуватися, де можна прибрати зайві дії, що варто автоматизувати і як зробити систему зрозумілою ще до того, як користувач почне в ній розбиратися.')}</p>
           <p>{localize('Я створюю сайти, CRM-системи та мобільні застосунки і можу вести проєкт практично повністю: від структури та інтерфейсу до frontend, backend, бази даних, інтеграцій і запуску.')}</p>
         </div>
-      </div>
+      </RevealBlock>
 
       <div className={styles.capabilityList}>
         {sections.map(section => (
-          <article className={styles.capability} key={section.number}>
+          <RevealArticle key={section.number} className={styles.capability}>
             <div className={styles.capabilityMeta}>
               <span className={styles.number}>{section.number}</span>
               <span className={styles.category}>{localize(section.category)}</span>
@@ -108,17 +111,17 @@ export default function CapabilitiesEssay() {
               <h3>{localize(section.title)}</h3>
               {section.paragraphs.map(paragraph => <p key={paragraph}>{localize(paragraph)}</p>)}
             </div>
-          </article>
+          </RevealArticle>
         ))}
       </div>
 
-      <div className={styles.conclusion}>
+      <RevealBlock className={styles.conclusion}>
         <p className={styles.conclusionLabel}>{localize('ВИСНОВОК')}</p>
         <div className={styles.conclusionCopy}>
           <p>{localize('Для мене хороший продукт не закінчується на моменті, коли все просто «працює». Важливо, щоб ним було приємно користуватися сьогодні, легко розвивати завтра і не хотілося повністю переробляти через рік.')}</p>
           <p>{localize('Саме до такого результату я й намагаюся доводити кожен проєкт.')}</p>
         </div>
-      </div>
+      </RevealBlock>
 
       <div className={styles.footer}>
         <div>
@@ -128,9 +131,57 @@ export default function CapabilitiesEssay() {
           </div>
         </div>
         <button className={styles.cta} type="button" onClick={openInquiry}>
-          {t('nav.discussProject')} <span aria-hidden="true">→</span>
+          <span className={styles.ctaLabel}>{t('nav.discussProject')}</span>
+          <span className={styles.ctaDial} aria-hidden="true">
+            <ArrowUpRight className={styles.ctaIcon} strokeWidth={1.8} />
+          </span>
         </button>
       </div>
     </div>
+  )
+}
+
+function useInView<T extends HTMLElement>() {
+  const elementRef = useRef<T>(null)
+  const [isInView, setIsInView] = useState(false)
+
+  useEffect(() => {
+    const element = elementRef.current
+    if (!element) return
+
+    if (!('IntersectionObserver' in window)) {
+      setIsInView(true)
+      return
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsInView(entry.isIntersecting)
+    }, { threshold: 0.01 })
+
+    observer.observe(element)
+
+    return () => observer.disconnect()
+  }, [])
+
+  return { elementRef, isInView }
+}
+
+function RevealBlock({ children, className }: { children: ReactNode; className: string }) {
+  const { elementRef, isInView } = useInView<HTMLDivElement>()
+
+  return (
+    <div ref={elementRef} className={`${className} ${isInView ? styles.revealActive : ''}`}>
+      {children}
+    </div>
+  )
+}
+
+function RevealArticle({ children, className }: { children: ReactNode; className: string }) {
+  const { elementRef, isInView } = useInView<HTMLElement>()
+
+  return (
+    <article ref={elementRef} className={`${className} ${isInView ? styles.revealActive : ''}`}>
+      {children}
+    </article>
   )
 }

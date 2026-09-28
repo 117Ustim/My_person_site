@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import { useEffect, useRef, useState } from 'react'
 import { useI18n } from '../../lib/i18n'
 import type { CapabilityItem } from '../../lib/page-data'
 import styles from './CapabilityShowcase.module.css'
@@ -97,13 +98,38 @@ export default function CapabilityShowcase({ items }: CapabilityShowcaseProps) {
 
         if (!topItem || !bottomItem) return null
 
-        return (
-          <div className={styles.pair} key={`${topItem.title}-${bottomItem.title}`}>
-            <CapabilityCard item={topItem} position="top" />
-            <CapabilityCard item={bottomItem} position="bottom" />
-          </div>
-        )
+        return <CapabilityPair key={`${topItem.title}-${bottomItem.title}`} topItem={topItem} bottomItem={bottomItem} />
       })}
+    </div>
+  )
+}
+
+function CapabilityPair({ topItem, bottomItem }: { topItem: CapabilityItem; bottomItem: CapabilityItem }) {
+  const pairRef = useRef<HTMLDivElement>(null)
+  const [isInView, setIsInView] = useState(false)
+
+  useEffect(() => {
+    const pair = pairRef.current
+    if (!pair) return
+
+    if (!('IntersectionObserver' in window)) {
+      setIsInView(true)
+      return
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsInView(entry.isIntersecting)
+    }, { threshold: 0.14 })
+
+    observer.observe(pair)
+
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <div ref={pairRef} className={`${styles.pair} ${isInView ? styles.isEntered : ''}`}>
+      <CapabilityCard item={topItem} position="top" />
+      <CapabilityCard item={bottomItem} position="bottom" />
     </div>
   )
 }

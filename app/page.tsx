@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
+import HomePageContent from '../components/HomePageContent/HomePageContent'
 import SiteShell from '../components/SiteShell/SiteShell'
-import PageRenderer from '../components/PageRenderer/PageRenderer'
-import { getRouteByPath } from '../lib/site-content'
 
 export const metadata: Metadata = {
   title: 'Головна',
@@ -10,13 +9,9 @@ export const metadata: Metadata = {
 }
 
 export default function HomePage() {
-  const route = getRouteByPath('/')
-
-  if (!route) return null
-
   return (
     <SiteShell>
-      <PageRenderer route={route} />
+      <HomePageContent />
     </SiteShell>
   )
 }

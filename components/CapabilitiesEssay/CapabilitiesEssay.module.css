@@ -81,7 +81,7 @@
   border: 1px solid rgb(var(--color-text-rgb) / 0.28);
   border-radius: 50%;
   background: var(--color-surface-3);
-  box-shadow: 0 0 0 8px rgba(255, 135, 122, 0.07);
+  box-shadow: 0 0 0 5px rgba(255, 135, 122, 0.07);
 }
 
 .portraitFrame::after {
@@ -96,7 +96,7 @@
 .portrait {
   object-fit: cover;
   object-position: center 28%;
-  filter: grayscale(1) contrast(1.08) brightness(0.72);
+  filter: saturate(0.92) contrast(1.02) brightness(0.82);
 }
 
 .introCopy p,
@@ -218,43 +218,209 @@
 }
 
 .cta {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 18px;
+  gap: 6px;
   flex-shrink: 0;
-  min-height: 36px;
-  padding: 0 16px;
-  border: 0;
+  min-width: 220px;
+  min-height: 48px;
+  padding: 0 2px 0 14px;
+  overflow: visible;
+  border: 1px solid rgb(var(--color-text-rgb) / 0.42);
   border-radius: 999px;
-  background: var(--color-button);
-  box-shadow: inset 0 0 0 1px var(--color-accent);
+  background: linear-gradient(145deg, #333332 0%, #1a1a19 40%, #0e0e0e 100%);
   color: var(--color-button-text);
   cursor: pointer;
   font: inherit;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
-  transition: background 180ms ease, transform 180ms ease;
+  box-shadow: inset 0 1px 1px rgb(var(--color-text-rgb) / 0.32), inset 0 -2px 2px rgb(0 0 0 / 0.55), 0 14px 22px rgb(0 0 0 / 0.42), 0 3px 10px rgb(255 135 122 / 0.08);
+  isolation: isolate;
+  transition: background 260ms ease, border-color 260ms ease, box-shadow 260ms ease, transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.cta span {
+.cta::before {
+  position: absolute;
+  inset: 1px;
+  border: 1px solid transparent;
+  border-top-color: rgb(var(--color-text-rgb) / 0.58);
+  border-right-color: rgb(var(--color-text-rgb) / 0.2);
+  border-bottom-color: rgb(255 135 122 / 0.14);
+  border-radius: inherit;
+  content: '';
+  pointer-events: none;
+}
+
+.ctaLabel {
+  position: relative;
+  z-index: 2;
+}
+
+.ctaDial {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  margin-left: auto;
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 1px solid rgb(var(--color-text-rgb) / 0.66);
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, #101010 0 48%, #3d3d3c 49% 52%, #101010 53% 64%, #b0b0ad 65% 68%, #343433 69% 79%, #0e0e0e 80% 100%);
+  box-shadow: inset 0 2px 2px rgb(var(--color-text-rgb) / 0.42), inset 0 -4px 8px rgb(0 0 0 / 0.75), 0 3px 7px rgb(0 0 0 / 0.5), 0 0 0 1px rgb(0 0 0 / 0.7);
+  transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1), border-color 260ms ease, box-shadow 420ms ease;
+}
+
+.ctaDial::before,
+.ctaDial::after {
+  position: absolute;
+  border-radius: 50%;
+  content: '';
+  pointer-events: none;
+}
+
+.ctaDial::before {
+  inset: 4px;
+  border: 1px solid rgb(var(--color-text-rgb) / 0.54);
+  box-shadow: inset 0 0 0 2px rgb(0 0 0 / 0.42), 0 0 0 1px rgb(0 0 0 / 0.52);
+  transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1), border-color 260ms ease;
+}
+
+.ctaDial::after {
+  inset: 1px;
+  border: 1px solid transparent;
+  border-top-color: rgb(var(--color-text-rgb) / 0.78);
+  border-right-color: rgb(255 135 122 / 0.76);
+  border-bottom-color: rgb(255 135 122 / 0.22);
+  transform: rotate(-35deg);
+  transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1), border-color 260ms ease;
+}
+
+.ctaIcon {
+  position: relative;
+  z-index: 2;
+  width: 19px;
+  height: 19px;
   color: var(--color-accent);
-  font-size: 22px;
-  line-height: 1;
-  transition: transform 180ms ease;
+  filter: drop-shadow(0 0 3px rgb(255 135 122 / 0.28));
+  transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1), color 220ms ease;
 }
 
 .cta:hover,
 .cta:focus-visible {
-  background: var(--color-button-hover);
-  transform: translateY(-1px);
+  background: linear-gradient(145deg, #3b3b3a 0%, #20201f 40%, #111110 100%);
+  border-color: rgb(var(--color-text-rgb) / 0.62);
+  box-shadow: inset 0 1px 1px rgb(var(--color-text-rgb) / 0.36), inset 0 -2px 2px rgb(0 0 0 / 0.55), 0 20px 30px rgb(0 0 0 / 0.48), 0 5px 16px rgb(255 135 122 / 0.13);
+  transform: translateY(-2px) scale(1.01);
 }
 
-.cta:hover span,
-.cta:focus-visible span {
-  transform: translateX(4px);
+.cta:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.cta:hover .ctaDial,
+.cta:focus-visible .ctaDial {
+  border-color: rgb(255 135 122 / 0.78);
+  box-shadow: inset 0 2px 2px rgb(var(--color-text-rgb) / 0.46), inset 0 -4px 8px rgb(0 0 0 / 0.78), 0 3px 8px rgb(0 0 0 / 0.55), 0 0 0 2px rgb(255 135 122 / 0.1), 0 0 18px rgb(255 135 122 / 0.16);
+  transform: rotate(14deg) scale(1.04);
+}
+
+.cta:hover .ctaDial::before,
+.cta:focus-visible .ctaDial::before {
+  border-color: rgb(var(--color-text-rgb) / 0.76);
+  transform: rotate(-28deg);
+}
+
+.cta:hover .ctaDial::after,
+.cta:focus-visible .ctaDial::after {
+  transform: rotate(82deg);
+}
+
+.cta:hover .ctaIcon,
+.cta:focus-visible .ctaIcon {
+  transform: translate(1px, -1px) rotate(-14deg) scale(1.04);
+}
+
+.revealActive .headingCopy {
+  animation: essayHeadingReveal 1450ms cubic-bezier(0.33, 1, 0.68, 1) both;
+}
+
+.revealActive .portraitFrame {
+  animation: essayPortraitReveal 1400ms cubic-bezier(0.33, 1, 0.68, 1) 140ms both;
+}
+
+.revealActive .introMeta,
+.revealActive .capabilityMeta,
+.revealActive .conclusionLabel {
+  animation: essayMetaReveal 1100ms cubic-bezier(0.33, 1, 0.68, 1) both;
+}
+
+.revealActive .introCopy,
+.revealActive .capabilityCopy,
+.revealActive .conclusionCopy {
+  animation: essayCopyReveal 1350ms cubic-bezier(0.33, 1, 0.68, 1) 180ms both;
+}
+
+@keyframes essayHeadingReveal {
+  0% {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translateY(26px);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes essayPortraitReveal {
+  0% {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translateY(18px) scale(0.96);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes essayMetaReveal {
+  0% {
+    opacity: 0;
+    filter: blur(3px);
+    transform: translateX(-18px);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0);
+  }
+}
+
+@keyframes essayCopyReveal {
+  0% {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 760px) {
@@ -298,6 +464,11 @@
     padding-top: 36px;
   }
 
+  .cta {
+    width: min(100%, 220px);
+    min-width: 0;
+  }
+
   .conclusion {
     grid-template-columns: 1fr;
     gap: 24px;
@@ -317,5 +488,26 @@
 
   .introCopy .lead {
     font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .revealActive .headingCopy,
+  .revealActive .portraitFrame,
+  .revealActive .introMeta,
+  .revealActive .capabilityMeta,
+  .revealActive .conclusionLabel,
+  .revealActive .introCopy,
+  .revealActive .capabilityCopy,
+  .revealActive .conclusionCopy {
+    animation: none;
+  }
+
+  .cta,
+  .ctaDial,
+  .ctaDial::before,
+  .ctaDial::after,
+  .ctaIcon {
+    transition-duration: 1ms;
   }
 }
