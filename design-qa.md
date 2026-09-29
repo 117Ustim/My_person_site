@@ -86,6 +86,42 @@
 
 final result: passed
 
+## Mobile navigation redesign — 2026-09-29
+
+### Source visual truth
+
+- User reference: `/Users/ustim/Downloads/Снимок экрана — 2026-09-29 в 22.35.21.png`.
+- Target state: open mobile navigation panel with brand, four links, locale selector and project CTA.
+
+### Implementation evidence
+
+- Local route: `http://localhost:3000/`.
+- Changes: reduced navigation typography, compact navigation kicker using the existing Lucide icon set, compact arrow tiles, language panel, elevated CTA and `16px` bottom-only panel radius.
+- Interaction behavior retained: links navigate or scroll to contacts, locale buttons remain selectable, and CTA opens the existing inquiry flow.
+- Validation: `npx tsc --noEmit` and `git diff --check` passed.
+
+### Findings
+
+- [P2] The open-menu state could not be recaptured after the final styling iteration. Chrome's CDP `Input.dispatchMouseEvent` timed out repeatedly when activating the accessible menu button, while page reload and screenshot capture worked. The resulting closed-page capture is not comparable to the open-menu reference.
+
+### Required fidelity surfaces
+
+- Typography: navigation is intentionally smaller (`24–29px`) per the latest user feedback.
+- Spacing and layout: panel retains a full-height mobile layout with a compact visual lead, clean rows and a reachable CTA.
+- Colors and visual tokens: existing graphite, off-white and coral tokens are used; no new brand color was introduced.
+- Image quality and assets: the existing brand logo is preserved; standard UI icons use the project's installed Lucide icon library.
+- Copy and content: existing localized navigation and CTA copy are retained.
+
+### Implementation checklist
+
+- [x] Smaller mobile navigation type applied.
+- [x] Decorative but functional navigation header and icon tiles added.
+- [x] Mobile panel lower corners use a small radius.
+- [x] Floating actions are hidden while the menu is open.
+- [ ] Reopen the menu through Chrome automation and capture the final open state for visual comparison.
+
+final result: blocked
+
 ## Mobile hero — responsive composition pass — 2026-09-29
 
 ### Source visual truth

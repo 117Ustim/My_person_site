@@ -1,9 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowUpRight } from 'lucide-react'
-import { usePathname } from 'next/navigation'
-import { type MouseEvent, useEffect, useState } from 'react'
+import { ArrowUpRight, Lightbulb, PanelsTopLeft, Smartphone, Sparkles } from 'lucide-react'
+import { usePathname, useRouter } from 'next/navigation'
+import { type MouseEvent, useEffect, useRef, useState } from 'react'
 import { localeLabels, type Locale, useI18n } from '../../lib/i18n'
 import BrandLogo from '../BrandLogo/BrandLogo'
 import { useProjectInquiry } from '../ProjectInquiry/ProjectInquiry'
@@ -19,10 +19,13 @@ type NavigationLink = (typeof simpleLinks)[number]
 
 export default function SiteHeader() {
   const pathname = usePathname()
+  const router = useRouter()
   const { t, locale, setLocale } = useI18n()
   const { openInquiry } = useProjectInquiry()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [mobileClosing, setMobileClosing] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const mobileNavigationTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const navigationLinks: NavigationLink[] = [
     ...simpleLinks,
     { labelKey: 'nav.contacts', href: `${pathname ?? '/'}#contacts` },
@@ -42,24 +45,47 @@ export default function SiteHeader() {
 
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
+    document.body.classList.add('mobile-menu-open')
 
     return () => {
       document.body.style.overflow = previousOverflow
+      document.body.classList.remove('mobile-menu-open')
     }
   }, [mobileOpen])
 
+  useEffect(() => () => {
+    if (mobileNavigationTimer.current) clearTimeout(mobileNavigationTimer.current)
+  }, [])
+
   const handleMobileToggle = () => {
+    if (mobileClosing) return
+
     setMobileOpen(current => !current)
   }
 
   const closeMenus = () => {
+    if (mobileNavigationTimer.current) {
+      clearTimeout(mobileNavigationTimer.current)
+      mobileNavigationTimer.current = null
+    }
+
+    setMobileClosing(false)
     setMobileOpen(false)
   }
 
-  const handleContactClick = (event: MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault()
-    closeMenus()
+  const handleMobileNavigation = (href: string) => {
+    if (mobileClosing) return
 
+    setMobileClosing(true)
+    router.push(href)
+    mobileNavigationTimer.current = setTimeout(() => {
+      mobileNavigationTimer.current = null
+      setMobileClosing(false)
+      setMobileOpen(false)
+    }, 280)
+  }
+
+  const scrollToContacts = () => {
     window.requestAnimationFrame(() => {
       const contacts = document.getElementById('contacts')
 
@@ -94,6 +120,26 @@ export default function SiteHeader() {
       url.hash = 'contacts'
       window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`)
     })
+  }
+
+  const handleContactClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault()
+    closeMenus()
+    scrollToContacts()
+  }
+
+  const handleMobileContactClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault()
+
+    if (mobileClosing) return
+
+    setMobileClosing(true)
+    mobileNavigationTimer.current = setTimeout(() => {
+      mobileNavigationTimer.current = null
+      setMobileClosing(false)
+      setMobileOpen(false)
+      scrollToContacts()
+    }, 280)
   }
 
   return (
@@ -142,8 +188,10 @@ export default function SiteHeader() {
       <MobileMenu
         links={navigationLinks}
         open={mobileOpen}
+        closing={mobileClosing}
         onClose={closeMenus}
-        onContactClick={handleContactClick}
+        onNavigate={handleMobileNavigation}
+        onContactClick={handleMobileContactClick}
         onOpenInquiry={openInquiry}
       />
     </>
@@ -197,25 +245,64 @@ function LanguageSwitcher({
 type MobileMenuProps = {
   links: NavigationLink[]
   open: boolean
+  closing: boolean
   onClose: () => void
+  onNavigate: (href: string) => void
   onContactClick: (event: MouseEvent<HTMLAnchorElement>) => void
   onOpenInquiry: () => void
 }
 
-function MobileMenu({ links, open, onClose, onContactClick, onOpenInquiry }: MobileMenuProps) {
+function MobileMenu({ links, open, closing, onClose, onNavigate, onContactClick, onOpenInquiry }: MobileMenuProps) {
   const { t, locale, setLocale } = useI18n()
 
   if (!open) return null
 
   return (
-    <div className={styles.mobilePanel}>
+    <div className={`${styles.mobilePanel} ${closing ? styles.mobilePanelClosing : ''}`}>
+      <div className={styles.mobileMenuArtwork} aria-hidden="true">
+        <div className={styles.mobileJourneyStage}>
+          <Lightbulb className={styles.mobileJourneyIcon} strokeWidth={1.55} />
+        </div>
+        <span className={`${styles.mobileJourneyLink} ${styles.mobileJourneyLinkFirst}`} />
+        <div className={`${styles.mobileJourneyStage} ${styles.mobileJourneyStageInterface}`}>
+          <PanelsTopLeft className={styles.mobileJourneyIcon} strokeWidth={1.55} />
+        </div>
+        <span className={`${styles.mobileJourneyLink} ${styles.mobileJourneyLinkSecond}`} />
+        <div className={`${styles.mobileJourneyStage} ${styles.mobileJourneyStageMobile}`}>
+          <Smartphone className={styles.mobileJourneyIcon} strokeWidth={1.55} />
+        </div>
+      </div>
       <nav className={styles.mobileNav} aria-label={t('common.mobileNavigation')}>
+        <div className={styles.mobileMenuLead}>
+          <span className={styles.mobileMenuKicker}>
+            <Sparkles className={styles.mobileMenuKickerIcon} aria-hidden="true" strokeWidth={1.6} />
+            {t('common.mobileNavigation')}
+          </span>
+          <span className={styles.mobileMenuLeadLine} aria-hidden="true" />
+        </div>
         {links.map(link => (
           <div className={styles.mobileMenuItem} key={link.href}>
             {link.labelKey === 'nav.contacts' ? (
-              <a className={styles.mobileNavLink} href={link.href} onClick={onContactClick}>{t(link.labelKey)}</a>
+              <a className={styles.mobileNavLink} href={link.href} onClick={onContactClick}>
+                <span>{t(link.labelKey)}</span>
+                <span className={styles.mobileNavIconFrame} aria-hidden="true">
+                  <ArrowUpRight className={styles.mobileNavIcon} strokeWidth={1.6} />
+                </span>
+              </a>
             ) : (
-              <Link className={styles.mobileNavLink} href={link.href} onClick={onClose}>{t(link.labelKey)}</Link>
+              <Link
+                className={styles.mobileNavLink}
+                href={link.href}
+                onClick={event => {
+                  event.preventDefault()
+                  onNavigate(link.href)
+                }}
+              >
+                <span>{t(link.labelKey)}</span>
+                <span className={styles.mobileNavIconFrame} aria-hidden="true">
+                  <ArrowUpRight className={styles.mobileNavIcon} strokeWidth={1.6} />
+                </span>
+              </Link>
             )}
           </div>
         ))}
@@ -225,7 +312,9 @@ function MobileMenu({ links, open, onClose, onContactClick, onOpenInquiry }: Mob
           <LanguageSwitcher locale={locale} onChange={setLocale} label={t('common.language')} variant="mobile" />
         </div>
         <button className={styles.mobileCta} type="button" onClick={() => { onClose(); onOpenInquiry() }}>
-          {t('nav.discussProject')}
+          <span className={styles.ctaTrace} aria-hidden="true" />
+          <span className={styles.mobileCtaLabel}>{t('nav.discussProject')}</span>
+          <ArrowUpRight className={styles.mobileCtaIcon} aria-hidden="true" strokeWidth={1.7} />
         </button>
       </nav>
     </div>

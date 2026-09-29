@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type RefObject } from 'react'
 import { useI18n } from '../../lib/i18n'
 import type { CapabilityItem } from '../../lib/page-data'
 import styles from './CapabilityShowcase.module.css'
@@ -33,7 +33,13 @@ function ShapeDefinitions() {
   )
 }
 
-function CapabilityCard({ item, position }: { item: CapabilityItem; position: CardPosition }) {
+function CapabilityCard({ item, position, cardRef, isEntered, onAnimationEnd }: {
+  item: CapabilityItem
+  position: CardPosition
+  cardRef: RefObject<HTMLElement | null>
+  isEntered: boolean
+  onAnimationEnd?: () => void
+}) {
   const { t } = useI18n()
   const isTop = position === 'top'
   const imageDimmedClass = item.imageDimmed === 'light'
@@ -45,7 +51,11 @@ function CapabilityCard({ item, position }: { item: CapabilityItem; position: Ca
         : ''
 
   return (
-    <article className={`${styles.card} ${isTop ? styles.topCard : styles.bottomCard}`}>
+    <article
+      ref={cardRef}
+      className={`${styles.card} ${isTop ? styles.topCard : styles.bottomCard} ${isEntered ? styles.isEntered : ''}`}
+      onAnimationEnd={onAnimationEnd}
+    >
       <div className={`${styles.surface} ${isTop ? styles.topSurface : styles.bottomSurface}`}>
         <div className={styles.visual}>
           <div className={styles.visualFrame}>
@@ -106,19 +116,159 @@ export default function CapabilityShowcase({ items }: CapabilityShowcaseProps) {
 
 function CapabilityPair({ topItem, bottomItem }: { topItem: CapabilityItem; bottomItem: CapabilityItem }) {
   const pairRef = useRef<HTMLDivElement>(null)
-  const [isInView, setIsInView] = useState(false)
+  const topCardRef = useRef<HTMLElement | null>(null)
+  const bottomCardRef = useRef<HTMLElement | null>(null)
+  const topVisibleRef = useRef(false)
+  const bottomVisibleRef = useRef(false)
+  const topThresholdReachedRef = useRef(false)
+  const bottomThresholdReachedRef = useRef(false)
+  const topEnteredRef = useRef(false)
+  const bottomEnteredRef = useRef(false)
+  const topAnimationCompleteRef = useRef(false)
+  const bottomAnimationCompleteRef = useRef(false)
+  const reducedMotionRef = useRef(false)
+  const scrollDirectionRef = useRef<'down' | 'up'>('down')
+  const [isPairInView, setIsPairInView] = useState(false)
+  const [isTopCardInView, setIsTopCardInView] = useState(false)
+  const [isBottomCardInView, setIsBottomCardInView] = useState(false)
+
+  function triggerTopCard() {
+    if (topEnteredRef.current || !topThresholdReachedRef.current || !topVisibleRef.current) return
+
+    topEnteredRef.current = true
+    setIsTopCardInView(false)
+    window.requestAnimationFrame(() => {
+      if (!topThresholdReachedRef.current || !topVisibleRef.current) {
+        topEnteredRef.current = false
+        return
+      }
+
+      setIsTopCardInView(true)
+      if (reducedMotionRef.current) {
+        topAnimationCompleteRef.current = true
+        if (scrollDirectionRef.current === 'down') triggerBottomCard()
+      }
+    })
+  }
+
+  function triggerBottomCard() {
+    if (bottomEnteredRef.current || !bottomThresholdReachedRef.current || !bottomVisibleRef.current) return
+
+    bottomEnteredRef.current = true
+    setIsBottomCardInView(false)
+    window.requestAnimationFrame(() => {
+      if (!bottomThresholdReachedRef.current || !bottomVisibleRef.current) {
+        bottomEnteredRef.current = false
+        return
+      }
+
+      setIsBottomCardInView(true)
+      if (reducedMotionRef.current) {
+        bottomAnimationCompleteRef.current = true
+        if (scrollDirectionRef.current === 'up') triggerTopCard()
+      }
+    })
+  }
+
+  function handleTopAnimationEnd() {
+    topAnimationCompleteRef.current = true
+    if (scrollDirectionRef.current === 'down') triggerBottomCard()
+  }
+
+  function handleBottomAnimationEnd() {
+    bottomAnimationCompleteRef.current = true
+    if (scrollDirectionRef.current === 'up') triggerTopCard()
+  }
 
   useEffect(() => {
     const pair = pairRef.current
-    if (!pair) return
+    const topCard = topCardRef.current
+    const bottomCard = bottomCardRef.current
+    if (!pair || !topCard || !bottomCard) return
 
     if (!('IntersectionObserver' in window)) {
-      setIsInView(true)
+      setIsPairInView(true)
+      setIsTopCardInView(true)
+      setIsBottomCardInView(true)
+      topEnteredRef.current = true
+      bottomEnteredRef.current = true
+      topAnimationCompleteRef.current = true
+      bottomAnimationCompleteRef.current = true
       return
     }
 
+    if (window.matchMedia('(max-width: 900px)').matches) {
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      reducedMotionRef.current = reducedMotion
+      topAnimationCompleteRef.current = reducedMotion
+      bottomAnimationCompleteRef.current = reducedMotion
+
+      let previousScrollY = window.scrollY
+      const handleScroll = () => {
+        const currentScrollY = window.scrollY
+        if (currentScrollY === previousScrollY) return
+
+        const direction = currentScrollY > previousScrollY ? 'down' : 'up'
+        scrollDirectionRef.current = direction
+        previousScrollY = currentScrollY
+
+        if (direction === 'down') {
+          if (topThresholdReachedRef.current) triggerTopCard()
+          if (topAnimationCompleteRef.current) triggerBottomCard()
+        } else {
+          if (bottomThresholdReachedRef.current) triggerBottomCard()
+          if (bottomAnimationCompleteRef.current) triggerTopCard()
+        }
+      }
+
+      window.addEventListener('scroll', handleScroll, { passive: true })
+
+      const topObserver = new IntersectionObserver(([entry]) => {
+        if (!entry.isIntersecting || entry.intersectionRatio === 0) {
+          topVisibleRef.current = false
+          topThresholdReachedRef.current = false
+          topEnteredRef.current = false
+          topAnimationCompleteRef.current = false
+          setIsTopCardInView(false)
+          return
+        }
+
+        topVisibleRef.current = true
+        if (entry.intersectionRatio >= 0.2) {
+          topThresholdReachedRef.current = true
+          if (scrollDirectionRef.current === 'down' || bottomAnimationCompleteRef.current) triggerTopCard()
+        }
+      }, { threshold: [0, 0.2] })
+      const bottomObserver = new IntersectionObserver(([entry]) => {
+        if (!entry.isIntersecting || entry.intersectionRatio === 0) {
+          bottomVisibleRef.current = false
+          bottomThresholdReachedRef.current = false
+          bottomEnteredRef.current = false
+          bottomAnimationCompleteRef.current = false
+          topAnimationCompleteRef.current = reducedMotion
+          setIsBottomCardInView(false)
+          return
+        }
+
+        bottomVisibleRef.current = true
+        if (entry.intersectionRatio >= 0.2) {
+          bottomThresholdReachedRef.current = true
+          if (scrollDirectionRef.current === 'up' || topAnimationCompleteRef.current) triggerBottomCard()
+        }
+      }, { threshold: [0, 0.2] })
+
+      topObserver.observe(topCard)
+      bottomObserver.observe(bottomCard)
+
+      return () => {
+        window.removeEventListener('scroll', handleScroll)
+        topObserver.disconnect()
+        bottomObserver.disconnect()
+      }
+    }
+
     const observer = new IntersectionObserver(([entry]) => {
-      setIsInView(entry.isIntersecting)
+      setIsPairInView(entry.isIntersecting)
     }, { threshold: 0.14 })
 
     observer.observe(pair)
@@ -127,9 +277,21 @@ function CapabilityPair({ topItem, bottomItem }: { topItem: CapabilityItem; bott
   }, [])
 
   return (
-    <div ref={pairRef} className={`${styles.pair} ${isInView ? styles.isEntered : ''}`}>
-      <CapabilityCard item={topItem} position="top" />
-      <CapabilityCard item={bottomItem} position="bottom" />
+    <div ref={pairRef} className={`${styles.pair} ${isPairInView ? styles.isEntered : ''}`}>
+      <CapabilityCard
+        item={topItem}
+        position="top"
+        cardRef={topCardRef}
+        isEntered={isTopCardInView}
+        onAnimationEnd={handleTopAnimationEnd}
+      />
+      <CapabilityCard
+        item={bottomItem}
+        position="bottom"
+        cardRef={bottomCardRef}
+        isEntered={isBottomCardInView}
+        onAnimationEnd={handleBottomAnimationEnd}
+      />
     </div>
   )
 }

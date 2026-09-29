@@ -308,3 +308,9 @@ section.homeAudienceSection {
     padding-top: 56px;
   }
 }
+
+@media (max-width: 760px) {
+  .main > .capabilitySection {
+    margin-top: -60px;
+  }
+}

@@ -14,5 +14,9 @@ export default function LoadingContent() {
 function LocalizedLoading() {
   const { t } = useI18n()
 
-  return <main className={styles.loading}>{t('loading')}</main>
+  return (
+    <main className={styles.loading}>
+      <span className={styles.loadingText}>{t('loading')}</span>
+    </main>
+  )
 }

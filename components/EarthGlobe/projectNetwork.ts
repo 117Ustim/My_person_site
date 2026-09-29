@@ -41,8 +41,26 @@ type ProjectNetwork = {
   dispose: () => void
 }
 
+type RouteAnimationSlot = {
+  activeRoute: Route
+  arrivalMaterial: MeshBasicMaterial
+  arrivalRing: Mesh
+  iconMaterial: SpriteMaterial
+  idleTime: number
+  lastRouteIndex: number
+  lineMaterial: MeshBasicMaterial
+  previousEndpoint: Mesh
+  projectIcon: Sprite
+  pulse: Mesh
+  pulseMaterial: MeshBasicMaterial
+  routeLine: Mesh
+  routeRunning: boolean
+  routeTime: number
+}
+
 const ROUTE_DURATION = 5.4
-const ROUTE_IDLE_TIME = 1.6
+const ROUTE_IDLE_TIME = 1.35
+const ROUTE_STAGGER = 2.8
 const ARC_SEGMENTS = 72
 
 const nodes: NetworkNode[] = [
@@ -67,6 +85,15 @@ const routeDefinitions: RouteDefinition[] = [
   { from: 6, to: 7, kind: 'mobile' },
   { from: 2, to: 3, kind: 'crm' },
   { from: 7, to: 0, kind: 'cloud' },
+]
+
+const additionalRouteDefinitions: RouteDefinition[] = [
+  { from: 1, to: 2, kind: 'crm' },
+  { from: 3, to: 4, kind: 'cloud' },
+  { from: 4, to: 8, kind: 'web' },
+  { from: 8, to: 5, kind: 'cloud' },
+  { from: 5, to: 7, kind: 'mobile' },
+  { from: 2, to: 6, kind: 'web' },
 ]
 
 function toSphere([longitude, latitude]: Coordinates, radius: number) {
@@ -128,9 +155,15 @@ function rotatedDepth(point: Vector3, rotationY: number) {
   return (-point.x * Math.sin(rotationY) + point.z * Math.cos(rotationY)) / length
 }
 
-function routeVisibilityScore(route: Route, rotationY: number, rotationSpeed: number) {
+function routeVisibilityScore(
+  route: Route,
+  rotationY: number,
+  rotationSpeed: number,
+  minimumEndpointDepth: number,
+  minimumRouteDepth: number,
+) {
   const checkTimes = [0.75, 2.7, 4.55]
-  const sampleStep = Math.max(1, Math.floor(ARC_SEGMENTS / 8))
+  const sampleStep = Math.max(1, Math.floor(ARC_SEGMENTS / 16))
   let minimumDepth = 1
 
   checkTimes.forEach((time) => {
@@ -143,11 +176,12 @@ function routeVisibilityScore(route: Route, rotationY: number, rotationSpeed: nu
 
   const startDepth = rotatedDepth(route.points[0], rotationY - rotationSpeed * 0.75)
   const endpointDepth = Math.min(
-    rotatedDepth(route.endpointNormal, rotationY - rotationSpeed * 3.35),
-    rotatedDepth(route.endpointNormal, rotationY - rotationSpeed * 4.55),
+    rotatedDepth(route.endpointNormal, rotationY - rotationSpeed * 3.02),
+    rotatedDepth(route.endpointNormal, rotationY - rotationSpeed * 3.87),
+    rotatedDepth(route.endpointNormal, rotationY - rotationSpeed * 4.72),
   )
 
-  if (startDepth < 0.08 || endpointDepth < 0.2 || minimumDepth < 0.015) return null
+  if (startDepth < 0.08 || endpointDepth < minimumEndpointDepth || minimumDepth < minimumRouteDepth) return null
   return minimumDepth + endpointDepth * 0.45 + (route.from === 0 || route.to === 0 ? 0.08 : 0)
 }
 
@@ -258,7 +292,9 @@ function createIconTexture(kind: ProjectKind) {
 export function createProjectNetwork(earthRadius: number, compact = false, rotationSpeed = 0): ProjectNetwork {
   const group = new Group()
   group.renderOrder = 3
-  const visibleNodeIndexes = new Set(compact ? [0, 4, 5, 7, 8] : nodes.map((_, index) => index))
+  const visibleNodeIndexes = new Set(nodes.map((_, index) => index))
+  const availableRouteDefinitions = [...routeDefinitions, ...additionalRouteDefinitions]
+  const routeTubeRadius = compact ? 0.0042 : 0.0045
 
   const pointGeometry = new SphereGeometry(0.011, 12, 8)
   const homePointGeometry = new SphereGeometry(0.016, 14, 10)
@@ -277,7 +313,7 @@ export function createProjectNetwork(earthRadius: number, compact = false, rotat
     return point
   })
 
-  const routes: Route[] = routeDefinitions
+  const routes: Route[] = availableRouteDefinitions
     .filter((route) => visibleNodeIndexes.has(route.from) && visibleNodeIndexes.has(route.to))
     .map((route) => {
       const points = createArcPoints(nodes[route.from].coordinates, nodes[route.to].coordinates, earthRadius)
@@ -285,42 +321,11 @@ export function createProjectNetwork(earthRadius: number, compact = false, rotat
         ...route,
         endpointNormal: points[points.length - 1].clone().normalize(),
         points,
-        geometry: new TubeGeometry(new CatmullRomCurve3(points), ARC_SEGMENTS, 0.0045, 5, false),
+        geometry: new TubeGeometry(new CatmullRomCurve3(points), ARC_SEGMENTS, routeTubeRadius, 5, false),
       }
     })
-
-  const lineMaterial = new MeshBasicMaterial({
-    color: '#ddd8d2',
-    transparent: true,
-    opacity: 0,
-    depthWrite: false,
-  })
-  const routeLine = new Mesh(routes[0].geometry, lineMaterial)
-  routeLine.renderOrder = 3
-  group.add(routeLine)
-
-  const pulseMaterial = new MeshBasicMaterial({
-    color: '#fffaf4',
-    transparent: true,
-    opacity: 0,
-    depthWrite: false,
-  })
-  const pulse = new Mesh(new SphereGeometry(0.019, 14, 10), pulseMaterial)
-  pulse.visible = false
-  pulse.renderOrder = 4
-  group.add(pulse)
-
-  const arrivalMaterial = new MeshBasicMaterial({
-    color: '#ff877a',
-    transparent: true,
-    opacity: 0,
-    depthWrite: false,
-    side: DoubleSide,
-  })
-  const arrivalRing = new Mesh(new RingGeometry(0.052, 0.064, 48), arrivalMaterial)
-  arrivalRing.visible = false
-  arrivalRing.renderOrder = 4
-  group.add(arrivalRing)
+  const minimumEndpointDepth = 0.46
+  const minimumRouteDepth = 0.05
 
   const iconTextures = {
     web: createIconTexture('web'),
@@ -328,117 +333,186 @@ export function createProjectNetwork(earthRadius: number, compact = false, rotat
     mobile: createIconTexture('mobile'),
     cloud: createIconTexture('cloud'),
   }
-  const iconMaterial = new SpriteMaterial({
-    map: iconTextures.crm,
-    transparent: true,
-    opacity: 0,
-    depthTest: true,
-    depthWrite: false,
-  })
-  const projectIcon = new Sprite(iconMaterial)
-  projectIcon.scale.setScalar(0.2)
-  projectIcon.visible = false
-  projectIcon.renderOrder = 5
-  group.add(projectIcon)
-
-  let routeTime = 0
-  let idleTime = ROUTE_IDLE_TIME
-  let routeRunning = false
-  let lastRouteIndex = -1
-  let activeRoute = routes[0]
-  let previousEndpoint = pointMeshes[activeRoute.to]
+  const pulseGeometry = new SphereGeometry(0.019, 14, 10)
+  const arrivalRingGeometry = new RingGeometry(0.052, 0.064, 48)
   const ringNormal = new Vector3(0, 0, 1)
+  let recentRouteIndexes: number[] = []
 
-  const hideRoute = () => {
-    previousEndpoint.scale.setScalar(1)
+  const slots: RouteAnimationSlot[] = Array.from({ length: 2 }, (_, slotIndex) => {
+    const lineMaterial = new MeshBasicMaterial({
+      color: '#ddd8d2',
+      transparent: true,
+      opacity: 0,
+      depthWrite: false,
+    })
+    const routeLine = new Mesh(routes[0].geometry, lineMaterial)
     routeLine.visible = false
+    routeLine.renderOrder = 3
+    group.add(routeLine)
+
+    const pulseMaterial = new MeshBasicMaterial({
+      color: '#fffaf4',
+      transparent: true,
+      opacity: 0,
+      depthWrite: false,
+    })
+    const pulse = new Mesh(pulseGeometry, pulseMaterial)
     pulse.visible = false
+    pulse.renderOrder = 4
+    group.add(pulse)
+
+    const arrivalMaterial = new MeshBasicMaterial({
+      color: '#ff877a',
+      transparent: true,
+      opacity: 0,
+      depthWrite: false,
+      side: DoubleSide,
+    })
+    const arrivalRing = new Mesh(arrivalRingGeometry, arrivalMaterial)
     arrivalRing.visible = false
+    arrivalRing.renderOrder = 4
+    group.add(arrivalRing)
+
+    const iconMaterial = new SpriteMaterial({
+      map: iconTextures.crm,
+      transparent: true,
+      opacity: 0,
+      depthTest: true,
+      depthWrite: false,
+    })
+    const projectIcon = new Sprite(iconMaterial)
+    projectIcon.scale.setScalar(0.2)
     projectIcon.visible = false
-    lineMaterial.opacity = 0
-    pulseMaterial.opacity = 0
-    arrivalMaterial.opacity = 0
-    iconMaterial.opacity = 0
+    projectIcon.renderOrder = 5
+    group.add(projectIcon)
+
+    const activeRoute = routes[0]
+
+    return {
+      activeRoute,
+      arrivalMaterial,
+      arrivalRing,
+      iconMaterial,
+      idleTime: ROUTE_IDLE_TIME - slotIndex * ROUTE_STAGGER,
+      lastRouteIndex: -1,
+      lineMaterial,
+      previousEndpoint: pointMeshes[activeRoute.to],
+      projectIcon,
+      pulse,
+      pulseMaterial,
+      routeLine,
+      routeRunning: false,
+      routeTime: 0,
+    }
+  })
+
+  const hideRoute = (slot: RouteAnimationSlot) => {
+    slot.previousEndpoint.scale.setScalar(1)
+    slot.routeLine.visible = false
+    slot.pulse.visible = false
+    slot.arrivalRing.visible = false
+    slot.projectIcon.visible = false
+    slot.lineMaterial.opacity = 0
+    slot.pulseMaterial.opacity = 0
+    slot.arrivalMaterial.opacity = 0
+    slot.iconMaterial.opacity = 0
   }
 
-  const findVisibleRoute = () => {
+  const findVisibleRoute = (slot: RouteAnimationSlot) => {
+    const activeRouteIndexes = new Set(
+      slots.filter((candidateSlot) => candidateSlot.routeRunning).map((candidateSlot) => candidateSlot.lastRouteIndex),
+    )
+    const activeEndpointIndexes = new Set(
+      slots.filter((candidateSlot) => candidateSlot.routeRunning).map((candidateSlot) => candidateSlot.activeRoute.to),
+    )
     const candidates = routes
-      .map((route, index) => ({ index, route, score: routeVisibilityScore(route, group.rotation.y, rotationSpeed) }))
+      .map((route, index) => ({
+        index,
+        route,
+        score: routeVisibilityScore(route, group.rotation.y, rotationSpeed, minimumEndpointDepth, minimumRouteDepth),
+      }))
       .filter((candidate): candidate is { index: number; route: Route; score: number } => candidate.score !== null)
+      .filter((candidate) => !activeRouteIndexes.has(candidate.index) && !activeEndpointIndexes.has(candidate.route.to))
       .sort((left, right) => right.score - left.score)
 
-    return candidates.find((candidate) => candidate.index !== lastRouteIndex) ?? candidates[0] ?? null
+    return candidates.find((candidate) => !recentRouteIndexes.includes(candidate.index))
+      ?? candidates.find((candidate) => candidate.index !== slot.lastRouteIndex)
+      ?? candidates[0]
+      ?? null
   }
 
-  const activateRoute = (route: Route, routeIndex: number) => {
-    previousEndpoint.scale.setScalar(1)
-    activeRoute = route
-    lastRouteIndex = routeIndex
-    previousEndpoint = pointMeshes[activeRoute.to]
-    routeLine.geometry = activeRoute.geometry
-    routeLine.geometry.setDrawRange(0, 6)
-    routeLine.visible = false
-    iconMaterial.map = iconTextures[activeRoute.kind]
-    iconMaterial.needsUpdate = true
+  const activateRoute = (slot: RouteAnimationSlot, route: Route, routeIndex: number) => {
+    slot.activeRoute = route
+    slot.lastRouteIndex = routeIndex
+    slot.previousEndpoint = pointMeshes[route.to]
+    slot.routeLine.geometry = route.geometry
+    slot.routeLine.geometry.setDrawRange(0, 6)
+    slot.routeLine.visible = false
+    slot.iconMaterial.map = iconTextures[route.kind]
+    slot.iconMaterial.needsUpdate = true
+    recentRouteIndexes = [routeIndex, ...recentRouteIndexes.filter((index) => index !== routeIndex)].slice(0, 4)
   }
 
   const update = (delta: number) => {
-    if (!routeRunning) {
-      idleTime += delta
-      if (idleTime < ROUTE_IDLE_TIME) return
+    slots.forEach((slot) => {
+      if (!slot.routeRunning) {
+        slot.idleTime += delta
+        if (slot.idleTime < ROUTE_IDLE_TIME) return
 
-      const nextRoute = findVisibleRoute()
-      if (!nextRoute) return
+        const nextRoute = findVisibleRoute(slot)
+        if (!nextRoute) return
 
-      activateRoute(nextRoute.route, nextRoute.index)
-      routeTime = 0
-      idleTime = 0
-      routeRunning = true
-    }
+        activateRoute(slot, nextRoute.route, nextRoute.index)
+        slot.routeTime = 0
+        slot.idleTime = 0
+        slot.routeRunning = true
+      }
 
-    routeTime += delta
-    const localTime = routeTime
+      slot.routeTime += delta
+      const localTime = slot.routeTime
+      const activeRoute = slot.activeRoute
 
-    const reveal = rangeProgress(localTime, 0.7, 1.75)
-    const fade = 1 - rangeProgress(localTime, 4.55, 5.35)
-    const lineOpacity = Math.min(reveal, fade)
-    lineMaterial.opacity = lineOpacity * 0.44
-    routeLine.visible = lineOpacity > 0.002
-    const routeIndexCount = activeRoute.geometry.index?.count ?? activeRoute.geometry.attributes.position.count
-    const visibleRouteIndexes = Math.max(6, Math.floor((reveal * routeIndexCount) / 6) * 6)
-    routeLine.geometry.setDrawRange(0, visibleRouteIndexes)
+      const reveal = rangeProgress(localTime, 0.7, 1.75)
+      const fade = 1 - rangeProgress(localTime, 4.55, 5.35)
+      const lineOpacity = Math.min(reveal, fade)
+      slot.lineMaterial.opacity = lineOpacity * 0.44
+      slot.routeLine.visible = lineOpacity > 0.002
+      const routeIndexCount = activeRoute.geometry.index?.count ?? activeRoute.geometry.attributes.position.count
+      const visibleRouteIndexes = Math.max(6, Math.floor((reveal * routeIndexCount) / 6) * 6)
+      slot.routeLine.geometry.setDrawRange(0, visibleRouteIndexes)
 
-    const pulseProgress = clamp((localTime - 1.58) / 1.42)
-    const pulseVisible = localTime >= 1.58 && localTime <= 3
-    pulse.visible = pulseVisible
-    pulseMaterial.opacity = pulseVisible ? Math.sin(Math.PI * pulseProgress) * 0.94 : 0
-    if (pulseVisible) setPointOnArc(pulse.position, activeRoute.points, pulseProgress)
+      const pulseProgress = clamp((localTime - 1.58) / 1.42)
+      const pulseVisible = localTime >= 1.58 && localTime <= 3
+      slot.pulse.visible = pulseVisible
+      slot.pulseMaterial.opacity = pulseVisible ? Math.sin(Math.PI * pulseProgress) * 0.94 : 0
+      if (pulseVisible) setPointOnArc(slot.pulse.position, activeRoute.points, pulseProgress)
 
-    const endpointNormal = activeRoute.endpointNormal
-    const arrivalProgress = clamp((localTime - 2.84) / 1.05)
-    const arrivalVisible = localTime >= 2.84 && localTime <= 3.89
-    arrivalRing.visible = arrivalVisible
-    arrivalRing.position.copy(endpointNormal).multiplyScalar(earthRadius + 0.045)
-    arrivalRing.quaternion.setFromUnitVectors(ringNormal, endpointNormal)
-    arrivalRing.scale.setScalar(0.65 + arrivalProgress * 1.45)
-    arrivalMaterial.opacity = arrivalVisible ? (1 - arrivalProgress) * 0.62 : 0
+      const endpointNormal = activeRoute.endpointNormal
+      const arrivalProgress = clamp((localTime - 2.84) / 1.05)
+      const arrivalVisible = localTime >= 2.84 && localTime <= 3.89
+      slot.arrivalRing.visible = arrivalVisible
+      slot.arrivalRing.position.copy(endpointNormal).multiplyScalar(earthRadius + 0.045)
+      slot.arrivalRing.quaternion.setFromUnitVectors(ringNormal, endpointNormal)
+      slot.arrivalRing.scale.setScalar(0.65 + arrivalProgress * 1.45)
+      slot.arrivalMaterial.opacity = arrivalVisible ? (1 - arrivalProgress) * 0.62 : 0
 
-    const nodePulseProgress = clamp((localTime - 2.74) / 0.9)
-    previousEndpoint.scale.setScalar(1 + Math.sin(Math.PI * nodePulseProgress) * 0.7)
+      const nodePulseProgress = clamp((localTime - 2.74) / 0.9)
+      slot.previousEndpoint.scale.setScalar(1 + Math.sin(Math.PI * nodePulseProgress) * 0.7)
 
-    const iconFadeIn = rangeProgress(localTime, 3.02, 3.32)
-    const iconFadeOut = 1 - rangeProgress(localTime, 4.12, 4.72)
-    const iconOpacity = Math.min(iconFadeIn, iconFadeOut)
-    projectIcon.visible = iconOpacity > 0.002
-    projectIcon.position.copy(endpointNormal).multiplyScalar(earthRadius + 0.075)
-    projectIcon.scale.setScalar(0.18 + iconFadeIn * 0.03)
-    iconMaterial.opacity = iconOpacity * 0.9
+      const iconFadeIn = rangeProgress(localTime, 3.02, 3.32)
+      const iconFadeOut = 1 - rangeProgress(localTime, 4.12, 4.72)
+      const iconOpacity = Math.min(iconFadeIn, iconFadeOut)
+      slot.projectIcon.visible = iconOpacity > 0.002
+      slot.projectIcon.position.copy(endpointNormal).multiplyScalar(earthRadius + 0.075)
+      slot.projectIcon.scale.setScalar(0.18 + iconFadeIn * 0.03)
+      slot.iconMaterial.opacity = iconOpacity * 0.9
 
-    if (routeTime >= ROUTE_DURATION) {
-      hideRoute()
-      routeRunning = false
-      idleTime = 0
-    }
+      if (slot.routeTime >= ROUTE_DURATION) {
+        hideRoute(slot)
+        slot.routeRunning = false
+        slot.idleTime = 0
+      }
+    })
   }
 
   const dispose = () => {
@@ -446,12 +520,14 @@ export function createProjectNetwork(earthRadius: number, compact = false, rotat
     homePointGeometry.dispose()
     pointMeshes.forEach((point) => point.material.dispose())
     routes.forEach((route) => route.geometry.dispose())
-    lineMaterial.dispose()
-    pulse.geometry.dispose()
-    pulseMaterial.dispose()
-    arrivalRing.geometry.dispose()
-    arrivalMaterial.dispose()
-    iconMaterial.dispose()
+    pulseGeometry.dispose()
+    arrivalRingGeometry.dispose()
+    slots.forEach((slot) => {
+      slot.lineMaterial.dispose()
+      slot.pulseMaterial.dispose()
+      slot.arrivalMaterial.dispose()
+      slot.iconMaterial.dispose()
+    })
     Object.values(iconTextures).forEach((texture) => texture?.dispose())
   }
 

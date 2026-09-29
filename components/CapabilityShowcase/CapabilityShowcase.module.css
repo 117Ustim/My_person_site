@@ -366,6 +366,14 @@
   .category {
     writing-mode: horizontal-tb;
   }
+
+  .topCard.isEntered {
+    animation: capabilityTopEntrance 1100ms cubic-bezier(0.33, 1, 0.68, 1) both;
+  }
+
+  .bottomCard.isEntered {
+    animation: capabilityBottomEntrance 1100ms cubic-bezier(0.33, 1, 0.68, 1) 320ms both;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -375,7 +383,14 @@
   }
 
   .pair.isEntered .topCard,
-  .pair.isEntered .bottomCard {
+  .pair.isEntered .bottomCard,
+  .topCard.isEntered,
+  .bottomCard.isEntered {
     animation: none;
+  }
+
+  .topCard,
+  .bottomCard {
+    transform: none;
   }
 }

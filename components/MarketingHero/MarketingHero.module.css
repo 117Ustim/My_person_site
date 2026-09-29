@@ -281,7 +281,7 @@
 .homeHero .heroImageFrame {
   top: clamp(0px, 31.39vw, 603px);
   right: 50%;
-  width: min(64vw, 1084.8px);
+  width: min(58vw, 988px);
   height: auto;
   aspect-ratio: 1586 / 992;
   transform: translateX(50%);
@@ -450,9 +450,9 @@
   }
 
   .homeHero {
-    --mobile-card-top: 350px;
-    --mobile-action-top: 550px;
-    --mobile-hero-height: 657px;
+    --mobile-card-top: 371px;
+    --mobile-action-top: 571px;
+    --mobile-hero-height: 678px;
     min-height: var(--mobile-hero-height);
   }
 
@@ -503,7 +503,7 @@
   }
 
   .homeHero .globeFrame {
-    top: calc(var(--mobile-card-top) - 10px);
+    top: calc(var(--mobile-card-top) - 17px);
     bottom: auto;
     left: max(-18px, calc(50% - 225px));
     width: min(44vw, 195px);
@@ -530,25 +530,25 @@
 
 @media (max-width: 424px) {
   .homeHero {
-    --mobile-card-top: clamp(337px, calc(18.3vw + 268px), 350px);
-    --mobile-action-top: clamp(516px, calc(59.6vw + 293px), 550px);
-    --mobile-hero-height: clamp(623px, calc(59.6vw + 400px), 657px);
+    --mobile-card-top: clamp(358px, calc(18.3vw + 289px), 371px);
+    --mobile-action-top: clamp(537px, calc(59.6vw + 314px), 571px);
+    --mobile-hero-height: clamp(644px, calc(59.6vw + 421px), 678px);
   }
 }
 
 @media (max-width: 340px) {
   .homeHero {
-    --mobile-card-top: 358px;
-    --mobile-action-top: 515px;
-    --mobile-hero-height: 622px;
+    --mobile-card-top: 379px;
+    --mobile-action-top: 536px;
+    --mobile-hero-height: 643px;
   }
 }
 
 @media (min-width: 501px) and (max-width: 760px) {
   .homeHero {
-    --mobile-card-top: clamp(350px, calc(30.77vw + 196.15px), 430px);
-    --mobile-action-top: clamp(550px, calc(50vw + 300px), 680px);
-    --mobile-hero-height: clamp(657px, calc(50vw + 407px), 787px);
+    --mobile-card-top: clamp(371px, calc(30.77vw + 217.15px), 451px);
+    --mobile-action-top: clamp(571px, calc(50vw + 321px), 701px);
+    --mobile-hero-height: clamp(678px, calc(50vw + 428px), 808px);
   }
 
   .homeHero::after {
@@ -581,7 +581,7 @@
 
   .homeHero .rightRock {
     top: clamp(235px, calc(21.15vw + 129.23px), 290px);
-    left: calc(50% + clamp(28px, calc(3.08vw + 12.62px), 36px));
+    left: calc(50% + clamp(38px, calc(3.08vw + 22.62px), 46px));
     width: clamp(235px, calc(25vw + 110px), 300px);
   }
 }
