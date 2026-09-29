@@ -247,6 +247,7 @@ export default function PortfolioPageContent() {
       imageHeight: 3755,
       category: 'mobile',
       portfolioProject: 'swipeshot',
+      liveUrl: 'https://apps.apple.com/ua/app/swipeshot-photo-cleaner/id6764800182?l=ru',
       imageAlt: t('portfolio.projectSwipeShotAlt'),
     },
   ]
@@ -274,6 +275,7 @@ export default function PortfolioPageContent() {
         selectProjectLabel={t('portfolio.selectProject')}
         scrollHintLabel={t('portfolio.scrollHint')}
         liveSiteLabel={t('portfolio.liveSiteLabel')}
+        appStoreLabel={t('portfolio.appStoreLabel')}
         liveSitePlaceholderLabel={t('portfolio.liveSitePlaceholder')}
         liveSiteInactiveLabel={t('portfolio.liveSiteInactive')}
         projectDetailsLabel={t('portfolio.projectDetailsLabel')}

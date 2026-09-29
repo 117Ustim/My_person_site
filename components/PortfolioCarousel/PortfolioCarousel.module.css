@@ -18,7 +18,11 @@
   grid-template-columns: minmax(220px, 0.62fr) minmax(0, 2.02fr) minmax(145px, 0.45fr);
   align-items: stretch;
   gap: clamp(18px, 2vw, 32px);
-  inset: clamp(28px, 4vw, 60px) clamp(24px, 5vw, 88px);
+  top: clamp(28px, 4vw, 60px);
+  left: 50%;
+  width: min(calc(100% - (clamp(24px, 5vw, 88px) * 2)), 1840px);
+  height: calc(100% - (clamp(28px, 4vw, 60px) * 2));
+  transform: translateX(-50%);
   overflow: hidden;
   border: 1px solid rgb(var(--color-text-rgb) / 0.2);
   border-radius: clamp(20px, 2vw, 32px);
@@ -617,7 +621,19 @@
 }
 
 .projectDetailsDialogSport {
-  width: min(100%, 1680px);
+  width: min(100%, 1840px);
+}
+
+.projectDetailsDialogMedScanner {
+  width: min(100%, 1840px);
+}
+
+.projectDetailsDialogAir {
+  width: min(100%, 1840px);
+}
+
+.projectDetailsDialogSwipeShot {
+  width: min(100%, 1840px);
 }
 
 .projectDetailsDialog::-webkit-scrollbar {
@@ -1369,9 +1385,12 @@
     grid-template-columns: 1fr;
     grid-template-rows: auto minmax(280px, 1fr) 150px;
     inset: 68px 16px 24px;
+    width: auto;
+    height: auto;
     gap: 14px;
     border-radius: 24px;
     padding: 18px;
+    transform: none;
   }
 
   .content {
@@ -1577,6 +1596,33 @@
   }
 
   .projectDetailsDialogAuto::-webkit-scrollbar {
+    display: none;
+  }
+
+  .projectDetailsDialogSport {
+    overflow-y: hidden;
+    scrollbar-width: none;
+  }
+
+  .projectDetailsDialogSport::-webkit-scrollbar {
+    display: none;
+  }
+
+  .projectDetailsDialogAir {
+    overflow-y: hidden;
+    scrollbar-width: none;
+  }
+
+  .projectDetailsDialogAir::-webkit-scrollbar {
+    display: none;
+  }
+
+  .projectDetailsDialogSwipeShot {
+    overflow-y: hidden;
+    scrollbar-width: none;
+  }
+
+  .projectDetailsDialogSwipeShot::-webkit-scrollbar {
     display: none;
   }
 }

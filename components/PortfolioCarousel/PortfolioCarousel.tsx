@@ -18,6 +18,7 @@ type PortfolioCarouselProps = {
   selectProjectLabel: string
   scrollHintLabel: string
   liveSiteLabel: string
+  appStoreLabel: string
   liveSitePlaceholderLabel: string
   liveSiteInactiveLabel: string
   projectDetailsLabel: string
@@ -186,6 +187,7 @@ export default function PortfolioCarousel({
   selectProjectLabel,
   scrollHintLabel,
   liveSiteLabel,
+  appStoreLabel,
   liveSitePlaceholderLabel,
   liveSiteInactiveLabel,
   projectDetailsLabel,
@@ -468,6 +470,11 @@ export default function PortfolioCarousel({
   const isBeautyMasterProject = activeProject.portfolioProject === 'beauty-master-crm'
   const isAutoServiceProject = activeProject.portfolioProject === 'auto-service-crm'
   const isSportBaseProject = activeProject.portfolioProject === 'sport-base-crm'
+  const isSportsMobileProject = activeProject.portfolioProject === 'sports-crm'
+  const isMedScannerProject = activeProject.portfolioProject === 'medscanner'
+  const isAirScannerProject = activeProject.portfolioProject === 'air-scanner'
+  const isSwipeShotProject = activeProject.portfolioProject === 'swipeshot'
+  const projectDetailsPlatform = isSwipeShotProject ? 'iOS · Swift' : projectDetailsPlatforms[activeProjectCategory]
   const isInactiveSiteProject = ['luxury-travel', 'childrens-party', 'diamant', 'boostify'].includes(activeProject.portfolioProject ?? '')
   const detailParagraphs = (activeProject.details ?? '')
     .split(/\n\s*\n/)
@@ -506,30 +513,28 @@ export default function PortfolioCarousel({
           <div className={styles.projectCopy}>
             <div className={styles.projectTopAction}>
               <div className={styles.projectActions}>
-                {activeProject.category === 'sites' ? (
-                  activeProject.liveUrl ? (
-                    <a
-                      className={styles.liveSiteAction}
-                      href={activeProject.liveUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label={liveSiteLabel}
-                      data-tooltip={liveSiteLabel}
-                    >
-                      <ExternalLink size={15} strokeWidth={1.8} aria-hidden="true" />
-                    </a>
-                  ) : (
-                    <button
-                      className={styles.liveSiteAction}
-                      type="button"
-                      aria-disabled={!isInactiveSiteProject ? 'true' : undefined}
-                      aria-label={liveSitePlaceholderLabel}
-                      data-tooltip={isInactiveSiteProject ? liveSiteLabel : liveSitePlaceholderLabel}
-                      onClick={isInactiveSiteProject ? () => setIsInactiveSiteNoticeOpen(true) : undefined}
-                    >
-                      <ExternalLink size={15} strokeWidth={1.8} aria-hidden="true" />
-                    </button>
-                  )
+                {activeProject.liveUrl ? (
+                  <a
+                    className={styles.liveSiteAction}
+                    href={activeProject.liveUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={activeProject.category === 'mobile' ? appStoreLabel : liveSiteLabel}
+                    data-tooltip={activeProject.category === 'mobile' ? appStoreLabel : liveSiteLabel}
+                  >
+                    <ExternalLink size={15} strokeWidth={1.8} aria-hidden="true" />
+                  </a>
+                ) : activeProject.category === 'sites' ? (
+                  <button
+                    className={styles.liveSiteAction}
+                    type="button"
+                    aria-disabled={!isInactiveSiteProject ? 'true' : undefined}
+                    aria-label={liveSitePlaceholderLabel}
+                    data-tooltip={isInactiveSiteProject ? liveSiteLabel : liveSitePlaceholderLabel}
+                    onClick={isInactiveSiteProject ? () => setIsInactiveSiteNoticeOpen(true) : undefined}
+                  >
+                    <ExternalLink size={15} strokeWidth={1.8} aria-hidden="true" />
+                  </button>
                 ) : null}
                 <button
                   className={`${styles.liveSiteAction} ${styles.projectDetailsAction}`}
@@ -730,7 +735,7 @@ export default function PortfolioCarousel({
           }}
         >
           <article
-            className={`${styles.projectDetailsDialog} ${isProjectDetailsClosing ? styles.projectDetailsDialogClosing : ''} ${isVetScanProject ? styles.projectDetailsDialogVet : ''} ${isVetScanSiteProject ? styles.projectDetailsDialogVetSite : ''} ${isLuxuryTravelProject ? styles.projectDetailsDialogLuxury : ''} ${isOliveOilProject ? styles.projectDetailsDialogOlive : ''} ${isModularHouseProject ? styles.projectDetailsDialogModularHouse : ''} ${isBoostifyProject ? styles.projectDetailsDialogBoostify : ''} ${isDiamantProject ? styles.projectDetailsDialogDiamant : ''} ${isBeautyMasterProject ? styles.projectDetailsDialogBeauty : ''} ${isAutoServiceProject ? styles.projectDetailsDialogAuto : ''} ${isSportBaseProject ? styles.projectDetailsDialogSport : ''}`}
+            className={`${styles.projectDetailsDialog} ${isProjectDetailsClosing ? styles.projectDetailsDialogClosing : ''} ${isVetScanProject ? styles.projectDetailsDialogVet : ''} ${isVetScanSiteProject ? styles.projectDetailsDialogVetSite : ''} ${isLuxuryTravelProject ? styles.projectDetailsDialogLuxury : ''} ${isOliveOilProject ? styles.projectDetailsDialogOlive : ''} ${isModularHouseProject ? styles.projectDetailsDialogModularHouse : ''} ${isBoostifyProject ? styles.projectDetailsDialogBoostify : ''} ${isDiamantProject ? styles.projectDetailsDialogDiamant : ''} ${isBeautyMasterProject ? styles.projectDetailsDialogBeauty : ''} ${isAutoServiceProject ? styles.projectDetailsDialogAuto : ''} ${isSportBaseProject || isSportsMobileProject ? styles.projectDetailsDialogSport : ''} ${isMedScannerProject ? styles.projectDetailsDialogMedScanner : ''} ${isAirScannerProject ? styles.projectDetailsDialogAir : ''} ${isSwipeShotProject ? styles.projectDetailsDialogSwipeShot : ''}`}
             role="dialog"
             aria-modal="true"
             aria-labelledby="project-details-title"
@@ -793,7 +798,7 @@ export default function PortfolioCarousel({
               </div>
               <div className={styles.projectDetailsMetaItem}>
                 <dt>{projectDetailsPlatformLabel}</dt>
-                <dd>{projectDetailsPlatforms[activeProjectCategory]}</dd>
+                <dd>{projectDetailsPlatform}</dd>
               </div>
               <div className={styles.projectDetailsMetaItem}>
                 <dt>{projectDetailsRoleLabel}</dt>

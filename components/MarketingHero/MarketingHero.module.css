@@ -279,7 +279,7 @@
 }
 
 .homeHero .heroImageFrame {
-  top: 31.39vw;
+  top: clamp(0px, 31.39vw, 603px);
   right: 50%;
   width: min(64vw, 1084.8px);
   height: auto;
@@ -304,24 +304,24 @@
 }
 
 .homeHero .leftRock {
-  top: 33.45vw;
-  left: -10.74vw;
-  width: 49.8vw;
-  height: 49.8vw;
+  top: clamp(0px, 33.45vw, 642px);
+  left: clamp(-206px, -10.74vw, 0px);
+  width: min(49.8vw, 956px);
+  height: min(49.8vw, 956px);
 }
 
 .homeHero .globeFrame {
-  top: 26vw;
+  top: clamp(0px, 26vw, 499px);
   left: 2vw;
   width: min(26vw, 420px);
   height: min(26vw, 420px);
 }
 
 .homeHero .rightRock {
-  top: 18.11vw;
-  right: -40.59vw;
-  width: 76.4vw;
-  height: 47.9vw;
+  top: clamp(0px, 18.11vw, 348px);
+  right: clamp(-780px, -40.59vw, 0px);
+  width: min(76.4vw, 1467px);
+  height: min(47.9vw, 920px);
   transform: translateY(-50px);
 }
 
