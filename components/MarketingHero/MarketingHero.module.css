@@ -173,7 +173,6 @@
 }
 
 .homeHero {
-  --hero-stage-edge: max(24px, calc((100% - 1840px) / 2));
   min-height: clamp(760px, 66.49vw, 1127px);
   align-items: flex-start;
 }
@@ -312,10 +311,10 @@
 }
 
 .homeHero .globeFrame {
-  top: clamp(190px, 15vw, 300px);
-  left: var(--hero-stage-edge);
-  width: clamp(160px, 15vw, 300px);
-  height: clamp(160px, 15vw, 300px);
+  top: clamp(0px, 26vw, 499px);
+  left: 2vw;
+  width: min(26vw, 420px);
+  height: min(26vw, 420px);
 }
 
 .homeHero .rightRock {

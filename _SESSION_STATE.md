@@ -1,5 +1,7 @@
 # Session state
 
+- Desktop-глобус возвращён к прежним размерам и позиции (`top: clamp(0px, 26vw, 499px)`, `left: 2vw`, размер `min(26vw, 420px)`). Мобильные размеры и WebGL-fallback не изменялись. Повторные `git diff --check`, `npx tsc --noEmit` и `npm run build` прошли.
+
 - Кнопка «Переглянути роботи» в hero главной страницы теперь ведёт на `/portfolio`, а не прокручивает к секции `#projects`. `git diff --check`, `npx tsc --noEmit` и `npm run build` прошли.
 
 - Главная desktop-композиция собрана в ограниченном hero-stage: глобус и портрет больше не разъезжаются на сверхшироких мониторах, а dashboard сохраняет центрирование и ограниченную ширину. Для глобуса добавлен безопасный статичный CSS-fallback при недоступном WebGL и обработка потери WebGL-контекста. `git diff --check`, `npx tsc --noEmit` и `npm run build` прошли.
