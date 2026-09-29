@@ -28,7 +28,6 @@ const securityHeaders = [
 ]
 
 const nextConfig: NextConfig = {
-  distDir: process.env.NEXT_DIST_DIR ?? '.next',
   poweredByHeader: false,
   images: {
     minimumCacheTTL: 31536000,
