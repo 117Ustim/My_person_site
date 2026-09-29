@@ -512,6 +512,15 @@
   }
 }
 
+@media (min-width: 1920px) {
+  .homeHero .globeFrame {
+    top: 300px;
+    left: max(24px, calc((100% - 1840px) / 2));
+    width: 300px;
+    height: 300px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .homeHero .action,
   .homeHero .actionLabel {

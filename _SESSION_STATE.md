@@ -1,5 +1,7 @@
 # Session state
 
+- Для очень широких desktop-экранов добавлено отдельное правило `min-width: 1920px`: глобус фиксируется в ограниченной композиции (`300×300px`, верх `300px`, край stage на базе `1840px`), поэтому не уезжает при расширении viewport. Мобильные правила не изменялись. `git diff --check`, `npx tsc --noEmit` и `npm run build` прошли.
+
 - Desktop-глобус возвращён к прежним размерам и позиции (`top: clamp(0px, 26vw, 499px)`, `left: 2vw`, размер `min(26vw, 420px)`). Мобильные размеры и WebGL-fallback не изменялись. Повторные `git diff --check`, `npx tsc --noEmit` и `npm run build` прошли.
 
 - Кнопка «Переглянути роботи» в hero главной страницы теперь ведёт на `/portfolio`, а не прокручивает к секции `#projects`. `git diff --check`, `npx tsc --noEmit` и `npm run build` прошли.
