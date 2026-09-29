@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react'
-import CookieBanner from '../CookieBanner/CookieBanner'
 import { ProjectInquiryProvider } from '../ProjectInquiry/ProjectInquiry'
 import SiteFooter from '../SiteFooter/SiteFooter'
 import SiteHeader from '../SiteHeader/SiteHeader'
@@ -17,7 +16,6 @@ export default function SiteShell({ children }: SiteShellProps) {
         <SiteHeader />
         {children}
         <SiteFooter />
-        <CookieBanner />
         <FloatingActions />
       </div>
     </ProjectInquiryProvider>

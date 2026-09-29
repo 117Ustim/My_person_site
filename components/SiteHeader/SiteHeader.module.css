@@ -581,6 +581,7 @@
 @media (max-width: 820px) {
   .header {
     top: 12px;
+    z-index: 90;
     border-radius: 999px;
   }
 
@@ -612,7 +613,7 @@
 
   .mobilePanel {
     position: fixed;
-    z-index: 50;
+    z-index: 90;
     inset: 0;
     top: 64px;
     display: flex;
