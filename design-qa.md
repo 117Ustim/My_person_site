@@ -86,6 +86,59 @@
 
 final result: passed
 
+## Mobile hero — responsive composition pass — 2026-09-29
+
+### Source visual truth
+
+- User-approved reference: `/Users/ustim/Downloads/Снимок экрана — 2026-09-29 в 17.40.19.png`.
+- Required outcome: the mobile hero keeps one balanced composition on every phone width; the dashboard stays centred, globe and portrait scale without distortion, and the visual rhythm between description, card, CTA and technology label remains stable.
+
+### Implementation evidence
+
+- Local route: `http://localhost:3000/`.
+- Browser-rendered mobile checks completed at CSS viewports `320 × 760`, `375 × 812`, `430 × 860` and `520 × 900`.
+- At `320px`: description → card `40px`, card → CTA `25px`, CTA → technology label `30px`.
+- At `375px`: description → card `40px`, card → CTA `25px`, CTA → technology label `30px`.
+- At `430px` and `520px`: the card, globe and portrait remain centred as a shared stage; no horizontal layout drift or portrait distortion was observed.
+- The portrait uses a fixed aspect ratio, its horizontal position is anchored to the stage centre, and the fade continues to hide the lower image edge.
+- TypeScript validation and `git diff --check` passed.
+
+### Findings
+
+- P0/P1/P2: none after the responsive pass.
+- Typography: the mobile heading now caps at `38px`, preventing a wider phone from pushing the description down and breaking the visual rhythm.
+- Spacing and layout: card, CTA and technology label follow a coordinated mobile scale rather than independent fixed coordinates.
+- Colors and visual tokens: existing dark gradient, dashboard treatment and coral/white accents are unchanged.
+- Image quality and asset fidelity: existing globe, dashboard and portrait assets are retained; the portrait keeps its natural proportion and lower-edge fade.
+- Copy and content: unchanged.
+
+### Comparison history
+
+- Earlier implementation mixed fixed vertical positions with independently capped `vw` sizes. On narrow widths the portrait narrowed while retaining a fixed height; on wider phones the text grew and shifted the visual stage.
+- Fix: introduced shared mobile layout variables, width-sensitive interpolation below `424px`, a narrow-screen override at `340px`, stage-centred portrait positioning and aspect-ratio-based portrait sizing.
+- Post-fix validation confirms stable 40px / 25px / 30px spacing at narrow and standard mobile widths, plus stable composition at wider mobile width.
+
+### Implementation checklist
+
+- [x] Portrait scales proportionally without stretching.
+- [x] Globe, dashboard and portrait share a centred composition stage.
+- [x] Key vertical gaps stay stable across tested mobile widths.
+
+## Mobile hero — proportional growth to 760px — 2026-09-29
+
+- Scope: only the mobile range `501–760px`; desktop rules and the already-approved layout through `500px` are unchanged.
+- Browser checks at `500px`, `600px` and `760px` confirm continuous growth of the shared stage: dashboard `280→311→360px`, globe `195→216→250px`, portrait `235→260→300px`, heading `38→42.6→50px`.
+- The CTA and overlay use the same interpolation as the visual stage, preserving the relationship between the card, portrait fade and the technologies section.
+- P0/P1/P2: none. TypeScript validation and whitespace validation passed.
+
+final result: passed
+- [x] Hero fade tracks the responsive hero height.
+- [x] No desktop rule was changed.
+- [x] Browser-rendered responsive states inspected.
+- [x] `npx tsc --noEmit` and `git diff --check` passed.
+
+final result: passed
+
 ## Decorative elements position — 2026-09-29
 
 - Глобус и портрет подняты ровно на `200px` в мобильном media-query.
