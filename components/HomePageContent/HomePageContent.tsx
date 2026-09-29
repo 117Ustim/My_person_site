@@ -239,7 +239,7 @@ export default function HomePageContent() {
         title={localize('Перетворюю ідеї на готові цифрові продукти')}
         description={localize('Full-stack розробник. Сайти, CRM-системи та мобільні застосунки для реальних бізнес-завдань')}
         actionLabel={localize('Переглянути роботи')}
-        actionHref="#projects"
+        actionHref="/portfolio"
         image={asset(locale === 'en' ? 'vetscanct-dashboard-anna-14-uniform-en.png' : 'vetscanct-dashboard-anna-14-uniform.png')}
         imageAlt={localize('Головна панель VetScanCT для керування записами, пацієнтами та оплатами')}
         showEarthGlobe

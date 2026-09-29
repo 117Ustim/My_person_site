@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useI18n } from '../../lib/i18n'
 import {
   AmbientLight,
@@ -168,12 +168,22 @@ function disposeObject(object: Object3D) {
 export default function EarthGlobe() {
   const { t } = useI18n()
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [webglAvailable, setWebglAvailable] = useState<boolean | null>(null)
 
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
 
-    const renderer = new WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' })
+    let renderer: WebGLRenderer
+
+    try {
+      renderer = new WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' })
+    } catch {
+      setWebglAvailable(false)
+      return
+    }
+
+    setWebglAvailable(true)
     renderer.setClearColor(0x000000, 0)
 
     const scene = new Scene()
@@ -309,6 +319,15 @@ export default function EarthGlobe() {
       animationFrame = window.requestAnimationFrame(render)
     }
 
+    const handleContextLost = (event: Event) => {
+      event.preventDefault()
+      disposed = true
+      stopAnimation()
+      setWebglAvailable(false)
+    }
+
+    canvas.addEventListener('webglcontextlost', handleContextLost, false)
+
     const intersectionObserver = new IntersectionObserver(([entry]) => {
       isVisible = entry.isIntersecting
 
@@ -335,6 +354,7 @@ export default function EarthGlobe() {
     return () => {
       disposed = true
       stopAnimation()
+      canvas.removeEventListener('webglcontextlost', handleContextLost)
       document.removeEventListener('visibilitychange', handleVisibilityChange)
       intersectionObserver.disconnect()
       resizeObserver.disconnect()
@@ -352,7 +372,12 @@ export default function EarthGlobe() {
 
   return (
     <div className={styles.globe} aria-label={t('globe.label')}>
-      <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
+      <canvas ref={canvasRef} className={`${styles.canvas} ${webglAvailable === false ? styles.hiddenCanvas : ''}`} aria-hidden="true" />
+      {webglAvailable === false ? (
+        <div className={styles.fallback} aria-hidden="true">
+          <span className={styles.fallbackLand} />
+        </div>
+      ) : null}
     </div>
   )
 }
