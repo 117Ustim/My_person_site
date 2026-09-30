@@ -33,12 +33,10 @@ function ShapeDefinitions() {
   )
 }
 
-function CapabilityCard({ item, position, cardRef, isEntered, onAnimationEnd }: {
+function CapabilityCard({ item, position, cardRef }: {
   item: CapabilityItem
   position: CardPosition
   cardRef: RefObject<HTMLElement | null>
-  isEntered: boolean
-  onAnimationEnd?: () => void
 }) {
   const { t } = useI18n()
   const isTop = position === 'top'
@@ -53,8 +51,7 @@ function CapabilityCard({ item, position, cardRef, isEntered, onAnimationEnd }: 
   return (
     <article
       ref={cardRef}
-      className={`${styles.card} ${isTop ? styles.topCard : styles.bottomCard} ${isEntered ? styles.isEntered : ''}`}
-      onAnimationEnd={onAnimationEnd}
+      className={`${styles.card} ${isTop ? styles.topCard : styles.bottomCard}`}
     >
       <div className={`${styles.surface} ${isTop ? styles.topSurface : styles.bottomSurface}`}>
         <div className={styles.visual}>
@@ -118,67 +115,8 @@ function CapabilityPair({ topItem, bottomItem }: { topItem: CapabilityItem; bott
   const pairRef = useRef<HTMLDivElement>(null)
   const topCardRef = useRef<HTMLElement | null>(null)
   const bottomCardRef = useRef<HTMLElement | null>(null)
-  const topVisibleRef = useRef(false)
-  const bottomVisibleRef = useRef(false)
-  const topThresholdReachedRef = useRef(false)
-  const bottomThresholdReachedRef = useRef(false)
-  const topEnteredRef = useRef(false)
-  const bottomEnteredRef = useRef(false)
-  const topAnimationCompleteRef = useRef(false)
-  const bottomAnimationCompleteRef = useRef(false)
-  const reducedMotionRef = useRef(false)
-  const scrollDirectionRef = useRef<'down' | 'up'>('down')
+  const mobileFrameRef = useRef<number | null>(null)
   const [isPairInView, setIsPairInView] = useState(false)
-  const [isTopCardInView, setIsTopCardInView] = useState(false)
-  const [isBottomCardInView, setIsBottomCardInView] = useState(false)
-
-  function triggerTopCard() {
-    if (topEnteredRef.current || !topThresholdReachedRef.current || !topVisibleRef.current) return
-
-    topEnteredRef.current = true
-    setIsTopCardInView(false)
-    window.requestAnimationFrame(() => {
-      if (!topThresholdReachedRef.current || !topVisibleRef.current) {
-        topEnteredRef.current = false
-        return
-      }
-
-      setIsTopCardInView(true)
-      if (reducedMotionRef.current) {
-        topAnimationCompleteRef.current = true
-        if (scrollDirectionRef.current === 'down') triggerBottomCard()
-      }
-    })
-  }
-
-  function triggerBottomCard() {
-    if (bottomEnteredRef.current || !bottomThresholdReachedRef.current || !bottomVisibleRef.current) return
-
-    bottomEnteredRef.current = true
-    setIsBottomCardInView(false)
-    window.requestAnimationFrame(() => {
-      if (!bottomThresholdReachedRef.current || !bottomVisibleRef.current) {
-        bottomEnteredRef.current = false
-        return
-      }
-
-      setIsBottomCardInView(true)
-      if (reducedMotionRef.current) {
-        bottomAnimationCompleteRef.current = true
-        if (scrollDirectionRef.current === 'up') triggerTopCard()
-      }
-    })
-  }
-
-  function handleTopAnimationEnd() {
-    topAnimationCompleteRef.current = true
-    if (scrollDirectionRef.current === 'down') triggerBottomCard()
-  }
-
-  function handleBottomAnimationEnd() {
-    bottomAnimationCompleteRef.current = true
-    if (scrollDirectionRef.current === 'up') triggerTopCard()
-  }
 
   useEffect(() => {
     const pair = pairRef.current
@@ -186,85 +124,78 @@ function CapabilityPair({ topItem, bottomItem }: { topItem: CapabilityItem; bott
     const bottomCard = bottomCardRef.current
     if (!pair || !topCard || !bottomCard) return
 
-    if (!('IntersectionObserver' in window)) {
-      setIsPairInView(true)
-      setIsTopCardInView(true)
-      setIsBottomCardInView(true)
-      topEnteredRef.current = true
-      bottomEnteredRef.current = true
-      topAnimationCompleteRef.current = true
-      bottomAnimationCompleteRef.current = true
-      return
-    }
-
     if (window.matchMedia('(max-width: 900px)').matches) {
+      const revealThreshold = 0.05
+      const revealRange = 0.45
+      const hiddenOffset = 170
+      const hiddenBrightness = 0.18
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      reducedMotionRef.current = reducedMotion
-      topAnimationCompleteRef.current = reducedMotion
-      bottomAnimationCompleteRef.current = reducedMotion
+      const cardProgress = { top: 0, bottom: 0 }
 
-      let previousScrollY = window.scrollY
-      const handleScroll = () => {
-        const currentScrollY = window.scrollY
-        if (currentScrollY === previousScrollY) return
+      const setCardProgress = (card: HTMLElement, progress: number, direction: 'left' | 'right') => {
+        const offset = direction === 'left' ? -hiddenOffset * (1 - progress) : hiddenOffset * (1 - progress)
+        const brightness = hiddenBrightness + (1 - hiddenBrightness) * progress
+        const shadeOpacity = 1 - progress
 
-        const direction = currentScrollY > previousScrollY ? 'down' : 'up'
-        scrollDirectionRef.current = direction
-        previousScrollY = currentScrollY
-
-        if (direction === 'down') {
-          if (topThresholdReachedRef.current) triggerTopCard()
-          if (topAnimationCompleteRef.current) triggerBottomCard()
-        } else {
-          if (bottomThresholdReachedRef.current) triggerBottomCard()
-          if (bottomAnimationCompleteRef.current) triggerTopCard()
-        }
+        card.style.setProperty('--mobile-card-x', `${offset}px`)
+        card.style.setProperty('--mobile-card-brightness', brightness.toFixed(3))
+        card.style.setProperty('--mobile-card-shade-opacity', shadeOpacity.toFixed(3))
       }
 
-      window.addEventListener('scroll', handleScroll, { passive: true })
+      const getCardProgress = (card: HTMLElement, cardKey: 'top' | 'bottom') => {
+        const rect = card.getBoundingClientRect()
+        const visibleHeight = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0))
+        const visibilityRatio = Math.min(1, visibleHeight / Math.max(rect.height, 1))
+        const currentProgress = cardProgress[cardKey]
 
-      const topObserver = new IntersectionObserver(([entry]) => {
-        if (!entry.isIntersecting || entry.intersectionRatio === 0) {
-          topVisibleRef.current = false
-          topThresholdReachedRef.current = false
-          topEnteredRef.current = false
-          topAnimationCompleteRef.current = false
-          setIsTopCardInView(false)
+        if (visibilityRatio === 0) {
+          cardProgress[cardKey] = 0
+          return 0
+        }
+
+        if (currentProgress >= 1 || visibilityRatio < revealThreshold) return currentProgress
+
+        const nextProgress = Math.min(1, Math.max(0, (visibilityRatio - revealThreshold) / revealRange))
+        cardProgress[cardKey] = Math.max(currentProgress, nextProgress)
+
+        return cardProgress[cardKey]
+      }
+
+      const updateCardProgress = () => {
+        mobileFrameRef.current = null
+
+        if (reducedMotion) {
+          setCardProgress(topCard, 1, 'left')
+          setCardProgress(bottomCard, 1, 'right')
           return
         }
 
-        topVisibleRef.current = true
-        if (entry.intersectionRatio >= 0.2) {
-          topThresholdReachedRef.current = true
-          if (scrollDirectionRef.current === 'down' || bottomAnimationCompleteRef.current) triggerTopCard()
-        }
-      }, { threshold: [0, 0.2] })
-      const bottomObserver = new IntersectionObserver(([entry]) => {
-        if (!entry.isIntersecting || entry.intersectionRatio === 0) {
-          bottomVisibleRef.current = false
-          bottomThresholdReachedRef.current = false
-          bottomEnteredRef.current = false
-          bottomAnimationCompleteRef.current = false
-          topAnimationCompleteRef.current = reducedMotion
-          setIsBottomCardInView(false)
-          return
-        }
+        setCardProgress(topCard, getCardProgress(topCard, 'top'), 'left')
+        setCardProgress(bottomCard, getCardProgress(bottomCard, 'bottom'), 'right')
+      }
 
-        bottomVisibleRef.current = true
-        if (entry.intersectionRatio >= 0.2) {
-          bottomThresholdReachedRef.current = true
-          if (scrollDirectionRef.current === 'up' || topAnimationCompleteRef.current) triggerBottomCard()
-        }
-      }, { threshold: [0, 0.2] })
+      const scheduleCardProgress = () => {
+        if (mobileFrameRef.current !== null) return
+        mobileFrameRef.current = window.requestAnimationFrame(updateCardProgress)
+      }
 
-      topObserver.observe(topCard)
-      bottomObserver.observe(bottomCard)
+      scheduleCardProgress()
+
+      if (reducedMotion) return
+
+      window.addEventListener('scroll', scheduleCardProgress, { passive: true })
+      window.addEventListener('resize', scheduleCardProgress)
 
       return () => {
-        window.removeEventListener('scroll', handleScroll)
-        topObserver.disconnect()
-        bottomObserver.disconnect()
+        window.removeEventListener('scroll', scheduleCardProgress)
+        window.removeEventListener('resize', scheduleCardProgress)
+        if (mobileFrameRef.current !== null) window.cancelAnimationFrame(mobileFrameRef.current)
       }
+    }
+
+    if (!('IntersectionObserver' in window)) {
+      setIsPairInView(true)
+      return
     }
 
     const observer = new IntersectionObserver(([entry]) => {
@@ -282,15 +213,11 @@ function CapabilityPair({ topItem, bottomItem }: { topItem: CapabilityItem; bott
         item={topItem}
         position="top"
         cardRef={topCardRef}
-        isEntered={isTopCardInView}
-        onAnimationEnd={handleTopAnimationEnd}
       />
       <CapabilityCard
         item={bottomItem}
         position="bottom"
         cardRef={bottomCardRef}
-        isEntered={isBottomCardInView}
-        onAnimationEnd={handleBottomAnimationEnd}
       />
     </div>
   )

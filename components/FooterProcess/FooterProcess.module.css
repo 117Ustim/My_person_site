@@ -275,6 +275,100 @@
   }
 }
 
+@media (max-width: 759px) {
+  .process {
+    padding: 18px 16px 16px;
+  }
+
+  .eyebrow {
+    font-size: 9px;
+  }
+
+  .heading {
+    font-size: 24px;
+  }
+
+  .trackWrap {
+    margin-top: 24px;
+  }
+
+  .trackLine {
+    top: 8px;
+    right: 8px;
+    bottom: auto;
+    left: 8px;
+    width: auto;
+    height: 1px;
+  }
+
+  .lightPulse {
+    top: 50%;
+    left: var(--pulse-position, 0%);
+  }
+
+  .stepList {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  .stepButton {
+    display: flex;
+    flex-direction: column;
+    min-height: 112px;
+    align-items: center;
+    padding: 0 2px;
+    text-align: center;
+  }
+
+  .node {
+    flex: 0 0 auto;
+  }
+
+  .stepNumber {
+    margin-top: 10px;
+    font-size: 8px;
+  }
+
+  .stepTitle {
+    margin-top: 5px;
+    font-size: 11px;
+    line-height: 1.15;
+    width: 100%;
+    white-space: nowrap;
+    overflow-wrap: anywhere;
+  }
+
+  .stepDescription {
+    display: -webkit-box;
+    width: 100%;
+    min-height: 36px;
+    max-width: 92px;
+    max-height: 36px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 7px;
+    overflow: hidden;
+    font-size: 8px;
+    line-height: 1.25;
+    visibility: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .activeStep .stepTitle {
+    transform: translateY(-1px);
+  }
+
+  .activeStep .stepDescription {
+    max-height: 36px;
+    visibility: visible;
+  }
+
+  .stepButton:focus-visible {
+    outline-offset: 3px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .lightPulse {
     display: none;

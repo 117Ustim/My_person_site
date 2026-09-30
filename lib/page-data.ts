@@ -10,6 +10,7 @@ export type PortfolioImageSection = {
 
 export type FeatureItem = {
   title: string
+  mobileLabel?: string
   description: string
   details?: string
   image: string

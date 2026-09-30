@@ -217,7 +217,7 @@
 @media (max-width: 620px) {
   .footerGrid {
     grid-template-columns: 1fr;
-    padding-top: 56px;
+    padding-top: 36px;
   }
 
   .badges {
@@ -235,8 +235,23 @@
   }
 
   .footerBottom {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 10px;
+    align-items: center;
+    flex-direction: row;
+    gap: clamp(8px, 3vw, 18px);
+  }
+
+  .copyright,
+  .credit {
+    font-size: clamp(10px, 2.7vw, 13px);
+  }
+
+  .copyright {
+    min-width: 0;
+    white-space: nowrap;
+  }
+
+  .credit {
+    flex: 0 0 auto;
+    gap: clamp(5px, 2vw, 8px);
   }
 }

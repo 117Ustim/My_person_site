@@ -17,6 +17,7 @@ export default function HomePageContent() {
   const homeSlides: FeatureItem[] = [
     {
       title: t('portfolio.projectVetTitle'),
+      mobileLabel: 'VetScanCT',
       description: t('portfolio.projectVetDescription'),
       image: locale === 'en' ? '/assets/portfolio/vet-clinic-crm-en.png' : '/assets/portfolio/vetscanct-home-crm.png',
       imageAlt: t('portfolio.projectVetAlt'),
@@ -29,6 +30,7 @@ export default function HomePageContent() {
     },
     {
       title: t('portfolio.projectBeautyTitle'),
+      mobileLabel: 'Beauty Master',
       description: t('portfolio.projectBeautyDescription'),
       image: locale === 'en' ? '/assets/portfolio/beauty-master-crm-en.png' : '/assets/portfolio/beauty-master-crm.png',
       imageAlt: t('portfolio.projectBeautyAlt'),
@@ -40,6 +42,7 @@ export default function HomePageContent() {
     },
     {
       title: t('portfolio.projectSportBaseTitle'),
+      mobileLabel: 'Sport Base',
       description: t('portfolio.projectSportBaseDescription'),
       image: locale === 'en' ? '/assets/portfolio/sport-base-crm-en.png' : '/assets/portfolio/sports-crm.png',
       imageAlt: t('portfolio.projectSportBaseAlt'),
@@ -51,6 +54,7 @@ export default function HomePageContent() {
     },
     {
       title: t('portfolio.projectAutoTitle'),
+      mobileLabel: 'Auto Service',
       description: t('portfolio.projectAutoDescription'),
       image: locale === 'en' ? '/assets/portfolio/auto-service-crm-en.png' : '/assets/portfolio/auto-service-crm-promo-uk.png',
       imageAlt: t('portfolio.projectAutoAlt'),
@@ -65,6 +69,7 @@ export default function HomePageContent() {
   const websiteSlides: FeatureItem[] = [
     {
       title: t('portfolio.projectTravelTitle'),
+      mobileLabel: 'Luxury Travel',
       description: t('portfolio.projectTravelDescription'),
       image: '/assets/portfolio/luxury-travel.png',
       imageAlt: t('portfolio.projectTravelAlt'),
@@ -78,6 +83,7 @@ export default function HomePageContent() {
     },
     {
       title: t('portfolio.projectVetSiteTitle'),
+      mobileLabel: 'VetScanCT',
       description: t('portfolio.projectVetSiteDescription'),
       image: locale === 'en' ? '/assets/portfolio/vetscan-site-en.png' : '/assets/portfolio/vetscan-ua-promo.png',
       imageAlt: t('portfolio.projectVetSiteAlt'),
@@ -90,6 +96,7 @@ export default function HomePageContent() {
     },
     {
       title: t('portfolio.projectOliveTitle'),
+      mobileLabel: 'Olive Oil',
       description: t('portfolio.projectOliveDescription'),
       image: '/assets/portfolio/olive-oil-promo.png',
       imageAlt: t('portfolio.projectOliveAlt'),
@@ -103,6 +110,7 @@ export default function HomePageContent() {
     },
     {
       title: t('portfolio.projectChildrenTitle'),
+      mobileLabel: "Children's Party",
       description: t('portfolio.projectChildrenDescription'),
       image: '/assets/portfolio/childrens-party-promo.png',
       imageAlt: t('portfolio.projectChildrenAlt'),
@@ -115,6 +123,7 @@ export default function HomePageContent() {
     },
     {
       title: t('portfolio.projectModularHouseTitle'),
+      mobileLabel: 'Modular House',
       description: t('portfolio.projectModularHouseDescription'),
       image: locale === 'en' ? '/assets/portfolio/modular-house-en.png' : '/assets/portfolio/modular-house-promo.png',
       imageAlt: t('portfolio.projectModularHouseAlt'),
@@ -128,6 +137,7 @@ export default function HomePageContent() {
     },
     {
       title: t('portfolio.projectIdentoTitle'),
+      mobileLabel: 'Idento',
       description: t('portfolio.projectIdentoDescription'),
       image: '/assets/portfolio/idento-promo.png',
       imageAlt: t('portfolio.projectIdentoAlt'),
@@ -141,6 +151,7 @@ export default function HomePageContent() {
     },
     {
       title: t('portfolio.projectDiamantTitle'),
+      mobileLabel: 'Diamant',
       description: t('portfolio.projectDiamantDescription'),
       image: locale === 'en' ? '/assets/portfolio/diamant-natural-cosmetics-ad-en-3d.png' : '/assets/portfolio/diamant-ukr-card.png',
       imageAlt: t('portfolio.projectDiamantAlt'),
@@ -153,6 +164,7 @@ export default function HomePageContent() {
     },
     {
       title: t('portfolio.projectBoostifyTitle'),
+      mobileLabel: 'Boostify',
       description: t('portfolio.projectBoostifyDescription'),
       image: locale === 'en' ? '/assets/portfolio/boostify-advertising-cover-en-strict-3d.png' : '/assets/portfolio/boostify-ukr-card.png',
       imageAlt: t('portfolio.projectBoostifyAlt'),
@@ -168,6 +180,7 @@ export default function HomePageContent() {
   const mobileSlides: FeatureItem[] = [
     {
       title: t('portfolio.projectMedScannerTitle'),
+      mobileLabel: 'MedScanner',
       description: t('portfolio.projectMedScannerDescription'),
       image: locale === 'en' ? '/assets/portfolio/medscanner-ad-en-3d.png' : '/assets/portfolio/medscanner-ukr.png',
       imageAlt: t('portfolio.projectMedScannerAlt'),
@@ -179,6 +192,7 @@ export default function HomePageContent() {
     },
     {
       title: t('portfolio.projectSportsTitle'),
+      mobileLabel: 'Sports CRM',
       description: t('portfolio.projectSportsDescription'),
       image: locale === 'en' ? '/assets/portfolio/fitness-mobile-app-creative-v4-en-swapped-labels.png' : '/assets/portfolio/fitness-mobile-app-ukr.png',
       imageAlt: t('portfolio.projectSportsAlt'),
@@ -190,6 +204,7 @@ export default function HomePageContent() {
     },
     {
       title: t('portfolio.projectAirScannerTitle'),
+      mobileLabel: 'Air Scanner',
       description: t('portfolio.projectAirScannerDescription'),
       image: locale === 'en' ? '/assets/portfolio/air-scanner-mobile-ad-en-3d.png' : '/assets/portfolio/air-scanner-mobile-ad-ua-3d.png',
       imageAlt: t('portfolio.projectAirScannerAlt'),
@@ -201,6 +216,7 @@ export default function HomePageContent() {
     },
     {
       title: t('portfolio.projectSwipeShotTitle'),
+      mobileLabel: 'SwipeShot',
       description: t('portfolio.projectSwipeShotDescription'),
       image: locale === 'en' ? '/assets/portfolio/swipeshot-mobile-ad-en-3d.png' : '/assets/portfolio/swipeshot-mobile-ad-ua-3d.png',
       imageAlt: t('portfolio.projectSwipeShotAlt'),
@@ -259,13 +275,23 @@ export default function HomePageContent() {
           description={localize('Реальні цифрові продукти для бізнесу — від CRM-систем і вебсайтів до мобільних застосунків')}
         />
         <div className={`${styles.sliderWrap} ${styles.homeSliderWrap}`}>
-          <FeatureSlider items={homeSlides} label={localize('Вибрані CRM-проєкти')} title={t('portfolio.categoryCrm')} headingGap="spacious" />
+          <FeatureSlider
+            items={homeSlides}
+            label={localize('Вибрані CRM-проєкти')}
+            title={t('portfolio.categoryCrm')}
+            headingGap="spacious"
+            mobileCategoryGroups={[
+              { id: 'crm', label: t('portfolio.categoryCrm'), items: homeSlides },
+              { id: 'sites', label: t('portfolio.categorySites'), items: websiteSlides },
+              { id: 'mobile', label: t('portfolio.categoryMobile'), items: mobileSlides },
+            ]}
+          />
         </div>
       </PageSection>
-      <PageSection className={styles.homeAudienceSection}>
+      <PageSection className={`${styles.homeAudienceSection} ${styles.mobileCategorySecondarySection}`}>
         <FeatureSlider items={websiteSlides} label={localize('Вебсайти та лендинги')} title={localize('Вебсайти та лендинги')} headingGap="spacious" scrollableControls reverse />
       </PageSection>
-      <PageSection tone="raised">
+      <PageSection tone="raised" className={styles.mobileCategorySecondarySection}>
         <FeatureSlider items={mobileSlides} label={localize('Мобільні застосунки')} title={localize('Мобільні застосунки')} description={localize('Зручні мобільні продукти для iOS та Android із продуманим користувацьким досвідом.')} compact />
       </PageSection>
       <PageSection id="capabilities" className={styles.capabilitiesSection}>

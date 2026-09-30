@@ -293,15 +293,15 @@
 
 @media (max-width: 900px) {
   .pairs {
-    gap: 24px;
-    margin-top: 36px;
+    gap: 18px;
+    margin-top: 30px;
   }
 
   .pair {
     display: flex;
     min-height: 0;
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
   }
 
   .card,
@@ -325,7 +325,7 @@
     overflow: hidden;
     flex-direction: column;
     border: 1px solid rgb(var(--color-text-rgb) / 0.45);
-    border-radius: 22px;
+    border-radius: 18px;
     clip-path: none;
   }
 
@@ -339,7 +339,7 @@
     position: relative;
     width: 100%;
     height: auto;
-    aspect-ratio: 1.42;
+    aspect-ratio: 1.62;
     -webkit-mask-image: none;
     mask-image: none;
   }
@@ -360,19 +360,65 @@
     left: auto;
     width: 100%;
     min-height: 0;
-    padding: 18px 20px 20px;
+    padding: 15px 17px 17px;
+  }
+
+  .copy {
+    gap: 12px;
+  }
+
+  .copy h3 {
+    font-size: clamp(19px, 4.6vw, 26px);
+  }
+
+  .copy p {
+    margin-top: 5px;
+    font-size: 12px;
+  }
+
+  .stack {
+    gap: 4px;
+    margin-top: 8px;
   }
 
   .category {
     writing-mode: horizontal-tb;
   }
 
-  .topCard.isEntered {
-    animation: capabilityTopEntrance 1100ms cubic-bezier(0.33, 1, 0.68, 1) both;
+  .topCard,
+  .bottomCard {
+    --mobile-card-brightness: 0.18;
+    --mobile-card-shade-opacity: 1;
+    --mobile-card-x: 0px;
+    filter: brightness(var(--mobile-card-brightness));
+    transform: translateX(var(--mobile-card-x));
+    will-change: transform, filter;
   }
 
-  .bottomCard.isEntered {
-    animation: capabilityBottomEntrance 1100ms cubic-bezier(0.33, 1, 0.68, 1) 320ms both;
+  .surface::after {
+    position: absolute;
+    z-index: 4;
+    inset: 0;
+    border-radius: inherit;
+    content: '';
+    opacity: var(--mobile-card-shade-opacity);
+    pointer-events: none;
+  }
+
+  .topSurface::after {
+    background: linear-gradient(90deg, rgb(18 16 15 / 0.08), rgb(18 16 15 / 0.9));
+  }
+
+  .bottomSurface::after {
+    background: linear-gradient(270deg, rgb(18 16 15 / 0.08), rgb(18 16 15 / 0.9));
+  }
+
+  .topCard {
+    --mobile-card-x: -170px;
+  }
+
+  .bottomCard {
+    --mobile-card-x: 170px;
   }
 }
 
@@ -383,14 +429,13 @@
   }
 
   .pair.isEntered .topCard,
-  .pair.isEntered .bottomCard,
-  .topCard.isEntered,
-  .bottomCard.isEntered {
+  .pair.isEntered .bottomCard {
     animation: none;
   }
 
   .topCard,
   .bottomCard {
+    filter: brightness(1);
     transform: none;
   }
 }

@@ -314,3 +314,15 @@ section.homeAudienceSection {
     margin-top: -60px;
   }
 }
+
+@media (max-width: 820px) {
+  .mobileCategorySecondarySection {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .capabilitiesSection {
+    padding-bottom: 36px;
+  }
+}
