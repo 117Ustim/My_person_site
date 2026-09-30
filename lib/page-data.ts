@@ -23,6 +23,7 @@ export type FeatureItem = {
   imageSections?: ReadonlyArray<PortfolioImageSection>
   imageFit?: 'cover' | 'contain'
   imagePosition?: 'center' | 'top'
+  mobileImagePosition?: 'center' | 'left' | 'right'
   imageSized?: boolean
   frameTone?: 'default' | 'coral'
   showPortfolioCard?: boolean

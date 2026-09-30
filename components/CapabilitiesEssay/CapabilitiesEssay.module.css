@@ -84,6 +84,10 @@
   box-shadow: 0 0 0 5px rgba(255, 135, 122, 0.07);
 }
 
+.mobilePortrait {
+  display: none;
+}
+
 .portraitFrame::after {
   position: absolute;
   inset: 6px;
@@ -434,6 +438,30 @@
     gap: 24px;
   }
 
+  .intro {
+    display: block;
+    margin-top: 24px;
+  }
+
+  .desktopPortrait {
+    display: none;
+  }
+
+  .mobilePortrait {
+    display: block;
+    float: right;
+    width: min(31vw, 132px);
+    margin: 0 0 18px 18px;
+  }
+
+  .introMeta {
+    margin-bottom: 24px;
+  }
+
+  .introCopy {
+    max-width: none;
+  }
+
   .headingBlock {
     grid-template-columns: 1fr;
     gap: 24px;
@@ -445,8 +473,12 @@
   }
 
   .intro {
-    margin-top: 64px;
+    margin-top: 40px;
     padding-bottom: 56px;
+  }
+
+  .mobilePortrait {
+    width: min(31vw, 132px);
   }
 
   .introMeta,

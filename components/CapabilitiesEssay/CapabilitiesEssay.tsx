@@ -78,7 +78,7 @@ export default function CapabilitiesEssay() {
           <p className={styles.eyebrow}>{localize('Мій підхід')}</p>
           <h2>{localize('Від ідеї до продукту, яким хочеться користуватися')}</h2>
         </div>
-        <div className={styles.portraitFrame}>
+        <div className={`${styles.portraitFrame} ${styles.desktopPortrait}`}>
           <Image
             className={styles.portrait}
             src="/assets/home-founder-avatar.png?v=20260926"
@@ -90,6 +90,15 @@ export default function CapabilitiesEssay() {
       </RevealBlock>
 
       <RevealBlock className={styles.intro}>
+        <div className={`${styles.portraitFrame} ${styles.mobilePortrait}`}>
+          <Image
+            className={styles.portrait}
+            src="/assets/home-founder-avatar.png?v=20260926"
+            alt={localize('Портрет автора')}
+            fill
+            sizes="(max-width: 760px) 31vw, 132px"
+          />
+        </div>
         <div className={styles.introMeta}>
           <span>00</span>
           <span>{localize('ПІДХІД')}</span>

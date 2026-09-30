@@ -44,6 +44,7 @@ export default function FeatureSlider({ items, label, title, description, revers
     : [{ id: 'default', label: title ?? resolvedLabel, items }]
   const activeMobileCategory = mobileCategories[mobileCategoryIndex] ?? mobileCategories[0]
   const mobileItems = activeMobileCategory.items
+  const activeHeading = mobileCategoryGroups?.length ? activeMobileCategory.label : title
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(max-width: 820px)')
@@ -144,9 +145,9 @@ export default function FeatureSlider({ items, label, title, description, revers
   return (
     <div className={`${styles.slider} ${reverse ? styles.reversed : ''} ${compact ? styles.compact : ''} ${imageSized ? styles.imageSized : ''} ${headingGap === 'spacious' ? styles.spaciousHeadingGap : ''}`} ref={sliderRef} aria-label={resolvedLabel}>
       <div className={styles.leftColumn}>
-        {title ? (
+        {activeHeading ? (
           <div className={styles.sliderHeading}>
-            <h3>{title}</h3>
+            <h3>{activeHeading}</h3>
             {description ? <p>{description}</p> : null}
           </div>
         ) : null}
@@ -241,7 +242,7 @@ export default function FeatureSlider({ items, label, title, description, revers
             <article className={styles.mobileSlide} key={`${item.title}-${item.image}`}>
               <div className={`${styles.mobileVisual} ${item.frameTone === 'coral' ? styles.coralVisual : ''}`}>
                 <Image
-                  className={`${item.imageFit === 'contain' ? styles.mobileContainImage : ''} ${item.imagePosition === 'top' ? styles.mobileTopImage : ''}`}
+                  className={`${item.imageFit === 'contain' ? styles.mobileContainImage : ''} ${item.imagePosition === 'top' ? styles.mobileTopImage : ''} ${item.mobileImagePosition === 'left' ? styles.mobileLeftImage : ''} ${item.mobileImagePosition === 'right' ? styles.mobileRightImage : ''}`}
                   src={item.image}
                   alt={item.imageAlt}
                   fill

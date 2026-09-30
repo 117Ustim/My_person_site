@@ -23,6 +23,7 @@ export default function HomePageContent() {
       imageAlt: t('portfolio.projectVetAlt'),
       imageFit: 'cover',
       imagePosition: 'top',
+      mobileImagePosition: 'left',
       imageSized: true,
       frameTone: 'coral',
       category: 'crm',
@@ -269,7 +270,7 @@ export default function HomePageContent() {
         />
         <CapabilityShowcase items={localizeCapabilities(localizedCapabilities, localize)} />
       </PageSection>
-      <PageSection tone="raised">
+      <PageSection tone="raised" className={styles.projectsSection}>
         <SectionHeading
           title={localize('Вибрані проєкти')}
           description={localize('Реальні цифрові продукти для бізнесу — від CRM-систем і вебсайтів до мобільних застосунків')}

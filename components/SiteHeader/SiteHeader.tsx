@@ -259,20 +259,20 @@ function MobileMenu({ links, open, closing, onClose, onNavigate, onContactClick,
 
   return (
     <div className={`${styles.mobilePanel} ${closing ? styles.mobilePanelClosing : ''}`}>
-      <div className={styles.mobileMenuArtwork} aria-hidden="true">
-        <div className={styles.mobileJourneyStage}>
-          <Lightbulb className={styles.mobileJourneyIcon} strokeWidth={1.55} />
-        </div>
-        <span className={`${styles.mobileJourneyLink} ${styles.mobileJourneyLinkFirst}`} />
-        <div className={`${styles.mobileJourneyStage} ${styles.mobileJourneyStageInterface}`}>
-          <PanelsTopLeft className={styles.mobileJourneyIcon} strokeWidth={1.55} />
-        </div>
-        <span className={`${styles.mobileJourneyLink} ${styles.mobileJourneyLinkSecond}`} />
-        <div className={`${styles.mobileJourneyStage} ${styles.mobileJourneyStageMobile}`}>
-          <Smartphone className={styles.mobileJourneyIcon} strokeWidth={1.55} />
-        </div>
-      </div>
       <nav className={styles.mobileNav} aria-label={t('common.mobileNavigation')}>
+        <div className={styles.mobileMenuArtwork} aria-hidden="true">
+          <div className={styles.mobileJourneyStage}>
+            <Lightbulb className={styles.mobileJourneyIcon} strokeWidth={1.55} />
+          </div>
+          <span className={`${styles.mobileJourneyLink} ${styles.mobileJourneyLinkFirst}`} />
+          <div className={`${styles.mobileJourneyStage} ${styles.mobileJourneyStageInterface}`}>
+            <PanelsTopLeft className={styles.mobileJourneyIcon} strokeWidth={1.55} />
+          </div>
+          <span className={`${styles.mobileJourneyLink} ${styles.mobileJourneyLinkSecond}`} />
+          <div className={`${styles.mobileJourneyStage} ${styles.mobileJourneyStageMobile}`}>
+            <Smartphone className={styles.mobileJourneyIcon} strokeWidth={1.55} />
+          </div>
+        </div>
         <div className={styles.mobileMenuLead}>
           <span className={styles.mobileMenuKicker}>
             <Sparkles className={styles.mobileMenuKickerIcon} aria-hidden="true" strokeWidth={1.6} />
