@@ -35,6 +35,47 @@ function validatePayload(value: unknown): ContactPayload | null {
 }
 
 async function deliverContact(payload: ContactPayload) {
+  if (payload.channel === 'telegram') {
+    const token = process.env.TELEGRAM_BOT_TOKEN
+    const chatId = process.env.TELEGRAM_CHAT_ID
+
+    if (!token || !chatId) {
+      throw new Error('Telegram delivery is not configured.')
+    }
+
+    const text = [
+      'Новая заявка с сайта',
+      '',
+      `Имя: ${payload.name}`,
+      `Email: ${payload.email}`,
+      '',
+      'Проект:',
+      payload.message,
+    ].join('\n')
+
+    const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: chatId, text }),
+    })
+
+    let result: { ok?: boolean } = {}
+    try {
+      result = await response.json() as { ok?: boolean }
+    } catch {
+      result = {}
+    }
+
+    if (!response.ok || result.ok !== true) {
+      throw new Error('Telegram delivery failed.')
+    }
+
+    return {
+      channel: payload.channel,
+      status: 'sent' as const,
+    }
+  }
+
   return {
     channel: payload.channel,
     status: 'stub' as const,
@@ -56,7 +97,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: 'Invalid contact payload.' }, { status: 400 })
   }
 
-  const delivery = await deliverContact(payload)
-
-  return NextResponse.json({ ok: true, ...delivery })
+  try {
+    const delivery = await deliverContact(payload)
+    return NextResponse.json({ ok: true, ...delivery })
+  } catch {
+    return NextResponse.json({ ok: false, error: 'Contact delivery failed.' }, { status: 502 })
+  }
 }

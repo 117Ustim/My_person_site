@@ -56,6 +56,7 @@ function ProjectInquiryModal({ open, onClose }: { open: boolean; onClose: () => 
   const messageFieldRef = useRef<HTMLLabelElement>(null)
   const [values, setValues] = useState<FormValues>({ name: '', email: '', message: '' })
   const [deliveryStatus, setDeliveryStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
+  const [deliveryChannel, setDeliveryChannel] = useState<ContactChannel | null>(null)
   const [scrollIndicatorOffset, setScrollIndicatorOffset] = useState(0)
 
   useEffect(() => {
@@ -64,6 +65,7 @@ function ProjectInquiryModal({ open, onClose }: { open: boolean; onClose: () => 
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     setDeliveryStatus('idle')
+    setDeliveryChannel(null)
     setScrollIndicatorOffset(0)
 
     if (window.matchMedia('(max-width: 620px)').matches) {
@@ -87,6 +89,7 @@ function ProjectInquiryModal({ open, onClose }: { open: boolean; onClose: () => 
 
   const handleDelivery = async (channel: ContactChannel) => {
     setDeliveryStatus('sending')
+    setDeliveryChannel(channel)
 
     try {
       const response = await fetch('/api/contact', {
@@ -198,7 +201,7 @@ function ProjectInquiryModal({ open, onClose }: { open: boolean; onClose: () => 
           </div>
         </form>
 
-        {deliveryStatus === 'success' ? <p className={styles.status} role="status">{t('contact.deliveryStubStatus')}</p> : null}
+        {deliveryStatus === 'success' ? <p className={styles.status} role="status">{t(deliveryChannel === 'telegram' ? 'contact.telegramSuccessStatus' : 'contact.deliveryStubStatus')}</p> : null}
         {deliveryStatus === 'error' ? <p className={`${styles.status} ${styles.statusError}`} role="alert">{t('contact.deliveryError')}</p> : null}
       </section>
     </div>
