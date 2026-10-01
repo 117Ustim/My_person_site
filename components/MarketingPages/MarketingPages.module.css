@@ -1,6 +1,10 @@
 .main {
-  overflow: hidden;
+  max-width: 100vw;
+  overflow-x: clip;
+  overscroll-behavior-x: none;
   background: var(--color-bg);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 .capabilitySection {
