@@ -22,7 +22,7 @@ import {
 } from 'three'
 import styles from './EarthGlobe.module.css'
 import { createProjectNetwork } from './projectNetwork'
-import { applyStoneMaterial, createStoneTexture } from './stoneMaterial'
+import { applyStoneMaterial, createStoneCanvas, createStoneTexture } from './stoneMaterial'
 
 const LAND_DATA = '/geo/ne-110m-land.json'
 const STONE_TEXTURE_DATA = '/site-assets/assets/0739-about-stone.CIU_KC6y_Z1peJd0-c9c65b3996.webp'
@@ -123,9 +123,7 @@ function loadStoneImage() {
   })
 }
 
-function createLandTexture(data: LandData) {
-  const width = 4096
-  const height = 2048
+function createLandMaskCanvas(data: LandData, width: number, height: number) {
   const mapCanvas = document.createElement('canvas')
   mapCanvas.width = width
   mapCanvas.height = height
@@ -144,6 +142,10 @@ function createLandTexture(data: LandData) {
     })
   })
 
+  return mapCanvas
+}
+
+function createShiftedLandMask(mapCanvas: HTMLCanvasElement, width: number, height: number) {
   // SphereGeometry начинает UV-развёртку с долготы −90°. Сдвигаем карту на четверть
   // оборота, чтобы сетка, береговая линия и стартовый ракурс совпадали географически.
   const canvas = document.createElement('canvas')
@@ -153,6 +155,52 @@ function createLandTexture(data: LandData) {
   if (!context) return null
   context.drawImage(mapCanvas, -width * 0.25, 0)
   context.drawImage(mapCanvas, width * 0.75, 0)
+
+  return canvas
+}
+
+function createLandTexture(data: LandData) {
+  const width = 4096
+  const height = 2048
+  const mapCanvas = createLandMaskCanvas(data, width, height)
+  if (!mapCanvas) return null
+  const canvas = createShiftedLandMask(mapCanvas, width, height)
+  if (!canvas) return null
+
+  const texture = new CanvasTexture(canvas)
+  texture.colorSpace = SRGBColorSpace
+  return texture
+}
+
+function createMobileLandTexture(data: LandData, stoneCanvas: HTMLCanvasElement) {
+  const width = 2048
+  const height = 1024
+  const mapCanvas = createLandMaskCanvas(data, width, height)
+  if (!mapCanvas) return null
+  const landMask = createShiftedLandMask(mapCanvas, width, height)
+  if (!landMask) return null
+
+  const canvas = document.createElement('canvas')
+  canvas.width = width
+  canvas.height = height
+  const context = canvas.getContext('2d')
+  if (!context) return null
+
+  const tileSize = stoneCanvas.width
+  for (let y = 0; y < height; y += tileSize) {
+    for (let x = 0; x < width; x += tileSize) {
+      const mirrorX = (x / tileSize) % 2 === 1
+      const mirrorY = (y / tileSize) % 2 === 1
+      context.save()
+      context.translate(x + (mirrorX ? tileSize : 0), y + (mirrorY ? tileSize : 0))
+      context.scale(mirrorX ? -1 : 1, mirrorY ? -1 : 1)
+      context.drawImage(stoneCanvas, 0, 0)
+      context.restore()
+    }
+  }
+
+  context.globalCompositeOperation = 'destination-in'
+  context.drawImage(landMask, 0, 0)
 
   const texture = new CanvasTexture(canvas)
   texture.colorSpace = SRGBColorSpace
@@ -216,6 +264,7 @@ export default function EarthGlobe() {
     const gridMaterial = addGraticule(gridGroup)
 
     const compactNetwork = window.matchMedia('(max-width: 820px)').matches
+    const useMobileLandTexture = window.matchMedia('(max-width: 820px) and (pointer: coarse)').matches
     const projectNetwork = createProjectNetwork(EARTH_RADIUS, compactNetwork, ROTATION_SPEED)
     projectNetwork.group.rotation.y = -0.2
     axialGroup.add(projectNetwork.group)
@@ -266,11 +315,20 @@ export default function EarthGlobe() {
     ])
       .then(([data, stoneImage]) => {
         if (disposed) return
-        landTexture = createLandTexture(data)
-        stoneTexture = stoneImage ? createStoneTexture(stoneImage) : null
-        if (!landTexture || !stoneTexture) return
-        stoneTexture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy())
-        applyStoneMaterial(landMaterial, stoneTexture)
+        const stoneCanvas = stoneImage ? createStoneCanvas(stoneImage) : null
+        if (!stoneCanvas) return
+
+        landTexture = useMobileLandTexture
+          ? createMobileLandTexture(data, stoneCanvas)
+          : createLandTexture(data)
+        if (!landTexture) return
+
+        if (!useMobileLandTexture) {
+          stoneTexture = createStoneTexture(stoneCanvas)
+          stoneTexture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy())
+          applyStoneMaterial(landMaterial, stoneTexture)
+        }
+
         landMaterial.map = landTexture
         landMaterial.opacity = 1
         landMaterial.needsUpdate = true

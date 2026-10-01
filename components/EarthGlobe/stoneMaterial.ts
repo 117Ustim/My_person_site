@@ -6,7 +6,16 @@ const STONE_CROP = { x: 540, y: 230, size: 180 }
 const STONE_TEXTURE_SIZE = 256
 const STONE_SCALE = 1.25
 
-export function createStoneTexture(image: HTMLImageElement) {
+export function createStoneTexture(canvas: HTMLCanvasElement) {
+  const texture = new CanvasTexture(canvas)
+  texture.colorSpace = SRGBColorSpace
+  // Зеркальное повторение стыкует край с самим собой: без резкого шва.
+  texture.wrapS = MirroredRepeatWrapping
+  texture.wrapT = MirroredRepeatWrapping
+  return texture
+}
+
+export function createStoneCanvas(image: HTMLImageElement) {
   const { x, y, size } = STONE_CROP
   const canvas = document.createElement('canvas')
   canvas.width = STONE_TEXTURE_SIZE
@@ -43,12 +52,7 @@ export function createStoneTexture(image: HTMLImageElement) {
   }
   context.putImageData(pixels, 0, 0)
 
-  const texture = new CanvasTexture(canvas)
-  texture.colorSpace = SRGBColorSpace
-  // Зеркальное повторение стыкует край с самим собой: без резкого шва.
-  texture.wrapS = MirroredRepeatWrapping
-  texture.wrapT = MirroredRepeatWrapping
-  return texture
+  return canvas
 }
 
 export function applyStoneMaterial(material: MeshStandardMaterial, texture: CanvasTexture) {
