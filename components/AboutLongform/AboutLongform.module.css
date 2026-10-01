@@ -1255,12 +1255,12 @@
 
   .heroAccent {
     top: 13px;
-    right: 40px;
+    right: 20px;
     width: 170px;
   }
 
   .chapters::before {
-    bottom: 26px;
+    bottom: 91px;
     left: 48px;
   }
 
@@ -1388,7 +1388,8 @@
   .actionSignal {
     --incoming-path: 76px;
     --signal-distance: 62px;
-    width: min(100%, 320px);
+    left: -26px;
+    width: min(100%, 288px);
     margin: 104px auto 0;
   }
 

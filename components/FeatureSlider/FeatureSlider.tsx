@@ -31,6 +31,7 @@ export default function FeatureSlider({ items, label, title, description, revers
   const { t } = useI18n()
   const resolvedLabel = label ?? t('common.features')
   const sliderRef = useRef<HTMLDivElement>(null)
+  const mobileProjectMenuRef = useRef<HTMLDivElement>(null)
   const mobileCarouselRef = useRef<HTMLDivElement>(null)
   const [activeIndex, setActiveIndex] = useState(0)
   const [mobileCategoryIndex, setMobileCategoryIndex] = useState(0)
@@ -140,6 +141,21 @@ export default function FeatureSlider({ items, label, title, description, revers
     }
   }, [mobileCategoryIndex])
 
+  useEffect(() => {
+    const menu = mobileProjectMenuRef.current
+    const activeTab = menu?.children[mobileActiveIndex]
+
+    if (!(activeTab instanceof HTMLElement) || !menu) return
+
+    const targetScrollLeft = activeTab.offsetLeft - (menu.clientWidth - activeTab.offsetWidth) / 2
+    const maximumScrollLeft = menu.scrollWidth - menu.clientWidth
+
+    menu.scrollTo({
+      left: Math.min(Math.max(0, targetScrollLeft), maximumScrollLeft),
+      behavior: 'smooth',
+    })
+  }, [mobileActiveIndex, mobileCategoryIndex])
+
   const imageSized = items.some(item => item.imageFit === 'contain' || item.imageSized)
 
   return (
@@ -217,7 +233,7 @@ export default function FeatureSlider({ items, label, title, description, revers
           </div>
         ) : null}
 
-        <div className={styles.mobileProjectMenu} role="tablist" aria-label={activeMobileCategory.label}>
+        <div ref={mobileProjectMenuRef} className={styles.mobileProjectMenu} role="tablist" aria-label={activeMobileCategory.label}>
           {mobileItems.map((item, index) => (
             <button
               className={`${styles.mobileProjectTab} ${index === mobileActiveIndex ? styles.mobileProjectTabActive : ''}`}

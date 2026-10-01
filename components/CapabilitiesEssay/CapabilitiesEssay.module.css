@@ -512,6 +512,22 @@
   .conclusionCopy p {
     font-size: 16px;
   }
+
+  .footerLabel {
+    margin-bottom: 12px;
+  }
+
+  .technologies {
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .technologies span {
+    min-height: 32px;
+    padding: 6px 11px;
+    border-radius: 8px;
+    font-size: 12px;
+  }
 }
 
 @media (max-width: 480px) {

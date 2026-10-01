@@ -475,8 +475,10 @@
 
 @media (max-width: 620px) {
   .backdrop {
-    align-items: end;
-    padding: 10px;
+    align-items: stretch;
+    height: 100dvh;
+    min-height: 100dvh;
+    padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
   }
 
   .linework {
@@ -489,22 +491,35 @@
 
   .dialog {
     display: block;
+    width: 100%;
+    height: 100%;
     min-height: 0;
-    max-height: calc(100vh - 20px);
-    padding: 28px 22px 30px;
+    max-height: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 14px 22px 22px;
     border-radius: 22px;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .dialog::-webkit-scrollbar {
+    width: 0;
   }
 
   .close {
-    top: 18px;
-    right: 18px;
+    position: sticky;
+    top: 0;
+    margin: 0 0 12px auto;
     width: 38px;
     height: 38px;
+    background: #161514;
     font-size: 25px;
   }
 
   .intro {
-    padding-right: 42px;
+    padding-right: 0;
   }
 
   .eyebrow {
@@ -538,7 +553,7 @@
     width: auto;
     grid-template-columns: 72px minmax(0, 1fr);
     column-gap: 16px;
-    margin-top: 38px;
+    margin-top: 28px;
   }
 
   .avatar {
@@ -564,7 +579,7 @@
     grid-column: 1 / -1;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 6px;
-    margin: 26px 0 0;
+    margin: 20px 0 0;
   }
 
   .steps li {
@@ -587,12 +602,12 @@
   }
 
   .form {
-    gap: 20px;
-    margin-top: 32px;
+    gap: 16px;
+    margin-top: 24px;
   }
 
   .form .messageField {
-    min-height: 130px;
+    min-height: 112px;
   }
 
   .formActions {

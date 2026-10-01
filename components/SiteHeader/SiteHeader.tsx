@@ -280,11 +280,11 @@ function MobileMenu({ links, open, closing, onClose, onNavigate, onContactClick,
           </span>
           <span className={styles.mobileMenuLeadLine} aria-hidden="true" />
         </div>
-        {links.map(link => (
-          <div className={styles.mobileMenuItem} key={link.href}>
+        {links.map((link, index) => (
+          <div className={styles.mobileMenuItem} data-menu-index={index} key={link.href}>
             {link.labelKey === 'nav.contacts' ? (
               <a className={styles.mobileNavLink} href={link.href} onClick={onContactClick}>
-                <span>{t(link.labelKey)}</span>
+                <span className={styles.mobileNavLabel}>{t(link.labelKey)}</span>
                 <span className={styles.mobileNavIconFrame} aria-hidden="true">
                   <ArrowUpRight className={styles.mobileNavIcon} strokeWidth={1.6} />
                 </span>
@@ -298,7 +298,7 @@ function MobileMenu({ links, open, closing, onClose, onNavigate, onContactClick,
                   onNavigate(link.href)
                 }}
               >
-                <span>{t(link.labelKey)}</span>
+                <span className={styles.mobileNavLabel}>{t(link.labelKey)}</span>
                 <span className={styles.mobileNavIconFrame} aria-hidden="true">
                   <ArrowUpRight className={styles.mobileNavIcon} strokeWidth={1.6} />
                 </span>

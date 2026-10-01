@@ -52,6 +52,7 @@ function sanitizeName(value: string, locale: Locale) {
 function ProjectInquiryModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { locale, t } = useI18n()
   const firstInputRef = useRef<HTMLInputElement>(null)
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
   const messageFieldRef = useRef<HTMLLabelElement>(null)
   const [values, setValues] = useState<FormValues>({ name: '', email: '', message: '' })
   const [deliveryStatus, setDeliveryStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
@@ -64,7 +65,12 @@ function ProjectInquiryModal({ open, onClose }: { open: boolean; onClose: () => 
     document.body.style.overflow = 'hidden'
     setDeliveryStatus('idle')
     setScrollIndicatorOffset(0)
-    firstInputRef.current?.focus()
+
+    if (window.matchMedia('(max-width: 620px)').matches) {
+      closeButtonRef.current?.focus()
+    } else {
+      firstInputRef.current?.focus()
+    }
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose()
@@ -136,7 +142,7 @@ function ProjectInquiryModal({ open, onClose }: { open: boolean; onClose: () => 
         </div>
         <div className={styles.decorativeArc} aria-hidden="true" />
         <BrandLogo className={styles.watermarkLogo} aria-label={t('common.auStudio')} />
-        <button className={styles.close} type="button" aria-label={t('contact.close')} onClick={onClose}>×</button>
+        <button ref={closeButtonRef} className={styles.close} type="button" aria-label={t('contact.close')} onClick={onClose}>×</button>
 
         <div className={styles.intro}>
           <p className={styles.eyebrow}>{t('contact.modalEyebrow')}</p>

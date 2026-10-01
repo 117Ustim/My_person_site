@@ -2,30 +2,32 @@ import { CanvasTexture, MeshStandardMaterial, MirroredRepeatWrapping, SRGBColorS
 
 // Один фрагмент из оригинального asset для всей суши; его альфа проверена: 255.
 const STONE_CROP = { x: 540, y: 230, size: 180 }
+// Степень двойки нужна, чтобы повторение текстуры работало и в WebGL Safari.
+const STONE_TEXTURE_SIZE = 256
 const STONE_SCALE = 1.25
 
 export function createStoneTexture(image: HTMLImageElement) {
   const { x, y, size } = STONE_CROP
   const canvas = document.createElement('canvas')
-  canvas.width = size
-  canvas.height = size
+  canvas.width = STONE_TEXTURE_SIZE
+  canvas.height = STONE_TEXTURE_SIZE
   const context = canvas.getContext('2d')
   if (!context) return null
-  context.drawImage(image, x, y, size, size, 0, 0, size, size)
+  context.drawImage(image, x, y, size, size, 0, 0, STONE_TEXTURE_SIZE, STONE_TEXTURE_SIZE)
 
   // Удаляем только крупный перепад освещения фотографии. Мелкий рельеф и
   // соотношение каналов (медные прожилки) остаются из исходного камня.
   const illumination = document.createElement('canvas')
-  illumination.width = size
-  illumination.height = size
+  illumination.width = STONE_TEXTURE_SIZE
+  illumination.height = STONE_TEXTURE_SIZE
   const lightContext = illumination.getContext('2d')
   if (!lightContext) return null
   lightContext.fillStyle = '#393735'
-  lightContext.fillRect(0, 0, size, size)
+  lightContext.fillRect(0, 0, STONE_TEXTURE_SIZE, STONE_TEXTURE_SIZE)
   lightContext.filter = 'blur(18px)'
   lightContext.drawImage(canvas, 0, 0)
-  const light = lightContext.getImageData(0, 0, size, size).data
-  const pixels = context.getImageData(0, 0, size, size)
+  const light = lightContext.getImageData(0, 0, STONE_TEXTURE_SIZE, STONE_TEXTURE_SIZE).data
+  const pixels = context.getImageData(0, 0, STONE_TEXTURE_SIZE, STONE_TEXTURE_SIZE)
 
   for (let i = 0; i < pixels.data.length; i += 4) {
     // Ошибочный crop нельзя маскировать плоской подложкой.
