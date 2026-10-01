@@ -36,6 +36,8 @@ type FormValues = {
   message: string
 }
 
+type FormErrors = Partial<Record<keyof FormValues, string>>
+
 type ContactChannel = 'email' | 'telegram' | 'whatsapp'
 
 const invalidNameCharacters = /[^\p{L}\p{M}\s'’ʼ-]/gu
@@ -55,6 +57,7 @@ function ProjectInquiryModal({ open, onClose }: { open: boolean; onClose: () => 
   const closeButtonRef = useRef<HTMLButtonElement>(null)
   const messageFieldRef = useRef<HTMLLabelElement>(null)
   const [values, setValues] = useState<FormValues>({ name: '', email: '', message: '' })
+  const [fieldErrors, setFieldErrors] = useState<FormErrors>({})
   const [deliveryStatus, setDeliveryStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
   const [deliveryChannel, setDeliveryChannel] = useState<ContactChannel | null>(null)
   const [scrollIndicatorOffset, setScrollIndicatorOffset] = useState(0)
@@ -66,6 +69,7 @@ function ProjectInquiryModal({ open, onClose }: { open: boolean; onClose: () => 
     document.body.style.overflow = 'hidden'
     setDeliveryStatus('idle')
     setDeliveryChannel(null)
+    setFieldErrors({})
     setScrollIndicatorOffset(0)
 
     if (window.matchMedia('(max-width: 620px)').matches) {
@@ -87,7 +91,21 @@ function ProjectInquiryModal({ open, onClose }: { open: boolean; onClose: () => 
 
   if (!open) return null
 
+  const validateForm = () => {
+    const nextErrors: FormErrors = {}
+    const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/
+
+    if (values.name.trim().length < 2) nextErrors.name = t('contact.validationName')
+    if (!emailPattern.test(values.email.trim())) nextErrors.email = t('contact.validationEmail')
+    if (values.message.trim().length < 3) nextErrors.message = t('contact.validationMessage')
+
+    setFieldErrors(nextErrors)
+    return Object.keys(nextErrors).length === 0
+  }
+
   const handleDelivery = async (channel: ContactChannel) => {
+    if (!validateForm()) return
+
     setDeliveryStatus('sending')
     setDeliveryChannel(channel)
 
@@ -113,6 +131,12 @@ function ProjectInquiryModal({ open, onClose }: { open: boolean; onClose: () => 
 
   const updateField = (field: keyof FormValues, value: string) => {
     setValues(current => ({ ...current, [field]: value }))
+    setFieldErrors(current => {
+      if (!current[field]) return current
+      const next = { ...current }
+      delete next[field]
+      return next
+    })
     setDeliveryStatus('idle')
   }
 
@@ -171,19 +195,22 @@ function ProjectInquiryModal({ open, onClose }: { open: boolean; onClose: () => 
         <p className={styles.footnote}>{t('contact.modalFootnote')}</p>
         <p className={styles.signature}>{t('contact.modalSignature')}</p>
 
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <form className={styles.form} noValidate onSubmit={handleSubmit}>
           <label>
             <span>{t('contact.nameLabel')}</span>
-            <input ref={firstInputRef} required minLength={2} maxLength={80} autoComplete="name" autoCapitalize="words" inputMode="text" lang={locale} value={values.name} onChange={event => handleNameChange(event.target.value)} placeholder={t('contact.namePlaceholder')} />
+            <input ref={firstInputRef} required minLength={2} maxLength={80} autoComplete="name" autoCapitalize="words" inputMode="text" lang={locale} value={values.name} onChange={event => handleNameChange(event.target.value)} placeholder={t('contact.namePlaceholder')} aria-invalid={Boolean(fieldErrors.name)} />
+            {fieldErrors.name ? <span className={styles.fieldError} role="alert">{fieldErrors.name}</span> : null}
           </label>
           <label>
             <span>{t('contact.emailLabel')}</span>
-            <input required type="email" minLength={5} maxLength={254} autoComplete="email" autoCapitalize="none" autoCorrect="off" spellCheck={false} inputMode="email" lang="en" dir="ltr" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}" value={values.email} onChange={event => handleEmailChange(event.target.value)} placeholder={t('contact.emailPlaceholder')} />
+            <input required type="email" minLength={5} maxLength={254} autoComplete="email" autoCapitalize="none" autoCorrect="off" spellCheck={false} inputMode="email" lang="en" dir="ltr" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}" value={values.email} onChange={event => handleEmailChange(event.target.value)} placeholder={t('contact.emailPlaceholder')} aria-invalid={Boolean(fieldErrors.email)} />
+            {fieldErrors.email ? <span className={styles.fieldError} role="alert">{fieldErrors.email}</span> : null}
           </label>
           <label ref={messageFieldRef} className={styles.messageField}>
             <span>{t('contact.messageLabel')}</span>
-            <textarea required rows={5} minLength={3} maxLength={3000} autoCapitalize="sentences" lang={locale} value={values.message} onChange={event => handleMessageChange(event.target.value)} onScroll={handleMessageScroll} placeholder={t('contact.messagePlaceholder')} />
+            <textarea required rows={5} minLength={3} maxLength={3000} autoCapitalize="sentences" lang={locale} value={values.message} onChange={event => handleMessageChange(event.target.value)} onScroll={handleMessageScroll} placeholder={t('contact.messagePlaceholder')} aria-invalid={Boolean(fieldErrors.message)} />
             <span className={styles.scrollIndicator} style={{ transform: `translateY(${scrollIndicatorOffset}px)` }} aria-hidden="true" />
+            {fieldErrors.message ? <span className={styles.fieldError} role="alert">{fieldErrors.message}</span> : null}
           </label>
           <div className={styles.formActions}>
             <button className={styles.channelButton} type="submit" disabled={deliveryStatus === 'sending'}>
