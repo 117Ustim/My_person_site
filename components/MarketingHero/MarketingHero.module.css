@@ -408,7 +408,11 @@
   }
 
   .portfolioHero.compact {
-    min-height: 380px;
+    min-height: 355px;
+  }
+
+  .portfolioHero .content {
+    transform: translateY(-25px);
   }
 
   .content {

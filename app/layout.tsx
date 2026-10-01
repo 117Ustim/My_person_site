@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="uk" className="dark">
+    <html lang="uk" className={`dark ${styles.html}`}>
       <body className={styles.body}>
         <I18nProvider>
           <LenisScroll />

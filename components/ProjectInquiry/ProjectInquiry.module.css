@@ -511,7 +511,7 @@
   .close {
     position: sticky;
     top: 0;
-    margin: 0 -20px 6px auto;
+    margin: 0 -52px 6px auto;
     width: 32px;
     height: 32px;
     background: #161514;
@@ -638,6 +638,7 @@
 
   .formActions {
     gap: 8px;
+    margin-top: max(12px, calc(100dvh - 670px));
   }
 
   .channelButton {

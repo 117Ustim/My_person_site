@@ -191,6 +191,10 @@
   isolation: isolate;
 }
 
+.mediaFullscreenHint {
+  display: none;
+}
+
 .mediaViewport {
   position: absolute;
   z-index: 0;
@@ -322,6 +326,27 @@
   height: 16px;
   flex: 0 0 16px;
   animation: scrollCuePulse 1800ms ease-in-out infinite;
+}
+
+.scrollCueMobileArrows {
+  display: none;
+}
+
+.scrollCueMobileIcon {
+  width: 24px;
+  height: 15px;
+  color: var(--color-accent);
+  animation: scrollCueArrowPulse 1800ms ease-in-out infinite;
+}
+
+.scrollCueMobileIcon:nth-child(2) {
+  margin-top: -2px;
+  animation-delay: 120ms;
+}
+
+.scrollCueMobileIcon:nth-child(3) {
+  margin-top: -2px;
+  animation-delay: 240ms;
 }
 
 .scrollCueComplete {
@@ -506,6 +531,85 @@
 
 .projectDetailsAction {
   color: rgb(var(--color-text-rgb) / 0.82);
+}
+
+.mediaFullscreenOverlay {
+  position: fixed;
+  z-index: 120;
+  inset: 0;
+  overflow: hidden;
+  background: var(--color-bg);
+  overscroll-behavior: contain;
+  animation: mediaFullscreenFadeIn 220ms ease-out both;
+}
+
+.mediaFullscreenDialog {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+.mediaFullscreenViewport {
+  position: absolute;
+  inset: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-top: env(safe-area-inset-top);
+  scrollbar-color: rgb(var(--color-text-rgb) / 0.5) transparent;
+  scrollbar-width: thin;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mediaFullscreenViewport::-webkit-scrollbar {
+  width: 4px;
+}
+
+.mediaFullscreenViewport::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mediaFullscreenViewport::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgb(var(--color-text-rgb) / 0.5);
+}
+
+.mediaFullscreenImage {
+  display: block;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  filter: saturate(0.82) brightness(0.9) contrast(1.04);
+}
+
+.mediaFullscreenClose {
+  position: fixed;
+  z-index: 3;
+  top: max(14px, env(safe-area-inset-top));
+  right: max(14px, env(safe-area-inset-right));
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid rgb(255 135 122 / 0.72);
+  border-radius: 50%;
+  background: rgb(20 19 18 / 0.82);
+  color: var(--color-text);
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.28);
+  backdrop-filter: blur(10px);
+  transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.mediaFullscreenClose:hover,
+.mediaFullscreenClose:focus-visible {
+  border-color: var(--color-accent);
+  background: rgb(255 135 122 / 0.2);
+  outline: none;
+  transform: rotate(8deg);
 }
 
 .projectDetailsOverlay {
@@ -985,6 +1089,10 @@
   transform: translateY(-2px);
 }
 
+.mobileAction {
+  display: none;
+}
+
 .previewRailShell {
   position: relative;
   z-index: 1;
@@ -1154,8 +1262,9 @@
 }
 
 .previewActive {
-  border-color: rgb(var(--color-text-rgb) / 0.56);
+  border-color: var(--color-accent);
   box-shadow: 0 22px 46px rgb(var(--color-bg-rgb) / 0.38), inset 0 1px 0 rgb(var(--color-text-rgb) / 0.26);
+  transform: translateY(0);
 }
 
 .preview:hover::after,
@@ -1173,6 +1282,25 @@
 .preview:focus-visible .previewBackdrop {
   filter: blur(18px) saturate(0.76) brightness(0.66);
   opacity: 0.96;
+}
+
+.previewActive:hover,
+.previewActive:focus-visible {
+  border-color: var(--color-accent);
+  box-shadow: 0 22px 46px rgb(var(--color-bg-rgb) / 0.38), inset 0 1px 0 rgb(var(--color-text-rgb) / 0.26);
+  transform: translateY(0);
+}
+
+.previewActive:hover .previewImage,
+.previewActive:focus-visible .previewImage {
+  filter: saturate(0.72) contrast(1.04);
+  transform: none;
+}
+
+.previewActive:hover .previewBackdrop,
+.previewActive:focus-visible .previewBackdrop {
+  filter: blur(16px) saturate(0.68) brightness(0.58);
+  opacity: 0.88;
 }
 
 .controls {
@@ -1225,6 +1353,19 @@
   }
 }
 
+@keyframes scrollCueArrowPulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translateY(-2px);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(2px);
+  }
+}
+
 @keyframes previewRailScrollHintPulse {
   0%,
   100% {
@@ -1245,6 +1386,16 @@
   100% {
     opacity: 0;
     transform: translate(-50%, -50%) scale(8.5);
+  }
+}
+
+@keyframes mediaFullscreenFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
   }
 }
 
@@ -1378,19 +1529,19 @@
 @media (max-width: 700px) {
   .carousel {
     display: block;
-    min-height: 860px;
+    min-height: 890px;
   }
 
   .imageFrame {
     grid-template-columns: 1fr;
     grid-template-rows: auto minmax(280px, 1fr) 150px;
-    inset: 68px 16px 24px;
+    inset: 68px 16px 54px;
     width: auto;
     height: auto;
-    gap: 14px;
+    gap: 29px;
     border-radius: 24px;
     padding: 18px;
-    transform: none;
+    transform: translateY(-40px);
   }
 
   .content {
@@ -1398,13 +1549,48 @@
     padding: 0 clamp(16px, 4.8vw, 28px);
   }
 
+  .projectTopAction {
+    margin-bottom: 10px;
+  }
+
+  .meta {
+    justify-content: flex-end;
+    gap: 18px;
+  }
+
+  .heading {
+    position: absolute;
+    top: 15px;
+    right: 0;
+  }
+
+  .counter {
+    display: none;
+  }
+
   .mainMediaFrame {
     min-height: 0;
     border-radius: 20px;
+    cursor: zoom-in;
+  }
+
+  .mediaFullscreenHint {
+    position: absolute;
+    z-index: 3;
+    top: 12px;
+    right: 12px;
+    display: block;
+    color: var(--color-accent);
+    font-size: 25px;
+    font-weight: 400;
+    line-height: 1;
+    pointer-events: none;
+    text-shadow: 0 2px 10px rgb(0 0 0 / 0.54);
   }
 
   .mediaColumn {
     grid-row: 2;
+    gap: 22px;
   }
 
   .categoryTabs {
@@ -1424,14 +1610,41 @@
 
   .scrollCue {
     right: 14px;
+    left: auto;
     bottom: 14px;
-    max-width: min(220px, 76%);
+    max-width: none;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    color: var(--color-accent);
+    backdrop-filter: none;
+    transform: none;
+  }
+
+  .scrollCueLabel,
+  .scrollCueTrack,
+  .scrollCue > .scrollCueIcon {
+    display: none;
+  }
+
+  .scrollCueMobileArrows {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 36px;
+    line-height: 0;
+  }
+
+  .scrollCueComplete {
+    transform: translateY(8px);
   }
 
   .title {
     max-width: 390px;
     margin-top: 22px;
-    font-size: clamp(34px, 10vw, 48px);
+    color: var(--color-accent);
+    font-size: 24px;
   }
 
   .description {
@@ -1444,6 +1657,28 @@
     min-height: 42px;
     margin-top: 24px;
     font-size: 13px;
+  }
+
+  .projectCopy .action {
+    display: none;
+  }
+
+  .mobileAction {
+    position: absolute;
+    z-index: 5;
+    right: auto;
+    bottom: 18px;
+    left: 50%;
+    display: inline-flex;
+    width: max-content;
+    max-width: calc(100% - 32px);
+    margin: 0;
+    transform: translateX(-50%);
+  }
+
+  .mobileAction:hover,
+  .mobileAction:focus-visible {
+    transform: translateX(-50%) translateY(-2px);
   }
 
   .previewRail {
@@ -1543,28 +1778,28 @@
   }
 
   .controls {
-    right: 24px;
-    bottom: 188px;
-    left: auto;
-    gap: 8px;
-    transform: none;
+    right: auto;
+    bottom: 74px;
+    left: 50%;
+    gap: 20px;
+    transform: translateX(-50%);
   }
 
   .control {
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
   }
 }
 
 @media (max-width: 420px) {
   .carousel {
-    min-height: 820px;
+    min-height: 850px;
   }
 
   .imageFrame {
     grid-template-rows: auto minmax(250px, 1fr) 132px;
-    inset: 62px 12px 18px;
-    gap: 12px;
+    inset: 62px 12px 48px;
+    gap: 27px;
     padding: 14px;
   }
 
@@ -1578,15 +1813,16 @@
   }
 
   .controls {
-    bottom: 170px;
+    bottom: 74px;
   }
 
   .scrollCue {
     right: 10px;
+    left: auto;
     bottom: 10px;
-    max-width: calc(100% - 20px);
-    padding: 8px 10px 8px 12px;
-    font-size: 10px;
+    max-width: none;
+    padding: 0;
+    transform: none;
   }
 }
 
@@ -1638,7 +1874,8 @@
 
   .categoryTab:active::after,
   .liveSiteAction,
-  .liveSiteAction::before {
+  .liveSiteAction::before,
+  .scrollCueMobileIcon {
     animation: none;
   }
 
@@ -1654,6 +1891,7 @@
   .scrollableImage,
   .scrollCue,
   .scrollCueIcon,
+  .scrollCueMobileIcon,
   .projectCopy,
   .projectDetailsDialog,
   .projectDetailsDialog::before,

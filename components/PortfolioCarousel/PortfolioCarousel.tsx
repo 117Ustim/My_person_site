@@ -209,11 +209,14 @@ export default function PortfolioCarousel({
   const [previewRailAtEnd, setPreviewRailAtEnd] = useState(false)
   const [isProjectDetailsOpen, setIsProjectDetailsOpen] = useState(false)
   const [isProjectDetailsClosing, setIsProjectDetailsClosing] = useState(false)
+  const [isMediaFullscreenOpen, setIsMediaFullscreenOpen] = useState(false)
   const [isInactiveSiteNoticeOpen, setIsInactiveSiteNoticeOpen] = useState(false)
   const carouselRef = useRef<HTMLElement>(null)
   const mediaViewportRef = useRef<HTMLDivElement>(null)
+  const mediaFullscreenViewportRef = useRef<HTMLDivElement>(null)
   const previewRailRef = useRef<HTMLDivElement>(null)
   const projectDetailsCloseButtonRef = useRef<HTMLButtonElement>(null)
+  const mediaFullscreenCloseButtonRef = useRef<HTMLButtonElement>(null)
   const projectDetailsCloseTimerRef = useRef<number | null>(null)
   const categoryTabsRef = useRef<HTMLDivElement>(null)
   const categoryTabRefs = useRef<Partial<Record<PortfolioCategory, HTMLButtonElement | null>>>({})
@@ -243,6 +246,14 @@ export default function PortfolioCarousel({
       projectDetailsCloseTimerRef.current = null
     }, projectDetailsCloseDuration)
   }, [isProjectDetailsClosing, isProjectDetailsOpen])
+
+  const openMediaFullscreen = useCallback(() => {
+    setIsMediaFullscreenOpen(true)
+  }, [])
+
+  const closeMediaFullscreen = useCallback(() => {
+    setIsMediaFullscreenOpen(false)
+  }, [])
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -292,6 +303,7 @@ export default function PortfolioCarousel({
 
     setIsProjectDetailsOpen(false)
     setIsProjectDetailsClosing(false)
+    setIsMediaFullscreenOpen(false)
     setIsInactiveSiteNoticeOpen(false)
   }, [activeCategory, activeIndex])
 
@@ -328,6 +340,31 @@ export default function PortfolioCarousel({
       document.documentElement.style.overflow = previousDocumentOverflow
     }
   }, [closeProjectDetails, isProjectDetailsOpen])
+
+  useEffect(() => {
+    if (!isMediaFullscreenOpen) return
+
+    const handleFullscreenKeyDown = (event: globalThis.KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closeMediaFullscreen()
+      }
+    }
+
+    const previousBodyOverflow = document.body.style.overflow
+    const previousDocumentOverflow = document.documentElement.style.overflow
+
+    document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+    document.addEventListener('keydown', handleFullscreenKeyDown)
+    mediaFullscreenCloseButtonRef.current?.focus()
+    mediaFullscreenViewportRef.current?.scrollTo({ top: 0, behavior: 'auto' })
+
+    return () => {
+      document.removeEventListener('keydown', handleFullscreenKeyDown)
+      document.body.style.overflow = previousBodyOverflow
+      document.documentElement.style.overflow = previousDocumentOverflow
+    }
+  }, [closeMediaFullscreen, isMediaFullscreenOpen])
 
   useEffect(() => {
     const previewRail = previewRailRef.current
@@ -370,11 +407,41 @@ export default function PortfolioCarousel({
     setActiveIndex(0)
   }, [activeCategory])
 
+  const scrollPreviewToIndex = useCallback((index: number) => {
+    const rail = previewRailRef.current
+    const preview = rail?.children[index] as HTMLElement | undefined
+
+    if (!rail || !preview) return
+
+    const isHorizontal = rail.scrollWidth > rail.clientWidth
+    const targetPosition = isHorizontal
+      ? preview.offsetLeft - (rail.clientWidth - preview.offsetWidth) / 2
+      : preview.offsetTop - (rail.clientHeight - preview.offsetHeight) / 2
+    const safePosition = Math.max(0, targetPosition)
+
+    rail.scrollTo({
+      left: isHorizontal ? safePosition : rail.scrollLeft,
+      top: isHorizontal ? rail.scrollTop : safePosition,
+      behavior: 'smooth',
+    })
+
+    window.setTimeout(() => {
+      if (!rail.isConnected) return
+
+      if (isHorizontal) {
+        rail.scrollLeft = safePosition
+      } else {
+        rail.scrollTop = safePosition
+      }
+    }, 320)
+  }, [])
+
   const changeProject = useCallback((nextIndex: number) => {
     if (nextIndex === activeIndex) return
 
     setActiveIndex(nextIndex)
-  }, [activeIndex])
+    window.requestAnimationFrame(() => scrollPreviewToIndex(nextIndex))
+  }, [activeIndex, scrollPreviewToIndex])
 
   const move = useCallback((direction: -1 | 1) => {
     const nextIndex = (activeIndex + direction + categoryProjects.length) % categoryProjects.length
@@ -598,9 +665,20 @@ export default function PortfolioCarousel({
 
           <div
             className={styles.mainMediaFrame}
-            role={activeProject.scrollable ? 'region' : undefined}
-            aria-label={activeProject.scrollable ? activeProject.imageAlt : undefined}
+            role="button"
+            tabIndex={0}
+            aria-label={`${selectProjectLabel}: ${activeProject.title}`}
+            onClick={openMediaFullscreen}
+            onKeyDown={event => {
+              if (event.target !== event.currentTarget) return
+
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault()
+                openMediaFullscreen()
+              }
+            }}
           >
+          <span className={styles.mediaFullscreenHint} aria-hidden="true">⛶</span>
           <div
             ref={mediaViewportRef}
             className={`${styles.mediaViewport} ${activeProject.scrollable ? styles.scrollableViewport : ''}`}
@@ -662,6 +740,11 @@ export default function PortfolioCarousel({
                 />
               </span>
               <ChevronDown className={styles.scrollCueIcon} aria-hidden="true" strokeWidth={1.5} />
+              <span className={styles.scrollCueMobileArrows} aria-hidden="true">
+                <ChevronDown className={styles.scrollCueMobileIcon} strokeWidth={2.5} />
+                <ChevronDown className={styles.scrollCueMobileIcon} strokeWidth={2.5} />
+                <ChevronDown className={styles.scrollCueMobileIcon} strokeWidth={2.5} />
+              </span>
             </div>
           ) : null}
           </div>
@@ -722,6 +805,70 @@ export default function PortfolioCarousel({
           ) : null}
         </div>
       </div>
+
+      <button className={`${styles.action} ${styles.mobileAction}`} type="button" onClick={openInquiry}>
+        {actionLabel}
+      </button>
+
+      {isMediaFullscreenOpen && typeof document !== 'undefined' ? createPortal(
+        <div
+          className={styles.mediaFullscreenOverlay}
+          data-lenis-prevent="true"
+          role="presentation"
+          onMouseDown={event => {
+            if (event.target === event.currentTarget) {
+              closeMediaFullscreen()
+            }
+          }}
+        >
+          <div
+            className={styles.mediaFullscreenDialog}
+            role="dialog"
+            aria-modal="true"
+            aria-label={activeProject.title}
+          >
+            <button
+              ref={mediaFullscreenCloseButtonRef}
+              className={styles.mediaFullscreenClose}
+              type="button"
+              aria-label={closeProjectDetailsLabel}
+              onClick={closeMediaFullscreen}
+            >
+              <X size={20} strokeWidth={1.8} aria-hidden="true" />
+            </button>
+
+            <div ref={mediaFullscreenViewportRef} className={styles.mediaFullscreenViewport}>
+              {activeProject.scrollable && activeProject.imageSections?.length ? (
+                <div className={styles.scrollableImageStack}>
+                  {activeProject.imageSections.map((section, sectionIndex) => (
+                    <LazyPortfolioImage
+                      key={section.src}
+                      section={section}
+                      alt={sectionIndex === 0 ? activeProject.imageAlt : ''}
+                      sizes="100vw"
+                      rootRef={mediaFullscreenViewportRef}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <Image
+                  className={styles.mediaFullscreenImage}
+                  src={activeProject.image}
+                  alt={activeProject.imageAlt}
+                  width={activeProject.imageWidth ?? 1640}
+                  height={activeProject.imageHeight ?? 5037}
+                  loading="eager"
+                  placeholder="blur"
+                  blurDataURL={portfolioBlurDataUrl}
+                  quality={75}
+                  sizes="100vw"
+                />
+              )}
+            </div>
+          </div>
+        </div>,
+        document.body,
+      ) : null}
 
       {isProjectDetailsOpen && typeof document !== 'undefined' ? createPortal(
         <div
