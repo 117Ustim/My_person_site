@@ -245,7 +245,7 @@ function ProjectInquiryModal({ open, onClose }: { open: boolean; onClose: () => 
           </div>
         </form>
 
-        {deliveryStatus === 'success' ? <p className={styles.status} role="status">{t(deliveryChannel === 'telegram' ? 'contact.telegramSuccessStatus' : deliveryChannel === 'whatsapp' ? 'contact.whatsappReadyStatus' : 'contact.deliveryStubStatus')}</p> : null}
+        {deliveryStatus === 'success' ? <p className={styles.status} role="status">{t(deliveryChannel === 'telegram' ? 'contact.telegramSuccessStatus' : deliveryChannel === 'whatsapp' ? 'contact.whatsappReadyStatus' : 'contact.emailSuccessStatus')}</p> : null}
         {deliveryStatus === 'error' ? <p className={`${styles.status} ${styles.statusError}`} role="alert">{t('contact.deliveryError')}</p> : null}
       </section>
     </div>

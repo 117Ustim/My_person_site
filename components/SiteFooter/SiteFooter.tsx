@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { useState } from 'react'
 import { useI18n } from '../../lib/i18n'
 import BrandLogo from '../BrandLogo/BrandLogo'
 import FooterProcess from '../FooterProcess/FooterProcess'
@@ -26,8 +27,34 @@ const badges: ReadonlyArray<FooterBadge> = [
   { src: '/assets/badges/production-deployment.png', label: 'Production deployment' },
 ]
 
+const emailAddress = 'ustik72@gmail.com'
+
 export default function SiteFooter() {
   const { t } = useI18n()
+  const [isEmailCopied, setIsEmailCopied] = useState(false)
+
+  const handleCopyEmail = async () => {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(emailAddress)
+      } else {
+        const textArea = document.createElement('textarea')
+        textArea.value = emailAddress
+        textArea.setAttribute('readonly', '')
+        textArea.style.position = 'fixed'
+        textArea.style.opacity = '0'
+        document.body.appendChild(textArea)
+        textArea.select()
+        document.execCommand('copy')
+        textArea.remove()
+      }
+
+      setIsEmailCopied(true)
+      window.setTimeout(() => setIsEmailCopied(false), 1800)
+    } catch {
+      setIsEmailCopied(false)
+    }
+  }
 
   return (
     <footer id="contacts" className={styles.footer}>
@@ -44,10 +71,26 @@ export default function SiteFooter() {
                 <span className={styles.contactLinkLabel}>{t('footer.locationLabel')}</span>
                 <span>{t('footer.location')}</span>
               </p>
-              <a className={styles.contactLink} href="mailto:ustik72@gmail.com">
+              <button
+                className={styles.contactLink}
+                type="button"
+                onClick={handleCopyEmail}
+                aria-label={t('footer.copyEmail')}
+                title={t('footer.copyEmail')}
+              >
                 <span className={styles.contactLinkLabel}>{t('footer.email')}</span>
-                <span>ustik72@gmail.com</span>
-              </a>
+                <span>{emailAddress}</span>
+                {isEmailCopied ? (
+                  <span
+                    className={styles.copyStatus}
+                    role="status"
+                    aria-live="polite"
+                    aria-label={t('footer.emailCopied')}
+                  >
+                    <span aria-hidden="true">✓✓</span>
+                  </span>
+                ) : null}
+              </button>
             </div>
             <div className={styles.contactSocials}>
               <a
@@ -63,12 +106,14 @@ export default function SiteFooter() {
               </a>
               <a
                 className={styles.contactSocialLink}
-                href="viber://chat?number=%2B380673276040"
-                aria-label={t('footer.viber')}
-                title={t('footer.viber')}
+                href="https://wa.me/380673276040"
+                target="_blank"
+                rel="noreferrer"
+                aria-label={t('footer.whatsapp')}
+                title={t('footer.whatsapp')}
               >
-                <ViberIcon />
-                <span>{t('footer.viber')}</span>
+                <WhatsAppIcon />
+                <span>{t('footer.whatsapp')}</span>
               </a>
             </div>
           </div>
@@ -113,7 +158,7 @@ function TelegramIcon() {
   )
 }
 
-function ViberIcon() {
+function WhatsAppIcon() {
   return (
     <svg className={styles.contactIcon} viewBox="0 0 24 24" aria-hidden="true">
       <path d="M17.4 2.8c-3.4-1.6-8.3-1.3-11.2.9-2.3 1.8-3.2 4.5-2.7 7.4.3 1.7 1.2 3.5 2.5 5.1l-1 3.4c-.2.7.5 1.3 1.2 1l3.4-1.2c2.4 1.2 5.3 1.5 7.8.7 3.3-1.1 5.2-3.7 5.4-7.5.2-4.5-1.6-7.9-5.4-9.8Zm-4.9 4.1c.4-.2.8-.1 1 .3l.8 1.5c.2.4.1.8-.2 1l-.7.5c.5 1 1.3 1.8 2.3 2.4l.5-.7c.2-.3.6-.4 1-.2l1.5.8c.4.2.5.6.3 1-.4.8-1.1 1.4-2 1.5-1.3.1-3-.8-4.6-2.4-1.6-1.6-2.5-3.3-2.4-4.6.1-1 .7-1.7 1.5-2.1Z" />

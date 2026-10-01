@@ -90,7 +90,24 @@
 }
 
 .contactLink {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
   transition: color 180ms ease;
+}
+
+.copyStatus {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 2px;
+  color: #58d68d;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: -0.08em;
+  line-height: 1;
 }
 
 .contactLinkLabel {

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { Resend } from 'resend'
 
 const contactChannels = ['email', 'telegram', 'whatsapp'] as const
 type ContactChannel = (typeof contactChannels)[number]
@@ -35,6 +36,44 @@ function validatePayload(value: unknown): ContactPayload | null {
 }
 
 async function deliverContact(payload: ContactPayload) {
+  if (payload.channel === 'email') {
+    const apiKey = process.env.RESEND_API_KEY
+    const recipient = process.env.CONTACT_EMAIL ?? 'ustik72@gmail.com'
+    const sender = process.env.CONTACT_FROM_EMAIL
+
+    if (!apiKey || !sender) {
+      throw new Error('Email delivery is not configured.')
+    }
+
+    const resend = new Resend(apiKey)
+    const text = [
+      'Новая заявка с сайта',
+      '',
+      `Имя: ${payload.name}`,
+      `Email: ${payload.email}`,
+      '',
+      'Проект:',
+      payload.message,
+    ].join('\n')
+
+    const { error } = await resend.emails.send({
+      from: sender,
+      to: recipient,
+      replyTo: payload.email,
+      subject: `Новая заявка с сайта от ${payload.name}`,
+      text,
+    })
+
+    if (error) {
+      throw new Error('Email delivery failed.')
+    }
+
+    return {
+      channel: payload.channel,
+      status: 'sent' as const,
+    }
+  }
+
   if (payload.channel === 'telegram') {
     const token = process.env.TELEGRAM_BOT_TOKEN
     const chatId = process.env.TELEGRAM_CHAT_ID
@@ -76,10 +115,7 @@ async function deliverContact(payload: ContactPayload) {
     }
   }
 
-  return {
-    channel: payload.channel,
-    status: 'stub' as const,
-  }
+  return { channel: payload.channel, status: 'stub' as const }
 }
 
 export async function POST(request: Request) {
