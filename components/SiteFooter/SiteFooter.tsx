@@ -52,7 +52,7 @@ export default function SiteFooter() {
             <div className={styles.contactSocials}>
               <a
                 className={styles.contactSocialLink}
-                href="https://t.me/+380673276040"
+                href="https://t.me/ustikm"
                 target="_blank"
                 rel="noreferrer"
                 aria-label={t('footer.telegram')}

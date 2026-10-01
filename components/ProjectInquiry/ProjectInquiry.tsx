@@ -42,6 +42,7 @@ type ContactChannel = 'email' | 'telegram' | 'whatsapp'
 
 const invalidNameCharacters = /[^\p{L}\p{M}\s'’ʼ-]/gu
 const invalidEmailCharacters = /[^A-Za-z0-9._%+@-]/g
+const whatsappNumber = '380673276040'
 
 function capitalizeFirstLetter(value: string, locale: Locale) {
   return value.replace(/\p{L}/u, letter => letter.toLocaleUpperCase(locale))
@@ -108,6 +109,22 @@ function ProjectInquiryModal({ open, onClose }: { open: boolean; onClose: () => 
 
     setDeliveryStatus('sending')
     setDeliveryChannel(channel)
+
+    if (channel === 'whatsapp') {
+      const text = [
+        'Новая заявка с сайта',
+        '',
+        `Имя: ${values.name.trim()}`,
+        `Email: ${values.email.trim()}`,
+        '',
+        'Проект:',
+        values.message.trim(),
+      ].join('\n')
+
+      window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer')
+      setDeliveryStatus('success')
+      return
+    }
 
     try {
       const response = await fetch('/api/contact', {
@@ -228,7 +245,7 @@ function ProjectInquiryModal({ open, onClose }: { open: boolean; onClose: () => 
           </div>
         </form>
 
-        {deliveryStatus === 'success' ? <p className={styles.status} role="status">{t(deliveryChannel === 'telegram' ? 'contact.telegramSuccessStatus' : 'contact.deliveryStubStatus')}</p> : null}
+        {deliveryStatus === 'success' ? <p className={styles.status} role="status">{t(deliveryChannel === 'telegram' ? 'contact.telegramSuccessStatus' : deliveryChannel === 'whatsapp' ? 'contact.whatsappReadyStatus' : 'contact.deliveryStubStatus')}</p> : null}
         {deliveryStatus === 'error' ? <p className={`${styles.status} ${styles.statusError}`} role="alert">{t('contact.deliveryError')}</p> : null}
       </section>
     </div>
