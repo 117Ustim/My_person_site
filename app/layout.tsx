@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import type { ReactNode } from 'react'
 import 'lenis/dist/lenis.css'
 import LenisScroll from '../components/LenisScroll/LenisScroll'
@@ -13,6 +13,13 @@ export const metadata: Metadata = {
     template: '%s',
   },
   description: 'Сайты, CRM-системы и мобильные приложения для реальных бизнес-задач.',
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 }
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
