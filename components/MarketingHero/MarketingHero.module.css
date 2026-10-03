@@ -394,6 +394,105 @@
   }
 }
 
+@media (min-width: 761px) and (max-width: 1199px) {
+  .homeHero {
+    --tablet-visual-top: clamp(500px, 44vw, 530px);
+    min-height: calc(var(--tablet-visual-top) + min(48vw, 580px) - 100px);
+  }
+
+  .homeHero::before {
+    position: absolute;
+    z-index: 4;
+    top: calc(var(--tablet-visual-top) + clamp(276px, 36.3vw, 435px) - 140px);
+    right: 0;
+    left: 0;
+    height: 190px;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgb(var(--color-overlay-rgb) / 0.08) 24%,
+      rgb(var(--color-overlay-rgb) / 0.4) 52%,
+      rgb(var(--color-overlay-rgb) / 0.88) 76%,
+      var(--color-bg) 100%
+    );
+    content: '';
+    pointer-events: none;
+  }
+
+  .homeHero::after {
+    top: calc(100% - clamp(220px, 24vw, 288px) + 85px);
+  }
+
+  .homeHero .heroImageFrame,
+  .homeHero .globeFrame,
+  .homeHero .rightRock {
+    top: var(--tablet-visual-top);
+  }
+
+  .homeHero .heroImageFrame {
+    top: calc(var(--tablet-visual-top) - 45px);
+    mask-image: linear-gradient(180deg, #000 70%, transparent 100%);
+  }
+
+  .homeHero .globeFrame {
+    top: calc(var(--tablet-visual-top) - 30px);
+  }
+
+  .homeHero .globeFrame {
+    width: min(31vw, 500px);
+    height: min(31vw, 500px);
+  }
+
+  .homeHero .description {
+    margin-top: 21px;
+    font-size: clamp(18px, 2.1vw, 24px);
+    line-height: 1.35;
+    transform: none;
+  }
+
+  .homeHero .title {
+    line-height: 71px;
+    transform: translateY(-20px);
+  }
+
+  .homeHero .action {
+    position: relative;
+    top: auto;
+    left: auto;
+    margin-top: 27px;
+    transform: none;
+  }
+
+  .homeHero .action:hover,
+  .homeHero .action:focus-visible {
+    transform: translateY(-5px) scale(1.015);
+  }
+
+  .homeHero .rightRock {
+    top: calc(var(--tablet-visual-top) - 135px);
+    right: calc(141px - 27vw);
+    width: min(48vw, 580px);
+    height: auto;
+    aspect-ratio: 1;
+    transform: none;
+  }
+
+  .portfolioHero.compact .content {
+    padding-top: 0;
+    transform: translateY(40px);
+  }
+
+  .portfolioHero.compact {
+    min-height: 290px;
+  }
+}
+
+@media (min-width: 1031px) and (max-width: 1199px) {
+  .portfolioHero.compact .content {
+    transform: translateY(80px);
+  }
+}
+
 @media (max-width: 760px) {
   .hero {
     min-height: 650px;

@@ -626,6 +626,20 @@
   }
 }
 
+@media (min-width: 600px) and (max-width: 760px) {
+  .copy {
+    align-items: center;
+    text-align: center;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 1199px) {
+  .visual {
+    aspect-ratio: 500 / 360;
+    min-height: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .action,
   .action::before,

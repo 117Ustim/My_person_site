@@ -165,3 +165,13 @@
     font-size: 16px;
   }
 }
+
+@media (min-width: 761px) and (max-width: 1199px) {
+  .withHeroFade .label {
+    transform: translateY(27px);
+  }
+
+  .withHeroFade .viewport {
+    margin-top: 38px;
+  }
+}

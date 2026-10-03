@@ -339,3 +339,10 @@ section.homeAudienceSection {
     padding-bottom: 36px;
   }
 }
+
+@media (min-width: 761px) and (max-width: 1199px) {
+  .main > .capabilitySection > div:first-child {
+    position: relative;
+    top: -35px;
+  }
+}

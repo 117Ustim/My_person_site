@@ -9,6 +9,7 @@ import { type Locale, useI18n } from '../../lib/i18n'
 import { useProjectInquiry } from '../ProjectInquiry/ProjectInquiry'
 import HandwrittenAccent from './HandwrittenAccent'
 import styles from './AboutLongform.module.css'
+import contactStyles from './AboutLongformContact.module.css'
 
 type ChapterKey = 'projects' | 'process' | 'design' | 'technical' | 'experience' | 'education' | 'sport' | 'certificates' | 'result' | 'contact'
 
@@ -244,20 +245,20 @@ export default function AboutLongform() {
           <ReadingSection number="10" label={labels.contact} title={content.result.contactTitle} variant="contact" isLast>
             {contactParagraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
             {content.result.contactHighlight ? <p className={styles.contactHighlight}>{content.result.contactHighlight}</p> : null}
-            <div className={styles.actionSignal}>
-              <span className={styles.incomingArrow} aria-hidden="true">
-                <span className={styles.incomingArrowTail} />
-                <ArrowDown className={styles.incomingArrowHead} strokeWidth={1.8} />
+            <div className={contactStyles.actionSignal}>
+              <span className={contactStyles.incomingArrow} aria-hidden="true">
+                <span className={contactStyles.incomingArrowTail} />
+                <ArrowDown className={contactStyles.incomingArrowHead} strokeWidth={1.8} />
               </span>
-              <button className={styles.action} type="button" onClick={openInquiry}>
+              <button className={contactStyles.action} type="button" onClick={openInquiry}>
                 <span>{t('nav.discussProject')}</span>
                 <ArrowRight aria-hidden="true" strokeWidth={1.75} />
               </button>
-              <span className={styles.signalLine} aria-hidden="true">
-                <span className={styles.signalPulse} />
+              <span className={contactStyles.signalLine} aria-hidden="true">
+                <span className={contactStyles.signalPulse} />
               </span>
-              <span className={styles.signalImpact} aria-hidden="true" />
-              <span className={styles.signalWave} aria-hidden="true" />
+              <span className={contactStyles.signalImpact} aria-hidden="true" />
+              <span className={contactStyles.signalWave} aria-hidden="true" />
             </div>
           </ReadingSection>
         </div>
@@ -304,7 +305,10 @@ function ReadingSection({
 }) {
   const { elementRef, isRevealed, isInView } = useRevealOnView<HTMLElement>()
   const animationIsActive = number === '10' && isInView
-  const sectionClassName = `${styles.readingSection} ${variant === 'technical' ? styles.technicalSection : ''} ${variant === 'certificates' ? styles.certificatesSection : ''} ${variant === 'contact' ? styles.contactSection : ''} ${isLast ? styles.lastSection : ''} ${isRevealed ? styles.isRevealed : ''} ${animationIsActive ? styles.isAnimationActive : ''}`
+  const isContactSection = variant === 'contact'
+  const sectionClassName = `${styles.readingSection} ${variant === 'technical' ? styles.technicalSection : ''} ${variant === 'certificates' ? styles.certificatesSection : ''} ${isContactSection ? contactStyles.contactSection : ''} ${isLast ? styles.lastSection : ''} ${isRevealed ? styles.isRevealed : ''} ${isContactSection && animationIsActive ? contactStyles.isAnimationActive : ''}`
+  const sectionInnerClassName = `${styles.sectionInner} ${isContactSection ? contactStyles.sectionInner : ''}`
+  const sectionCopyClassName = `${styles.sectionCopy} ${isContactSection ? contactStyles.sectionCopy : ''}`
 
   return (
     <section ref={elementRef} className={sectionClassName}>
@@ -312,9 +316,9 @@ function ReadingSection({
         <span>{number}</span>
         <small>{label}</small>
       </div>
-      <div className={styles.sectionInner}>
+      <div className={sectionInnerClassName}>
         <h2>{title}</h2>
-        <div className={styles.sectionCopy}>{children}</div>
+        <div className={sectionCopyClassName}>{children}</div>
       </div>
     </section>
   )
