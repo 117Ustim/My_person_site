@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { useI18n } from '../../lib/i18n'
 import BrandLogo from '../BrandLogo/BrandLogo'
 import FooterProcess from '../FooterProcess/FooterProcess'
+import SiteCounter from '../SiteCounter/SiteCounter'
 import styles from './SiteFooter.module.css'
 
 type FooterBadge = {
@@ -140,6 +141,7 @@ export default function SiteFooter() {
 
       <div className={styles.footerBottom}>
         <p className={styles.copyright}>{t('footer.copyright')}</p>
+        <SiteCounter />
         <p className={styles.credit}>
           <span>{t('footer.createdBy')}</span>
           <BrandLogo className={styles.creditLogo} aria-label={t('common.auStudio')} />
