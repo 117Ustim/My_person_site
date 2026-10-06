@@ -1,7 +1,7 @@
 import { createHmac, randomBytes, scryptSync, timingSafeEqual } from 'node:crypto'
 import { cookies } from 'next/headers'
 
-const adminSessionCookie = 'person_site_admin_session'
+export const adminSessionCookie = 'person_site_admin_session'
 const sessionLifetimeSeconds = 60 * 60 * 12
 
 function getRequiredEnvironmentValue(name: string) {
@@ -71,7 +71,7 @@ function createSessionToken() {
   return `${payload}.${signature}`
 }
 
-function isValidSessionToken(token: string | undefined) {
+export function isValidAdminSessionToken(token: string | undefined) {
   const secret = getSessionSecret()
 
   if (!secret || !token) {
@@ -123,7 +123,7 @@ export async function createAdminSession() {
 
 export async function getAdminSession() {
   const cookieStore = await cookies()
-  return isValidSessionToken(cookieStore.get(adminSessionCookie)?.value)
+  return isValidAdminSessionToken(cookieStore.get(adminSessionCookie)?.value)
 }
 
 export async function clearAdminSession() {

@@ -5,11 +5,12 @@ import { redisCommand } from './redis'
 export const allowedPages = new Set(['home', 'portfolio', 'about'])
 
 const analyticsEventsKey = 'person-site:analytics:events'
+const ownerEventsKey = 'person-site:analytics:owner-events'
 const botEventsKey = 'person-site:analytics:bot-events'
 const analyticsRetentionSeconds = 60 * 60 * 24 * 90
 const maxStoredEvents = 2000
 
-type VisitKind = 'human' | 'bot'
+type VisitKind = 'human' | 'owner' | 'bot'
 type DeviceType = 'mobile' | 'tablet' | 'desktop'
 
 export type VisitClientPayload = {
@@ -240,7 +241,7 @@ export function createVisitEvent({
 }
 
 export async function recordVisitEvent(event: VisitEvent, kind: VisitKind) {
-  const key = kind === 'bot' ? botEventsKey : analyticsEventsKey
+  const key = kind === 'bot' ? botEventsKey : kind === 'owner' ? ownerEventsKey : analyticsEventsKey
   await redisCommand(['LPUSH', key, JSON.stringify(event)])
   await redisCommand(['LTRIM', key, '0', String(maxStoredEvents - 1)])
   await redisCommand(['EXPIRE', key, String(analyticsRetentionSeconds)])
@@ -265,12 +266,13 @@ function parseEvents(value: unknown) {
 }
 
 export async function getAnalyticsSnapshot() {
-  const [rawHumanEvents, rawBotEvents, homeCount, portfolioCount, aboutCount] = await Promise.all([
+  const [rawHumanEvents, rawOwnerEvents, rawBotEvents, homeCount, portfolioCount, aboutCount] = await Promise.all([
     redisCommand(['LRANGE', analyticsEventsKey, '0', '199']),
+    redisCommand(['LRANGE', ownerEventsKey, '0', '199']),
     redisCommand(['LRANGE', botEventsKey, '0', '49']),
-    redisCommand(['GET', 'person-site:count:home']),
-    redisCommand(['GET', 'person-site:count:portfolio']),
-    redisCommand(['GET', 'person-site:count:about']),
+    redisCommand(['GET', 'person-site:human-count:home']),
+    redisCommand(['GET', 'person-site:human-count:portfolio']),
+    redisCommand(['GET', 'person-site:human-count:about']),
   ])
 
   return {
@@ -280,6 +282,7 @@ export async function getAnalyticsSnapshot() {
       about: Number(aboutCount) || 0,
     },
     humanEvents: parseEvents(rawHumanEvents),
+    ownerEvents: parseEvents(rawOwnerEvents),
     botEvents: parseEvents(rawBotEvents),
   }
 }

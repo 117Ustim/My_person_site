@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { adminSessionCookie, isValidAdminSessionToken } from '../../../lib/admin-auth'
 import { redisCommand } from '../../../lib/redis'
 import {
   allowedPages,
@@ -23,11 +24,12 @@ export async function POST(request: NextRequest) {
   try {
     const userAgent = request.headers.get('user-agent')
     const botReason = isLikelyBot(userAgent, body?.automated === true)
+    const isOwner = isValidAdminSessionToken(request.cookies.get(adminSessionCookie)?.value)
     const existingVisitorId = request.cookies.get(visitorCookieName)?.value
     const visitorId = /^[A-Za-z0-9_-]{20,80}$/.test(existingVisitorId ?? '')
       ? existingVisitorId!
       : crypto.randomUUID()
-    const countKey = `person-site:count:${page}`
+    const countKey = `person-site:human-count:${page}`
 
     if (botReason) {
       const count = await redisCommand(['GET', countKey])
@@ -46,6 +48,30 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json(
         { count: Number(count) || 0, counted: false, visitorType: 'bot' },
+        { headers: { 'Cache-Control': 'no-store' } },
+      )
+    }
+
+    if (isOwner) {
+      try {
+        await recordVisitEvent(
+          createVisitEvent({
+            request,
+            body,
+            page,
+            visitorId,
+            userAgent,
+            kind: 'owner',
+          }),
+          'owner',
+        )
+      } catch {
+        // Посещение владельца не влияет на публичный счётчик.
+      }
+
+      const count = await redisCommand(['GET', countKey])
+      return NextResponse.json(
+        { count: Number(count) || 0, counted: false, visitorType: 'owner' },
         { headers: { 'Cache-Control': 'no-store' } },
       )
     }

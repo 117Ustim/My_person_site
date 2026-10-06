@@ -66,12 +66,17 @@ export default async function AdminAnalyticsPage() {
             <article className={styles.statCard} key={page}>
               <span className={styles.statLabel}>{pageLabels[page] ?? page}</span>
               <strong className={styles.statValue}>{count}</strong>
-              <span className={styles.statHint}>уникально за 24 часа</span>
+              <span className={styles.statHint}>реальные визиты</span>
             </article>
           ))}
           <article className={styles.statCard}>
             <span className={styles.statLabel}>Боты</span>
             <strong className={styles.statValue}>{snapshot.botEvents.length}</strong>
+            <span className={styles.statHint}>последние события</span>
+          </article>
+          <article className={styles.statCard}>
+            <span className={styles.statLabel}>Мои визиты</span>
+            <strong className={styles.statValue}>{snapshot.ownerEvents.length}</strong>
             <span className={styles.statHint}>последние события</span>
           </article>
         </section>
@@ -116,6 +121,48 @@ export default async function AdminAnalyticsPage() {
             </div>
           ) : (
             <p className={styles.empty}>Визитов пока нет.</p>
+          )}
+        </section>
+
+        <section className={styles.section} aria-labelledby="owner-visits-title">
+          <div className={styles.sectionHeading}>
+            <div>
+              <p className={styles.eyebrow}>OWNER VISITS</p>
+              <h2 className={styles.sectionTitle} id="owner-visits-title">
+                Мои визиты
+              </h2>
+            </div>
+          </div>
+
+          {snapshot.ownerEvents.length ? (
+            <div className={styles.tableWrap}>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>Время</th>
+                    <th>Место</th>
+                    <th>Устройство</th>
+                    <th>Страница</th>
+                    <th>Источник</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {snapshot.ownerEvents.map(event => (
+                    <tr key={event.id}>
+                      <td>{formatVisitedAt(event.visitedAt)}</td>
+                      <td>{formatLocation(event)}</td>
+                      <td>
+                        {event.device} · {event.browser}
+                      </td>
+                      <td>{pageLabels[event.page] ?? event.page}</td>
+                      <td>{event.source}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className={styles.empty}>Ваших визитов пока нет.</p>
           )}
         </section>
 

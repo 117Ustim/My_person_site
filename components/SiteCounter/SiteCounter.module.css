@@ -1,5 +1,8 @@
 .counter {
   display: inline-block;
   min-width: 1ch;
+  color: rgba(244, 240, 233, 0.46);
+  font-size: 11px;
+  line-height: 1;
   text-align: center;
 }
