@@ -33,12 +33,51 @@ function formatLocation(event: VisitEvent) {
   return location.length ? location.join(', ') : 'Не определено'
 }
 
+function formatVisitedRange(firstVisitedAt: string, lastVisitedAt: string) {
+  return firstVisitedAt === lastVisitedAt
+    ? formatVisitedAt(firstVisitedAt)
+    : `${formatVisitedAt(firstVisitedAt)} — ${formatVisitedAt(lastVisitedAt)}`
+}
+
+function groupHumanVisits(events: VisitEvent[]) {
+  const grouped = new Map<string, VisitEvent[]>()
+
+  for (const event of events) {
+    const visitorEvents = grouped.get(event.visitorId) ?? []
+    visitorEvents.push(event)
+    grouped.set(event.visitorId, visitorEvents)
+  }
+
+  return Array.from(grouped.values())
+    .map(visitorEvents => {
+      const chronologicalEvents = [...visitorEvents].sort(
+        (first, second) => new Date(first.visitedAt).getTime() - new Date(second.visitedAt).getTime(),
+      )
+      const firstEvent = chronologicalEvents[0]
+      const lastEvent = chronologicalEvents[chronologicalEvents.length - 1]
+
+      return {
+        id: firstEvent.visitorId,
+        firstVisitedAt: firstEvent.visitedAt,
+        lastVisitedAt: lastEvent.visitedAt,
+        location: formatLocation(lastEvent),
+        device: `${lastEvent.device} · ${lastEvent.browser}`,
+        pages: Array.from(new Set(chronologicalEvents.map(event => event.page))),
+        source: lastEvent.source,
+      }
+    })
+    .sort(
+      (first, second) => new Date(second.lastVisitedAt).getTime() - new Date(first.lastVisitedAt).getTime(),
+    )
+}
+
 export default async function AdminAnalyticsPage() {
   if (!(await getAdminSession())) {
     redirect('/admin/login')
   }
 
   const snapshot = await getAnalyticsSnapshot()
+  const groupedHumanVisits = groupHumanVisits(snapshot.humanEvents)
 
   return (
     <main className={styles.page}>
@@ -81,8 +120,8 @@ export default async function AdminAnalyticsPage() {
           </article>
         </section>
 
-        <section className={styles.section} aria-labelledby="recent-visits-title">
-          <div className={styles.sectionHeading}>
+        <details className={styles.section}>
+          <summary className={styles.sectionHeading}>
             <div>
               <p className={styles.eyebrow}>HUMAN VISITS</p>
               <h2 className={styles.sectionTitle} id="recent-visits-title">
@@ -90,9 +129,9 @@ export default async function AdminAnalyticsPage() {
               </h2>
             </div>
             <span className={styles.sectionHint}>Хранение: до 90 дней или 2000 событий</span>
-          </div>
+          </summary>
 
-          {snapshot.humanEvents.length ? (
+          {groupedHumanVisits.length ? (
             <div className={styles.tableWrap}>
               <table className={styles.table}>
                 <thead>
@@ -100,20 +139,26 @@ export default async function AdminAnalyticsPage() {
                     <th>Время</th>
                     <th>Место</th>
                     <th>Устройство</th>
-                    <th>Страница</th>
+                    <th>Страницы</th>
                     <th>Источник</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {snapshot.humanEvents.map(event => (
-                    <tr key={event.id}>
-                      <td>{formatVisitedAt(event.visitedAt)}</td>
-                      <td>{formatLocation(event)}</td>
+                  {groupedHumanVisits.map(visitor => (
+                    <tr key={visitor.id}>
+                      <td>{formatVisitedRange(visitor.firstVisitedAt, visitor.lastVisitedAt)}</td>
+                      <td>{visitor.location}</td>
+                      <td>{visitor.device}</td>
                       <td>
-                        {event.device} · {event.browser}
+                        <div className={styles.pageTags} aria-label="Посещённые страницы">
+                          {visitor.pages.map(page => (
+                            <span className={styles.pageTag} key={page}>
+                              {pageLabels[page] ?? page}
+                            </span>
+                          ))}
+                        </div>
                       </td>
-                      <td>{pageLabels[event.page] ?? event.page}</td>
-                      <td>{event.source}</td>
+                      <td>{visitor.source}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -122,17 +167,17 @@ export default async function AdminAnalyticsPage() {
           ) : (
             <p className={styles.empty}>Визитов пока нет.</p>
           )}
-        </section>
+        </details>
 
-        <section className={styles.section} aria-labelledby="owner-visits-title">
-          <div className={styles.sectionHeading}>
+        <details className={styles.section}>
+          <summary className={styles.sectionHeading}>
             <div>
               <p className={styles.eyebrow}>OWNER VISITS</p>
               <h2 className={styles.sectionTitle} id="owner-visits-title">
                 Мои визиты
               </h2>
             </div>
-          </div>
+          </summary>
 
           {snapshot.ownerEvents.length ? (
             <div className={styles.tableWrap}>
@@ -164,17 +209,17 @@ export default async function AdminAnalyticsPage() {
           ) : (
             <p className={styles.empty}>Ваших визитов пока нет.</p>
           )}
-        </section>
+        </details>
 
-        <section className={styles.section} aria-labelledby="bot-visits-title">
-          <div className={styles.sectionHeading}>
+        <details className={styles.section}>
+          <summary className={styles.sectionHeading}>
             <div>
               <p className={styles.eyebrow}>BOT FILTER</p>
               <h2 className={styles.sectionTitle} id="bot-visits-title">
                 Отфильтрованные боты
               </h2>
             </div>
-          </div>
+          </summary>
 
           {snapshot.botEvents.length ? (
             <div className={styles.tableWrap}>
@@ -202,7 +247,7 @@ export default async function AdminAnalyticsPage() {
           ) : (
             <p className={styles.empty}>Отфильтрованных запросов пока нет.</p>
           )}
-        </section>
+        </details>
       </div>
     </main>
   )
