@@ -1,54 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { redisCommand } from '../../../lib/redis'
+import {
+  allowedPages,
+  createVisitEvent,
+  isLikelyBot,
+  isRateLimited,
+  recordVisitEvent,
+  type VisitClientPayload,
+} from '../../../lib/visit-analytics'
 
 const visitorCookieName = 'person_site_visitor'
 const visitorLifetimeSeconds = 60 * 60 * 24
 
-const redisUrl =
-  process.env.UPSTASH_REDIS_REST_URL ??
-  process.env.UPSTASH_REDIS_REST_KV_REST_API_URL ??
-  process.env.KV_REST_API_URL
-const redisToken =
-  process.env.UPSTASH_REDIS_REST_TOKEN ??
-  process.env.UPSTASH_REDIS_REST_KV_REST_API_TOKEN ??
-  process.env.KV_REST_API_TOKEN
-
-const allowedPages = new Set(['home', 'portfolio', 'about'])
-
-type RedisResponse = {
-  result?: unknown
-  error?: string
-}
-
-async function redisCommand(command: string[]) {
-  if (!redisUrl || !redisToken) {
-    throw new Error('Redis environment variables are not configured')
-  }
-
-  const response = await fetch(redisUrl, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${redisToken}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(command),
-    cache: 'no-store',
-  })
-
-  if (!response.ok) {
-    throw new Error('Redis request failed')
-  }
-
-  const payload = (await response.json()) as RedisResponse
-
-  if (payload.error) {
-    throw new Error('Redis command failed')
-  }
-
-  return payload.result
-}
-
 export async function POST(request: NextRequest) {
-  const body = (await request.json().catch(() => null)) as { page?: unknown } | null
+  const body = (await request.json().catch(() => null)) as VisitClientPayload | null
   const page = typeof body?.page === 'string' ? body.page : ''
 
   if (!allowedPages.has(page)) {
@@ -56,10 +21,44 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    const userAgent = request.headers.get('user-agent')
+    const botReason = isLikelyBot(userAgent, body?.automated === true)
     const existingVisitorId = request.cookies.get(visitorCookieName)?.value
-    const visitorId = existingVisitorId ?? crypto.randomUUID()
-    const visitKey = `person-site:visit:${page}:${visitorId}`
+    const visitorId = /^[A-Za-z0-9_-]{20,80}$/.test(existingVisitorId ?? '')
+      ? existingVisitorId!
+      : crypto.randomUUID()
     const countKey = `person-site:count:${page}`
+
+    if (botReason) {
+      const count = await redisCommand(['GET', countKey])
+      await recordVisitEvent(
+        createVisitEvent({
+          request,
+          body,
+          page,
+          visitorId,
+          userAgent,
+          kind: 'bot',
+          botReason,
+        }),
+        'bot',
+      )
+
+      return NextResponse.json(
+        { count: Number(count) || 0, counted: false, visitorType: 'bot' },
+        { headers: { 'Cache-Control': 'no-store' } },
+      )
+    }
+
+    if (await isRateLimited(request)) {
+      const count = await redisCommand(['GET', countKey])
+      return NextResponse.json(
+        { count: Number(count) || 0, counted: false, visitorType: 'limited' },
+        { headers: { 'Cache-Control': 'no-store' } },
+      )
+    }
+
+    const visitKey = `person-site:visit:${page}:${visitorId}`
     const visitMarker = await redisCommand([
       'SET',
       visitKey,
@@ -71,15 +70,30 @@ export async function POST(request: NextRequest) {
 
     if (visitMarker === 'OK') {
       await redisCommand(['INCR', countKey])
+      try {
+        await recordVisitEvent(
+          createVisitEvent({
+            request,
+            body,
+            page,
+            visitorId,
+            userAgent,
+            kind: 'human',
+          }),
+          'human',
+        )
+      } catch {
+        // Счётчик продолжает работать, даже если журнал временно недоступен.
+      }
     }
 
     const count = await redisCommand(['GET', countKey])
     const response = NextResponse.json(
-      { count: Number(count) || 0 },
+      { count: Number(count) || 0, counted: visitMarker === 'OK', visitorType: 'human' },
       { headers: { 'Cache-Control': 'no-store' } },
     )
 
-    if (!existingVisitorId) {
+    if (!existingVisitorId || visitorId !== existingVisitorId) {
       response.cookies.set(visitorCookieName, visitorId, {
         httpOnly: true,
         maxAge: 60 * 60 * 24 * 365,
