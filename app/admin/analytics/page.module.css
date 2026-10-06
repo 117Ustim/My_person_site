@@ -1,7 +1,9 @@
 .page {
   min-height: 100dvh;
   padding: 32px;
-  background: #121212;
+  background:
+    radial-gradient(circle at 88% 0%, rgba(233, 131, 111, 0.07), transparent 30%),
+    #121212;
   color: #f4f0e9;
 }
 
@@ -57,18 +59,30 @@
   align-items: center;
   justify-content: center;
   border: 1px solid rgba(244, 240, 233, 0.24);
+  border-radius: 12px;
   padding: 0 16px;
   background: transparent;
   color: #f4f0e9;
   cursor: pointer;
   font: inherit;
   text-decoration: none;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease, transform 160ms ease;
 }
 
 .secondaryButton:hover,
 .secondaryButton:focus-visible {
   border-color: #e9836f;
+  background: rgba(233, 131, 111, 0.08);
   color: #e9836f;
+}
+
+.secondaryButton:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 4px rgba(233, 131, 111, 0.16);
+}
+
+.secondaryButton:active {
+  transform: translateY(1px);
 }
 
 .stats {
@@ -83,8 +97,17 @@
   align-content: space-between;
   gap: 18px;
   border: 1px solid rgba(244, 240, 233, 0.14);
+  border-radius: 20px;
   padding: 20px;
   background: #1d1d1b;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.12);
+  transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+.statCard:hover {
+  border-color: rgba(233, 131, 111, 0.34);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
 }
 
 .statLabel,
@@ -120,7 +143,9 @@
 .tableWrap {
   overflow-x: auto;
   border: 1px solid rgba(244, 240, 233, 0.14);
+  border-radius: 18px;
   background: #1d1d1b;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.12);
 }
 
 .table {
@@ -154,12 +179,22 @@
   border-bottom: 0;
 }
 
+.table tbody tr {
+  transition: background-color 160ms ease;
+}
+
+.table tbody tr:hover {
+  background: rgba(244, 240, 233, 0.035);
+}
+
 .empty {
   margin: 0;
   border: 1px solid rgba(244, 240, 233, 0.14);
+  border-radius: 18px;
   padding: 24px;
   color: rgba(244, 240, 233, 0.62);
   background: #1d1d1b;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.12);
 }
 
 @media (max-width: 900px) {
@@ -189,5 +224,13 @@
 
   .statCard {
     min-height: 120px;
+  }
+
+  .headerActions {
+    width: 100%;
+  }
+
+  .headerActions .secondaryButton {
+    flex: 1;
   }
 }

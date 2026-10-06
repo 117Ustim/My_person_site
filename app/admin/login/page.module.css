@@ -3,7 +3,9 @@
   display: grid;
   place-items: center;
   padding: 24px;
-  background: #121212;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(233, 131, 111, 0.08), transparent 34%),
+    #121212;
   color: #f4f0e9;
 }
 
@@ -11,8 +13,9 @@
   width: min(100%, 430px);
   padding: 40px;
   border: 1px solid rgba(244, 240, 233, 0.18);
+  border-radius: 24px;
   background: #1d1d1b;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.24);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(233, 131, 111, 0.03);
 }
 
 .eyebrow {
@@ -50,16 +53,23 @@
   width: 100%;
   min-height: 48px;
   border: 1px solid rgba(244, 240, 233, 0.22);
-  border-radius: 0;
+  border-radius: 14px;
   padding: 0 14px;
   background: #121212;
   color: #f4f0e9;
   font: inherit;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
 }
 
-.input:focus {
-  outline: 2px solid #e9836f;
-  outline-offset: 2px;
+.input:hover {
+  border-color: rgba(244, 240, 233, 0.38);
+}
+
+.input:focus-visible {
+  outline: 0;
+  border-color: #e9836f;
+  box-shadow: 0 0 0 4px rgba(233, 131, 111, 0.16);
+  background: #151514;
 }
 
 .error {
@@ -72,12 +82,28 @@
   min-height: 50px;
   margin-top: 18px;
   border: 0;
-  border-radius: 0;
+  border-radius: 14px;
   background: #e9836f;
   color: #121212;
   cursor: pointer;
   font: inherit;
   font-weight: 600;
+  transition: background-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.submit:hover:not(:disabled),
+.submit:focus-visible:not(:disabled) {
+  background: #f09581;
+  box-shadow: 0 10px 24px rgba(233, 131, 111, 0.2);
+}
+
+.submit:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.submit:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 4px rgba(233, 131, 111, 0.2), 0 10px 24px rgba(233, 131, 111, 0.2);
 }
 
 .submit:disabled {
@@ -87,6 +113,7 @@
 
 @media (max-width: 520px) {
   .card {
+    border-radius: 20px;
     padding: 28px 22px;
   }
 }
