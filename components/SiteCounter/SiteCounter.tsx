@@ -92,7 +92,7 @@ export default function SiteCounter() {
 
   return (
     <span className={styles.counter} aria-live="polite" aria-busy={count === null}>
-      {count ?? 0}
+      {count ?? '…'}
     </span>
   )
 }
