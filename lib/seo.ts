@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { defaultLocale, localizePath, locales, type Locale } from './locale-routing'
 import { siteUrl } from './site-config'
+import type { ServiceSlug } from './service-content'
 
 export type SeoPage = 'home' | 'portfolio' | 'about'
 
@@ -74,6 +75,33 @@ const pageSeo: Record<Locale, Record<SeoPage, SeoPageData>> = {
   },
 }
 
+const serviceSeo: Record<Locale, Record<ServiceSlug, SeoPageData>> = {
+  uk: {
+    'crm-development': {
+      path: '/services/crm-development',
+      title: 'Розробка CRM-систем на замовлення | AU Studio',
+      description: 'Проєктую та розробляю CRM-системи під бізнес-процеси: клієнти, заявки, записи, оплати, ролі, звіти та інтеграції.',
+      openGraphLocale: 'uk_UA',
+    },
+  },
+  ru: {
+    'crm-development': {
+      path: '/services/crm-development',
+      title: 'Разработка CRM-систем на заказ | AU Studio',
+      description: 'Проектирую и разрабатываю CRM-системы под бизнес-процессы: клиенты, заявки, записи, оплаты, роли, отчёты и интеграции.',
+      openGraphLocale: 'ru_RU',
+    },
+  },
+  en: {
+    'crm-development': {
+      path: '/services/crm-development',
+      title: 'Custom CRM Development for Businesses | AU Studio',
+      description: 'I design and develop custom CRM systems for business processes, including customers, leads, appointments, payments, roles, reports, and integrations.',
+      openGraphLocale: 'en_US',
+    },
+  },
+}
+
 function absoluteUrl(pathname: string) {
   return new URL(pathname, siteUrl).toString()
 }
@@ -131,4 +159,55 @@ export function getLocalizedPageMetadata(locale: Locale, page: SeoPage): Metadat
 
 export function getDefaultPageMetadata(page: SeoPage): Metadata {
   return getPageMetadata(defaultLocale, page)
+}
+
+export function getServiceMetadata(locale: Locale, service: ServiceSlug): Metadata {
+  const data = serviceSeo[locale][service]
+  const canonicalPath = localizePath(locale, data.path)
+  const canonicalUrl = absoluteUrl(canonicalPath)
+  const localizedUrls = Object.fromEntries(
+    locales.map(item => [item, absoluteUrl(localizePath(item, data.path))]),
+  )
+
+  return {
+    title: data.title,
+    description: data.description,
+    alternates: {
+      canonical: canonicalUrl,
+      languages: {
+        ...localizedUrls,
+        'x-default': absoluteUrl(data.path),
+      },
+    },
+    openGraph: {
+      title: data.title,
+      description: data.description,
+      url: canonicalUrl,
+      siteName: 'AU Studio',
+      type: 'website',
+      locale: data.openGraphLocale,
+      images: [
+        {
+          url: absoluteUrl('/og-image.png'),
+          width: 1200,
+          height: 630,
+          alt: 'AU Studio — digital products and development',
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: data.title,
+      description: data.description,
+      images: [absoluteUrl('/og-image.png')],
+    },
+  }
+}
+
+export function getLocalizedServiceMetadata(locale: Locale, service: ServiceSlug): Metadata {
+  return getServiceMetadata(locale, service)
+}
+
+export function getDefaultServiceMetadata(service: ServiceSlug): Metadata {
+  return getServiceMetadata(defaultLocale, service)
 }

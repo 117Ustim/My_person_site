@@ -1,0 +1,349 @@
+.page {
+  min-height: 100vh;
+  padding: 132px 24px 96px;
+  background: var(--color-bg);
+}
+
+.container {
+  width: min(100%, 1180px);
+  margin: 0 auto;
+}
+
+.breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 48px;
+  color: rgba(247, 245, 240, 0.55);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+
+.breadcrumbs a {
+  color: inherit;
+  transition: color 180ms ease;
+}
+
+.breadcrumbs a:hover,
+.breadcrumbs a:focus-visible {
+  color: var(--color-accent);
+}
+
+.hero {
+  max-width: 900px;
+  padding-bottom: 112px;
+}
+
+.eyebrow {
+  margin: 0 0 22px;
+  color: var(--color-accent);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+}
+
+.title {
+  max-width: 820px;
+  margin: 0;
+  color: var(--color-text);
+  font-size: clamp(42px, 7vw, 88px);
+  font-weight: 500;
+  letter-spacing: -0.06em;
+  line-height: 0.98;
+}
+
+.heroDescription {
+  max-width: 720px;
+  margin: 32px 0 0;
+  color: rgba(247, 245, 240, 0.68);
+  font-size: clamp(19px, 2.2vw, 27px);
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+}
+
+.ctaLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  margin-top: 38px;
+  padding: 0 22px;
+  border: 1px solid rgba(255, 135, 122, 0.65);
+  border-radius: 999px;
+  color: var(--color-text);
+  font-size: 14px;
+  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+
+.ctaLink:hover,
+.ctaLink:focus-visible {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.section {
+  padding: 76px 0;
+  border-top: 1px solid rgba(247, 245, 240, 0.12);
+}
+
+.sectionHeader {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.2fr);
+  gap: 40px;
+  margin-bottom: 42px;
+}
+
+.sectionTitle {
+  max-width: 430px;
+  margin: 0;
+  color: var(--color-text);
+  font-size: clamp(30px, 4vw, 52px);
+  font-weight: 500;
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+
+.sectionDescription,
+.intro {
+  max-width: 620px;
+  margin: 0;
+  color: rgba(247, 245, 240, 0.68);
+  font-size: 18px;
+  line-height: 1.55;
+}
+
+.introBlock {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.2fr);
+  gap: 40px;
+}
+
+.introTitle {
+  max-width: 430px;
+  margin: 0;
+  color: var(--color-text);
+  font-size: clamp(26px, 3vw, 40px);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+.problemGrid,
+.caseGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.problem,
+.case {
+  min-height: 210px;
+  padding: 24px;
+  border: 1px solid rgba(247, 245, 240, 0.12);
+  border-radius: 20px;
+  background: rgba(247, 245, 240, 0.035);
+}
+
+.problemTitle,
+.caseTitle {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.problemDescription,
+.caseDescription {
+  margin: 18px 0 0;
+  color: rgba(247, 245, 240, 0.62);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.capabilityGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid rgba(247, 245, 240, 0.12);
+  border-radius: 20px;
+  background: rgba(247, 245, 240, 0.12);
+}
+
+.capability {
+  display: flex;
+  align-items: center;
+  min-height: 76px;
+  padding: 18px 22px;
+  background: var(--color-bg);
+  color: rgba(247, 245, 240, 0.8);
+  font-size: 16px;
+  line-height: 1.35;
+}
+
+.processList {
+  display: grid;
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid rgba(247, 245, 240, 0.12);
+  border-radius: 20px;
+  background: rgba(247, 245, 240, 0.12);
+}
+
+.processItem {
+  display: grid;
+  grid-template-columns: minmax(160px, 0.6fr) minmax(0, 1.4fr);
+  gap: 24px;
+  padding: 24px;
+  background: var(--color-bg);
+}
+
+.processTitle {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
+.processDescription {
+  margin: 0;
+  color: rgba(247, 245, 240, 0.62);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.case {
+  display: flex;
+  flex-direction: column;
+}
+
+.caseLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 28px;
+  color: var(--color-accent);
+  font-size: 14px;
+  transition: color 180ms ease;
+}
+
+.caseLink:hover,
+.caseLink:focus-visible {
+  color: var(--color-text);
+}
+
+.faqList {
+  display: grid;
+  gap: 12px;
+}
+
+.faqItem {
+  border-bottom: 1px solid rgba(247, 245, 240, 0.12);
+}
+
+.faqQuestion {
+  cursor: pointer;
+  padding: 20px 0;
+  color: var(--color-text);
+  font-size: 19px;
+  font-weight: 500;
+  list-style: none;
+}
+
+.faqQuestion::-webkit-details-marker {
+  display: none;
+}
+
+.faqQuestion::after {
+  float: right;
+  color: var(--color-accent);
+  content: '+';
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.faqItem[open] .faqQuestion::after {
+  content: '−';
+}
+
+.faqAnswer {
+  max-width: 720px;
+  margin: -4px 0 22px;
+  color: rgba(247, 245, 240, 0.62);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.ctaSection {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 0.65fr);
+  gap: 40px;
+  align-items: end;
+  padding-bottom: 0;
+}
+
+.ctaTitle {
+  max-width: 650px;
+  margin: 0;
+  color: var(--color-text);
+  font-size: clamp(34px, 5vw, 68px);
+  font-weight: 500;
+  letter-spacing: -0.06em;
+  line-height: 0.98;
+}
+
+.ctaCopy {
+  margin: 0;
+  color: rgba(247, 245, 240, 0.68);
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+@media (max-width: 760px) {
+  .page {
+    padding: 112px 18px 72px;
+  }
+
+  .breadcrumbs {
+    margin-bottom: 36px;
+  }
+
+  .hero {
+    padding-bottom: 76px;
+  }
+
+  .section {
+    padding: 56px 0;
+  }
+
+  .sectionHeader,
+  .introBlock,
+  .ctaSection {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .problemGrid,
+  .caseGrid,
+  .capabilityGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .problem,
+  .case {
+    min-height: 0;
+  }
+
+  .processItem {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .ctaTitle {
+    font-size: clamp(36px, 11vw, 56px);
+  }
+}
