@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { stripLocalePrefix } from '../../lib/locale-routing'
 import styles from './SiteCounter.module.css'
 
 const pageByPath: Record<string, string> = {
@@ -12,10 +13,11 @@ const pageByPath: Record<string, string> = {
 
 export default function SiteCounter() {
   const pathname = usePathname()
+  const pagePath = stripLocalePrefix(pathname)
   const [count, setCount] = useState<number | null>(null)
 
   useEffect(() => {
-    const page = pageByPath[pathname]
+    const page = pageByPath[pagePath]
 
     if (!page) {
       setCount(null)
@@ -84,9 +86,9 @@ export default function SiteCounter() {
       window.clearTimeout(timer)
       isCurrent = false
     }
-  }, [pathname])
+  }, [pagePath])
 
-  if (!pageByPath[pathname]) {
+  if (!pageByPath[pagePath]) {
     return null
   }
 

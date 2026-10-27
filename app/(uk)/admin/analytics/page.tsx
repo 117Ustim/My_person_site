@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
-import { getAdminSession } from '../../../lib/admin-auth'
-import { getAnalyticsSnapshot, type VisitEvent } from '../../../lib/visit-analytics'
+import { getAdminSession } from '../../../../lib/admin-auth'
+import { getAnalyticsSnapshot, type VisitEvent } from '../../../../lib/visit-analytics'
 import { logoutAdmin } from './actions'
 import styles from './page.module.css'
 

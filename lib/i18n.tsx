@@ -1,17 +1,11 @@
 'use client'
 
-import { usePathname } from 'next/navigation'
-import { createContext, type ReactNode, useContext, useEffect, useMemo, useState } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
+import { createContext, type ReactNode, useCallback, useContext, useEffect, useMemo } from 'react'
+import { getLocaleFromPathname, localeLabels, localizePath, locales, stripLocalePrefix, type Locale } from './locale-routing'
 
-export type Locale = 'uk' | 'ru' | 'en'
-
-export const locales: Locale[] = ['uk', 'ru', 'en']
-
-export const localeLabels: Record<Locale, string> = {
-  uk: 'UA',
-  ru: 'RU',
-  en: 'EN',
-}
+export { localeLabels, locales }
+export type { Locale }
 
 type MessageDictionary = Record<string, string>
 
@@ -1261,40 +1255,39 @@ type I18nContextValue = {
 
 const pageTitles: Record<Locale, Record<string, string>> = {
   uk: {
-    '/': 'Головна',
-    '/portfolio': 'Портфоліо — цифрові продукти та розробка',
-    '/about': 'Про мене — full-stack розробник',
+    '/': 'Розробка сайтів, CRM і мобільних застосунків | AU Studio',
+    '/portfolio': 'Портфоліо: сайти, CRM-системи та мобільні застосунки | AU Studio',
+    '/about': 'Full-stack розробник: сайти, CRM і мобільні застосунки | AU Studio',
   },
   ru: {
-    '/': 'Главная',
-    '/portfolio': 'Портфолио — цифровые продукты и разработка',
-    '/about': 'Обо мне — full-stack разработчик',
+    '/': 'Разработка сайтов, CRM и мобильных приложений | AU Studio',
+    '/portfolio': 'Портфолио: сайты, CRM-системы и мобильные приложения | AU Studio',
+    '/about': 'Full-stack разработчик: сайты, CRM и мобильные приложения | AU Studio',
   },
   en: {
-    '/': 'Home',
-    '/portfolio': 'Portfolio — digital products and development',
-    '/about': 'About me — full-stack developer',
+    '/': 'Website, CRM and Mobile App Development | AU Studio',
+    '/portfolio': 'Portfolio: Websites, CRM Systems and Mobile Apps | AU Studio',
+    '/about': 'Full-stack Developer: Websites, CRM and Mobile Apps | AU Studio',
   },
 }
 
 const I18nContext = createContext<I18nContextValue | null>(null)
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>('uk')
   const pathname = usePathname()
-
-  useEffect(() => {
-    const savedLocale = window.localStorage.getItem('site-locale') as Locale | null
-    if (savedLocale && locales.includes(savedLocale)) setLocaleState(savedLocale)
-  }, [])
+  const router = useRouter()
+  const locale = getLocaleFromPathname(pathname)
+  const pagePath = stripLocalePrefix(pathname)
 
   useEffect(() => {
     document.documentElement.lang = locale
-    document.title = pageTitles[locale][pathname] ?? pageTitles[locale]['/']
-    window.localStorage.setItem('site-locale', locale)
-  }, [locale, pathname])
+    document.title = pageTitles[locale][pagePath] ?? pageTitles[locale]['/']
+  }, [locale, pagePath])
 
-  const setLocale = (nextLocale: Locale) => setLocaleState(nextLocale)
+  const setLocale = useCallback((nextLocale: Locale) => {
+    const nextPath = localizePath(nextLocale, pagePath)
+    router.push(nextPath)
+  }, [pagePath, router])
 
   const value = useMemo<I18nContextValue>(() => ({
     locale,
@@ -1307,7 +1300,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       return message
     },
     localize: source => contentMessages[locale][source] ?? source,
-  }), [locale])
+  }), [locale, setLocale])
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>
 }

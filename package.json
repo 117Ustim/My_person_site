@@ -5,9 +5,11 @@
   "scripts": {
     "dev": "NEXT_DIST_DIR=.next-dev next dev -p 3000",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "generate:og": "node scripts/generate-og-image.mjs"
   },
   "dependencies": {
+    "@next/third-parties": "^16.4.3",
     "lenis": "^1.3.26",
     "lucide-react": "^1.46.0",
     "next": "15.5.26",

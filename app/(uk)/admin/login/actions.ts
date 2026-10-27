@@ -1,7 +1,7 @@
 'use server'
 
 import { redirect } from 'next/navigation'
-import { createAdminSession, isAdminEmail, verifyAdminPassword } from '../../../lib/admin-auth'
+import { createAdminSession, isAdminEmail, verifyAdminPassword } from '../../../../lib/admin-auth'
 
 export type LoginState = {
   error: string

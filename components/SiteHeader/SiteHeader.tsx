@@ -5,6 +5,7 @@ import { ArrowUpRight, Lightbulb, PanelsTopLeft, Smartphone, Sparkles } from 'lu
 import { usePathname, useRouter } from 'next/navigation'
 import { type MouseEvent, useEffect, useRef, useState } from 'react'
 import { localeLabels, type Locale, useI18n } from '../../lib/i18n'
+import { localizePath } from '../../lib/locale-routing'
 import BrandLogo from '../BrandLogo/BrandLogo'
 import { useProjectInquiry } from '../ProjectInquiry/ProjectInquiry'
 import styles from './SiteHeader.module.css'
@@ -15,7 +16,10 @@ const simpleLinks = [
   { labelKey: 'nav.aboutMe', href: '/about' },
 ]
 
-type NavigationLink = (typeof simpleLinks)[number]
+type NavigationLink = {
+  labelKey: string
+  href: string
+}
 
 export default function SiteHeader() {
   const pathname = usePathname()
@@ -27,8 +31,8 @@ export default function SiteHeader() {
   const [scrolled, setScrolled] = useState(false)
   const mobileNavigationTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const navigationLinks: NavigationLink[] = [
-    ...simpleLinks,
-    { labelKey: 'nav.contacts', href: `${pathname ?? '/'}#contacts` },
+    ...simpleLinks.map(link => ({ ...link, href: localizePath(locale, link.href) })),
+    { labelKey: 'nav.contacts', href: `${pathname ?? localizePath(locale, '/')}#contacts` },
   ]
 
   useEffect(() => {
@@ -147,7 +151,7 @@ export default function SiteHeader() {
       <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
         <div className={styles.inner}>
           <nav className={styles.nav} aria-label={t('common.mainNavigation')}>
-            <Link className={styles.brand} href="/" aria-label={t('common.auHome')} onClick={closeMenus}>
+            <Link className={styles.brand} href={localizePath(locale, '/')} aria-label={t('common.auHome')} onClick={closeMenus}>
               <BrandLogo className={styles.brandLogo} aria-label={t('common.auStudio')} />
             </Link>
 

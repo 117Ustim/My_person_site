@@ -5,6 +5,7 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import type { CSSProperties, ReactNode } from 'react'
 import { useI18n } from '../../lib/i18n'
+import { localizePath } from '../../lib/locale-routing'
 import styles from './MarketingHero.module.css'
 
 const EarthGlobe = dynamic(() => import('../EarthGlobe/EarthGlobe'), {
@@ -72,7 +73,7 @@ export default function MarketingHero({
         </h1>
         <p className={styles.description}>{description}</p>
         {resolvedActionLabel ? (
-          <Link className={styles.action} href={actionHref}>
+          <Link className={styles.action} href={actionHref.startsWith('/') ? localizePath(locale, actionHref) : actionHref}>
             <span className={styles.actionLabel}>{resolvedActionLabel}</span>
           </Link>
         ) : null}

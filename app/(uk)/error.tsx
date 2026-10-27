@@ -1,7 +1,7 @@
 'use client'
 
-import { I18nProvider, useI18n } from '../lib/i18n'
-import styles from './error.module.css'
+import { I18nProvider, useI18n } from '../../lib/i18n'
+import styles from '../../app/error.module.css'
 
 export default function GlobalError({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (

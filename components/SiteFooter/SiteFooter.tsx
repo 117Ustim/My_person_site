@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 import { useI18n } from '../../lib/i18n'
+import { localizePath } from '../../lib/locale-routing'
 import BrandLogo from '../BrandLogo/BrandLogo'
 import FooterProcess from '../FooterProcess/FooterProcess'
 import SiteCounter from '../SiteCounter/SiteCounter'
@@ -31,7 +32,7 @@ const badges: ReadonlyArray<FooterBadge> = [
 const emailAddress = 'ustik72@gmail.com'
 
 export default function SiteFooter() {
-  const { t } = useI18n()
+  const { locale, t } = useI18n()
   const [isEmailCopied, setIsEmailCopied] = useState(false)
 
   const handleCopyEmail = async () => {
@@ -61,7 +62,7 @@ export default function SiteFooter() {
     <footer id="contacts" className={styles.footer}>
       <div className={styles.footerGrid}>
         <div className={styles.companyColumn}>
-          <Link className={styles.footerBrand} href="/" aria-label={t('common.auHome')}>
+          <Link className={styles.footerBrand} href={localizePath(locale, '/')} aria-label={t('common.auHome')}>
             <BrandLogo className={styles.footerLogo} aria-label={t('common.auStudio')} />
           </Link>
           <p className={styles.companyText}>{t('footer.companyText')}</p>

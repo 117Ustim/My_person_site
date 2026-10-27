@@ -6,6 +6,7 @@ import { ArrowUpRight } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import type { UIEvent } from 'react'
 import { useI18n } from '../../lib/i18n'
+import { localizePath } from '../../lib/locale-routing'
 import type { FeatureItem } from '../../lib/page-data'
 import styles from './FeatureSlider.module.css'
 
@@ -28,7 +29,7 @@ type FeatureSliderProps = {
 const duration = 10_000
 
 export default function FeatureSlider({ items, label, title, description, reverse = false, compact = false, headingGap, scrollableControls = false, mobileCategoryGroups }: FeatureSliderProps) {
-  const { t } = useI18n()
+  const { locale, t } = useI18n()
   const resolvedLabel = label ?? t('common.features')
   const sliderRef = useRef<HTMLDivElement>(null)
   const mobileProjectMenuRef = useRef<HTMLDivElement>(null)
@@ -201,7 +202,7 @@ export default function FeatureSlider({ items, label, title, description, revers
             {item.portfolioProject || item.showPortfolioCard ? (
               <Link
                 className={styles.portfolioCard}
-                href={item.portfolioProject ? `/portfolio?category=${item.category ?? 'crm'}&project=${encodeURIComponent(item.portfolioProject)}` : '/portfolio'}
+                href={localizePath(locale, item.portfolioProject ? `/portfolio?category=${item.category ?? 'crm'}&project=${encodeURIComponent(item.portfolioProject)}` : '/portfolio')}
                 aria-label={`${t('portfolio.selectProject')}: ${item.title}`}
               >
                 <span className={styles.portfolioCardCopy}>
@@ -267,7 +268,7 @@ export default function FeatureSlider({ items, label, title, description, revers
                 {item.portfolioProject || item.showPortfolioCard ? (
                   <Link
                     className={styles.portfolioCard}
-                    href={item.portfolioProject ? `/portfolio?category=${item.category ?? 'crm'}&project=${encodeURIComponent(item.portfolioProject)}` : '/portfolio'}
+                    href={localizePath(locale, item.portfolioProject ? `/portfolio?category=${item.category ?? 'crm'}&project=${encodeURIComponent(item.portfolioProject)}` : '/portfolio')}
                     aria-label={`${t('portfolio.selectProject')}: ${item.title}`}
                   >
                     <span className={styles.portfolioCardCopy}>
