@@ -1,6 +1,8 @@
 # Session state
 
-- Пункт 9 локальной настройки конверсий GA4 выполнен. Добавлен безопасный helper `lib/analytics.ts` и события `contact_channel_click`, `generate_lead` и `contact_click` для формы заявки и контактных ссылок футера. В GA4 не передаются имя, email или текст заявки — только канал и место действия. Существующий интерфейс и видимые тексты не менялись. Локальная сборка прошла с 27 маршрутами, `npx tsc --noEmit --incremental false` и `git diff --check` прошли. В production изменения ещё не опубликованы.
+- Исправлена доставка пользовательских событий GA4 в `lib/analytics.ts`: вместо прямого обращения к `window.gtag` используется официальный `sendGAEvent` из `@next/third-parties/google`. Это должно устранить ситуацию, когда Tag Assistant видит `page_view` и `form_start`, но не видит `contact_channel_click`, `generate_lead` и `contact_click`. Внешний вид, тексты и структура страниц не менялись. `git diff --check`, `npx tsc --noEmit --incremental false` и `npm run build` прошли успешно; production-деплой ещё не выполнен.
+
+- Пункт 9 опубликован в production. Коммит `89002af` (`Track GA4 contact conversions`) отправлен в `main`; Vercel deployment `my-person-site-bkpetm6zk` завершён со статусом `Ready`. Production-проверка показала `200` для `https://117m.com.ua/`, Measurement ID `G-XCV7CGBXGV` и наличие в клиентском JavaScript событий `contact_channel_click`, `generate_lead` и `contact_click`. В GA4 не передаются имя, email или текст заявки — только канал и место действия. Существующий интерфейс и видимые тексты не менялись.
 
 - Google Analytics исправлен и опубликован в production: переменная Vercel `NEXT_PUBLIC_GA_ID` заменена на `G-XCV7CGBXGV`, локальные `.env.local` и `.env.example` обновлены. Коммит `5e32478` отправлен в `main`; Vercel deployment `my-person-site-94mavqex2` завершён со статусом `Ready`. Production HTML `https://117m.com.ua` теперь отдаёт `G-XCV7CGBXGV`; публичная страница проверена со статусом `200`.
 
