@@ -85,7 +85,7 @@ export default function ServicePage({ content }: ServicePageProps) {
               <article className={styles.case} key={project.project}>
                 <h3 className={styles.caseTitle}>{project.title}</h3>
                 <p className={styles.caseDescription}>{project.description}</p>
-                <Link className={styles.caseLink} href={`${portfolioPath}?category=crm&project=${encodeURIComponent(project.project)}`}>
+                <Link className={styles.caseLink} href={`${portfolioPath}?category=${content.portfolioCategory}&project=${encodeURIComponent(project.project)}`}>
                   {content.locale === 'uk' ? 'Відкрити кейс →' : content.locale === 'ru' ? 'Открыть кейс →' : 'Open case →'}
                 </Link>
               </article>

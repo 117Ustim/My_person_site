@@ -89,6 +89,12 @@ const serviceSeo: Record<Locale, Record<ServiceSlug, SeoPageData>> = {
       description: 'Створюю корпоративні сайти, лендинги та вебплатформи з продуманою структурою, адаптивним інтерфейсом і зрозумілим шляхом до цільової дії.',
       openGraphLocale: 'uk_UA',
     },
+    'mobile-app-development': {
+      path: '/services/mobile-app-development',
+      title: 'Розробка мобільних застосунків для iOS та Android | AU Studio',
+      description: 'Створюю мобільні застосунки для бізнесу: MVP, iOS та Android, авторизація, API, push-сповіщення, аналітика та підготовка до запуску.',
+      openGraphLocale: 'uk_UA',
+    },
   },
   ru: {
     'crm-development': {
@@ -103,6 +109,12 @@ const serviceSeo: Record<Locale, Record<ServiceSlug, SeoPageData>> = {
       description: 'Создаю корпоративные сайты, лендинги и веб-платформы с продуманной структурой, адаптивным интерфейсом и понятным путём к целевому действию.',
       openGraphLocale: 'ru_RU',
     },
+    'mobile-app-development': {
+      path: '/services/mobile-app-development',
+      title: 'Разработка мобильных приложений для iOS и Android | AU Studio',
+      description: 'Создаю мобильные приложения для бизнеса: MVP, iOS и Android, авторизация, API, push-уведомления, аналитика и подготовка к запуску.',
+      openGraphLocale: 'ru_RU',
+    },
   },
   en: {
     'crm-development': {
@@ -115,6 +127,12 @@ const serviceSeo: Record<Locale, Record<ServiceSlug, SeoPageData>> = {
       path: '/services/web-development',
       title: 'Website Development for Businesses | AU Studio',
       description: 'I create corporate websites, landing pages, and web platforms with clear structure, responsive interfaces, and a focused path to the next action.',
+      openGraphLocale: 'en_US',
+    },
+    'mobile-app-development': {
+      path: '/services/mobile-app-development',
+      title: 'Mobile App Development for iOS and Android | AU Studio',
+      description: 'I build mobile apps for businesses: MVPs, iOS and Android products, authentication, APIs, push notifications, analytics, and launch preparation.',
       openGraphLocale: 'en_US',
     },
   },

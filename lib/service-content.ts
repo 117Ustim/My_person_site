@@ -1,6 +1,8 @@
 import type { Locale } from './locale-routing'
 
-export type ServiceSlug = 'crm-development' | 'web-development'
+export type ServiceSlug = 'crm-development' | 'web-development' | 'mobile-app-development'
+
+export type ServicePortfolioCategory = 'crm' | 'sites' | 'mobile'
 
 export type ServiceContent = {
   slug: ServiceSlug
@@ -27,6 +29,7 @@ export type ServiceContent = {
   ctaTitle: string
   ctaDescription: string
   ctaAction: string
+  portfolioCategory: ServicePortfolioCategory
 }
 
 const basePath = '/services/crm-development'
@@ -35,6 +38,7 @@ const content: Record<Locale, Record<ServiceSlug, ServiceContent>> = {
   uk: {
     'crm-development': {
       slug: 'crm-development',
+      portfolioCategory: 'crm',
     path: basePath,
     locale: 'uk',
     breadcrumbHome: 'Головна',
@@ -87,6 +91,7 @@ const content: Record<Locale, Record<ServiceSlug, ServiceContent>> = {
     },
     'web-development': {
     slug: 'web-development',
+    portfolioCategory: 'sites',
     path: '/services/web-development',
     locale: 'uk',
     breadcrumbHome: 'Головна',
@@ -137,10 +142,65 @@ const content: Record<Locale, Record<ServiceSlug, ServiceContent>> = {
     ctaDescription: 'Розкажіть про бізнес і ціль сайту. Разом визначимо структуру, потрібні функції та реалістичний план запуску.',
       ctaAction: 'Обговорити розробку сайту',
     },
+    'mobile-app-development': {
+      slug: 'mobile-app-development',
+      portfolioCategory: 'mobile',
+      path: '/services/mobile-app-development',
+      locale: 'uk',
+      breadcrumbHome: 'Головна',
+      breadcrumbCurrent: 'Розробка мобільних застосунків',
+      eyebrow: 'МОБІЛЬНІ ЗАСТОСУНКИ ДЛЯ БІЗНЕСУ',
+      title: 'Розробка мобільних застосунків для iOS та Android',
+      description: 'Створюю мобільні застосунки для бізнесу — від ідеї та MVP до стабільного продукту з авторизацією, API, push-сповіщеннями та аналітикою.',
+      introTitle: 'Мобільний продукт, яким зручно користуватися щодня',
+      intro: 'Мобільний застосунок має вирішувати конкретну задачу користувача, а не просто бути ще однією іконкою на екрані. Я допомагаю структурувати ідею, спроєктувати ключові сценарії та реалізувати застосунок, який можна розвивати разом із бізнесом.',
+      problemsTitle: 'Які задачі вирішує мобільний застосунок',
+      problems: [
+        { title: 'Клієнтам складно повертатися до сервісу', description: 'Створюємо швидкий мобільний сценарій для повторних дій, записів, замовлень або роботи з особистим кабінетом.' },
+        { title: 'Процеси не працюють поза офісом', description: 'Переносимо потрібні функції в смартфон: дані, статуси, повідомлення, сканування та синхронізацію.' },
+        { title: 'Ідею потрібно перевірити без зайвих витрат', description: 'Визначаємо MVP, запускаємо найважливіші сценарії та залишаємо технічну основу для наступних версій.' },
+      ],
+      capabilitiesTitle: 'Що може входити в застосунок',
+      capabilities: [
+        'Застосунки для iOS та Android',
+        'MVP, прототипування та розвиток продукту',
+        'Авторизація, профілі та ролі користувачів',
+        'API, синхронізація даних і робота офлайн',
+        'Push-сповіщення, сканування та медіафайли',
+        'Аналітика, тестування та підготовка до публікації',
+      ],
+      processTitle: 'Як проходить розробка застосунку',
+      process: [
+        { title: 'Ідея', description: 'Визначаємо ціль продукту, аудиторію, ключові сценарії та критерії першого запуску.' },
+        { title: 'Сценарії', description: 'Проєктуємо структуру, навігацію, стани екранів і логіку взаємодії користувача із застосунком.' },
+        { title: 'Розробка', description: 'Збираємо мобільний інтерфейс, backend, API, інтеграції та необхідну інфраструктуру.' },
+        { title: 'Перевірка', description: 'Тестуємо сценарії, різні розміри екранів, продуктивність і обмін даними.' },
+        { title: 'Запуск', description: 'Готуємо продукт до публікації, передаємо доступи та плануємо подальший розвиток.' },
+      ],
+      casesTitle: 'Мобільні застосунки в портфоліо',
+      casesDescription: 'Подивіться на реальні мобільні продукти для здоров’я, подорожей, роботи з фото та фітнесу.',
+      cases: [
+        { title: 'MedScanner', description: 'Застосунок для сканування ліків, контролю домашньої аптечки, нагадувань і показників здоров’я.', project: 'medscanner' },
+        { title: 'Застосунок для тренерів і клієнтів', description: 'Мобільний продукт, синхронізований із CRM: плани тренувань, відвідування та прогрес.', project: 'sports-crm' },
+        { title: 'Air Scanner', description: 'Застосунок для сканування авіаквитків, нагадувань про рейси та онлайн-реєстрації.', project: 'air-scanner' },
+        { title: 'SwipeShot', description: 'iPhone-застосунок на Swift для швидкого очищення фото, відео та скриншотів за допомогою свайпів.', project: 'swipeshot' },
+      ],
+      faqTitle: 'Поширені запитання',
+      faq: [
+        { question: 'Для яких платформ можна створити застосунок?', answer: 'Для iOS, Android або обох платформ. Варіант розробки визначаємо за аудиторією, функціями, бюджетом і планом розвитку продукту.' },
+        { question: 'Чи можна почати з MVP?', answer: 'Так. Спочатку виділяємо найважливіші сценарії, запускаємо першу версію та перевіряємо продукт на реальних користувачах.' },
+        { question: 'Чи можна підключити власний backend або CRM?', answer: 'Так, мобільний застосунок можна синхронізувати з API, CRM, особистим кабінетом, платежами та іншими сервісами.' },
+        { question: 'Чи допоможете з публікацією в App Store і Google Play?', answer: 'Так, підготую продукт до публікації, перевірю технічні вимоги та допоможу пройти необхідні кроки релізу.' },
+      ],
+      ctaTitle: 'Є ідея мобільного продукту?',
+      ctaDescription: 'Розкажіть, яку задачу має вирішувати застосунок. Разом визначимо першу версію, потрібні функції та план запуску.',
+      ctaAction: 'Обговорити мобільний застосунок',
+    },
   },
   ru: {
     'crm-development': {
       slug: 'crm-development',
+      portfolioCategory: 'crm',
     path: basePath,
     locale: 'ru',
     breadcrumbHome: 'Главная',
@@ -193,6 +253,7 @@ const content: Record<Locale, Record<ServiceSlug, ServiceContent>> = {
     },
     'web-development': {
     slug: 'web-development',
+    portfolioCategory: 'sites',
     path: '/services/web-development',
     locale: 'ru',
     breadcrumbHome: 'Главная',
@@ -243,10 +304,65 @@ const content: Record<Locale, Record<ServiceSlug, ServiceContent>> = {
     ctaDescription: 'Расскажите о бизнесе и цели сайта. Вместе определим структуру, нужные функции и реалистичный план запуска.',
       ctaAction: 'Обсудить разработку сайта',
     },
+    'mobile-app-development': {
+      slug: 'mobile-app-development',
+      portfolioCategory: 'mobile',
+      path: '/services/mobile-app-development',
+      locale: 'ru',
+      breadcrumbHome: 'Главная',
+      breadcrumbCurrent: 'Разработка мобильных приложений',
+      eyebrow: 'МОБИЛЬНЫЕ ПРИЛОЖЕНИЯ ДЛЯ БИЗНЕСА',
+      title: 'Разработка мобильных приложений для iOS и Android',
+      description: 'Создаю мобильные приложения для бизнеса — от идеи и MVP до стабильного продукта с авторизацией, API, push-уведомлениями и аналитикой.',
+      introTitle: 'Мобильный продукт, которым удобно пользоваться каждый день',
+      intro: 'Мобильное приложение должно решать конкретную задачу пользователя, а не просто быть ещё одной иконкой на экране. Я помогаю структурировать идею, спроектировать ключевые сценарии и реализовать приложение, которое можно развивать вместе с бизнесом.',
+      problemsTitle: 'Какие задачи решает мобильное приложение',
+      problems: [
+        { title: 'Клиентам сложно возвращаться к сервису', description: 'Создаём быстрый мобильный сценарий для повторных действий, записей, заказов или работы с личным кабинетом.' },
+        { title: 'Процессы не работают вне офиса', description: 'Переносим нужные функции в смартфон: данные, статусы, уведомления, сканирование и синхронизацию.' },
+        { title: 'Идею нужно проверить без лишних затрат', description: 'Определяем MVP, запускаем самые важные сценарии и оставляем техническую основу для следующих версий.' },
+      ],
+      capabilitiesTitle: 'Что может входить в приложение',
+      capabilities: [
+        'Приложения для iOS и Android',
+        'MVP, прототипирование и развитие продукта',
+        'Авторизация, профили и роли пользователей',
+        'API, синхронизация данных и работа офлайн',
+        'Push-уведомления, сканирование и медиафайлы',
+        'Аналитика, тестирование и подготовка к публикации',
+      ],
+      processTitle: 'Как проходит разработка приложения',
+      process: [
+        { title: 'Идея', description: 'Определяем цель продукта, аудиторию, ключевые сценарии и критерии первого запуска.' },
+        { title: 'Сценарии', description: 'Проектируем структуру, навигацию, состояния экранов и логику взаимодействия пользователя с приложением.' },
+        { title: 'Разработка', description: 'Собираем мобильный интерфейс, backend, API, интеграции и необходимую инфраструктуру.' },
+        { title: 'Проверка', description: 'Тестируем сценарии, разные размеры экранов, производительность и обмен данными.' },
+        { title: 'Запуск', description: 'Готовим продукт к публикации, передаём доступы и планируем дальнейшее развитие.' },
+      ],
+      casesTitle: 'Мобильные приложения в портфолио',
+      casesDescription: 'Посмотрите на реальные мобильные продукты для здоровья, путешествий, работы с фото и фитнеса.',
+      cases: [
+        { title: 'MedScanner', description: 'Приложение для сканирования лекарств, контроля домашней аптечки, напоминаний и показателей здоровья.', project: 'medscanner' },
+        { title: 'Приложение для тренеров и клиентов', description: 'Мобильный продукт, синхронизированный с CRM: планы тренировок, посещения и прогресс.', project: 'sports-crm' },
+        { title: 'Air Scanner', description: 'Приложение для сканирования авиабилетов, напоминаний о рейсах и онлайн-регистрации.', project: 'air-scanner' },
+        { title: 'SwipeShot', description: 'iPhone-приложение на Swift для быстрой очистки фото, видео и скриншотов с помощью свайпов.', project: 'swipeshot' },
+      ],
+      faqTitle: 'Частые вопросы',
+      faq: [
+        { question: 'Для каких платформ можно создать приложение?', answer: 'Для iOS, Android или обеих платформ. Вариант разработки определяем по аудитории, функциям, бюджету и плану развития продукта.' },
+        { question: 'Можно начать с MVP?', answer: 'Да. Сначала выделяем самые важные сценарии, запускаем первую версию и проверяем продукт на реальных пользователях.' },
+        { question: 'Можно подключить собственный backend или CRM?', answer: 'Да, мобильное приложение можно синхронизировать с API, CRM, личным кабинетом, платежами и другими сервисами.' },
+        { question: 'Поможете с публикацией в App Store и Google Play?', answer: 'Да, подготовлю продукт к публикации, проверю технические требования и помогу пройти необходимые этапы релиза.' },
+      ],
+      ctaTitle: 'Есть идея мобильного продукта?',
+      ctaDescription: 'Расскажите, какую задачу должно решать приложение. Вместе определим первую версию, нужные функции и план запуска.',
+      ctaAction: 'Обсудить мобильное приложение',
+    },
   },
   en: {
     'crm-development': {
       slug: 'crm-development',
+      portfolioCategory: 'crm',
     path: basePath,
     locale: 'en',
     breadcrumbHome: 'Home',
@@ -299,6 +415,7 @@ const content: Record<Locale, Record<ServiceSlug, ServiceContent>> = {
     },
     'web-development': {
     slug: 'web-development',
+    portfolioCategory: 'sites',
     path: '/services/web-development',
     locale: 'en',
     breadcrumbHome: 'Home',
@@ -348,6 +465,60 @@ const content: Record<Locale, Record<ServiceSlug, ServiceContent>> = {
     ctaTitle: 'Do you need to create or relaunch a website?',
     ctaDescription: 'Tell me about the business and the website goal. We will define the structure, required features, and a realistic launch plan.',
       ctaAction: 'Discuss website development',
+    },
+    'mobile-app-development': {
+      slug: 'mobile-app-development',
+      portfolioCategory: 'mobile',
+      path: '/services/mobile-app-development',
+      locale: 'en',
+      breadcrumbHome: 'Home',
+      breadcrumbCurrent: 'Mobile app development',
+      eyebrow: 'MOBILE APPS FOR BUSINESS',
+      title: 'Mobile app development for iOS and Android',
+      description: 'I build mobile apps for businesses — from an idea and MVP to a stable product with authentication, APIs, push notifications, and analytics.',
+      introTitle: 'A mobile product people can use every day',
+      intro: 'A mobile app should solve a clear user problem instead of becoming another icon on a screen. I help structure the idea, design the key flows, and build an app that can grow with the business.',
+      problemsTitle: 'What a mobile app can solve',
+      problems: [
+        { title: 'Customers find it hard to return to the service', description: 'We create a fast mobile flow for repeat actions, bookings, orders, or work with a personal account.' },
+        { title: 'Processes stop outside the office', description: 'We bring the right functions to the phone: data, statuses, notifications, scanning, and synchronisation.' },
+        { title: 'The idea needs validation without unnecessary cost', description: 'We define an MVP, launch the most important flows, and keep a technical foundation for future versions.' },
+      ],
+      capabilitiesTitle: 'What the app can include',
+      capabilities: [
+        'Apps for iOS and Android',
+        'MVPs, prototyping, and product development',
+        'Authentication, profiles, and user roles',
+        'APIs, data synchronisation, and offline workflows',
+        'Push notifications, scanning, and media files',
+        'Analytics, testing, and store release preparation',
+      ],
+      processTitle: 'How mobile app development works',
+      process: [
+        { title: 'The idea', description: 'We define the product goal, audience, key flows, and the criteria for the first release.' },
+        { title: 'The flows', description: 'We design the structure, navigation, screen states, and interaction logic for the app.' },
+        { title: 'The build', description: 'We build the mobile interface, backend, APIs, integrations, and required infrastructure.' },
+        { title: 'Validation', description: 'We test the flows, screen sizes, performance, and data exchange.' },
+        { title: 'The launch', description: 'We prepare the product for release, transfer access, and plan the next stage of development.' },
+      ],
+      casesTitle: 'Mobile apps in the portfolio',
+      casesDescription: 'See real mobile products for health, travel, photo management, and fitness.',
+      cases: [
+        { title: 'MedScanner', description: 'An app for scanning medication, managing a home medicine cabinet, reminders, and health metrics.', project: 'medscanner' },
+        { title: 'App for trainers and clients', description: 'A mobile product synced with a CRM: training plans, attendance, and progress.', project: 'sports-crm' },
+        { title: 'Air Scanner', description: 'An app for scanning flight tickets, flight reminders, and online check-in.', project: 'air-scanner' },
+        { title: 'SwipeShot', description: 'An iPhone app built with Swift for quickly cleaning photos, videos, and screenshots with swipes.', project: 'swipeshot' },
+      ],
+      faqTitle: 'Frequently asked questions',
+      faq: [
+        { question: 'Which platforms can you build for?', answer: 'iOS, Android, or both. The right approach depends on the audience, features, budget, and product roadmap.' },
+        { question: 'Can we start with an MVP?', answer: 'Yes. We identify the most important flows, launch the first version, and validate the product with real users.' },
+        { question: 'Can the app connect to our backend or CRM?', answer: 'Yes. A mobile app can synchronise with an API, CRM, personal account, payment service, and other systems.' },
+        { question: 'Can you help publish to the App Store and Google Play?', answer: 'Yes. I prepare the product for release, check the technical requirements, and help complete the necessary launch steps.' },
+      ],
+      ctaTitle: 'Have an idea for a mobile product?',
+      ctaDescription: 'Tell me what problem the app should solve. We will define the first version, required features, and a launch plan.',
+      ctaAction: 'Discuss a mobile app',
     },
   },
 }

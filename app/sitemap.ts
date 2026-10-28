@@ -4,7 +4,12 @@ import { pageRoutes } from '../lib/site-content'
 import { siteUrl } from '../lib/site-config'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const basePaths = [...pageRoutes.map(route => route.path), '/services/crm-development', '/services/web-development']
+  const basePaths = [
+    ...pageRoutes.map(route => route.path),
+    '/services/crm-development',
+    '/services/web-development',
+    '/services/mobile-app-development',
+  ]
   const routes = basePaths.flatMap(path => [
     path,
     ...locales
