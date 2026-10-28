@@ -83,6 +83,12 @@ const serviceSeo: Record<Locale, Record<ServiceSlug, SeoPageData>> = {
       description: 'Проєктую та розробляю CRM-системи під бізнес-процеси: клієнти, заявки, записи, оплати, ролі, звіти та інтеграції.',
       openGraphLocale: 'uk_UA',
     },
+    'web-development': {
+      path: '/services/web-development',
+      title: 'Розробка сайтів для бізнесу | AU Studio',
+      description: 'Створюю корпоративні сайти, лендинги та вебплатформи з продуманою структурою, адаптивним інтерфейсом і зрозумілим шляхом до цільової дії.',
+      openGraphLocale: 'uk_UA',
+    },
   },
   ru: {
     'crm-development': {
@@ -91,12 +97,24 @@ const serviceSeo: Record<Locale, Record<ServiceSlug, SeoPageData>> = {
       description: 'Проектирую и разрабатываю CRM-системы под бизнес-процессы: клиенты, заявки, записи, оплаты, роли, отчёты и интеграции.',
       openGraphLocale: 'ru_RU',
     },
+    'web-development': {
+      path: '/services/web-development',
+      title: 'Разработка сайтов для бизнеса | AU Studio',
+      description: 'Создаю корпоративные сайты, лендинги и веб-платформы с продуманной структурой, адаптивным интерфейсом и понятным путём к целевому действию.',
+      openGraphLocale: 'ru_RU',
+    },
   },
   en: {
     'crm-development': {
       path: '/services/crm-development',
       title: 'Custom CRM Development for Businesses | AU Studio',
       description: 'I design and develop custom CRM systems for business processes, including customers, leads, appointments, payments, roles, reports, and integrations.',
+      openGraphLocale: 'en_US',
+    },
+    'web-development': {
+      path: '/services/web-development',
+      title: 'Website Development for Businesses | AU Studio',
+      description: 'I create corporate websites, landing pages, and web platforms with clear structure, responsive interfaces, and a focused path to the next action.',
       openGraphLocale: 'en_US',
     },
   },
