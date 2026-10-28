@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { Mail } from 'lucide-react'
 import { createContext, type FormEvent, type ReactNode, type UIEvent, useContext, useEffect, useRef, useState } from 'react'
 import { type Locale, useI18n } from '../../lib/i18n'
+import { trackEvent } from '../../lib/analytics'
 import BrandLogo from '../BrandLogo/BrandLogo'
 import styles from './ProjectInquiry.module.css'
 
@@ -109,6 +110,7 @@ function ProjectInquiryModal({ open, onClose }: { open: boolean; onClose: () => 
 
     setDeliveryStatus('sending')
     setDeliveryChannel(channel)
+    trackEvent('contact_channel_click', { channel, location: 'inquiry_modal' })
 
     if (channel === 'whatsapp') {
       const text = [
@@ -123,6 +125,7 @@ function ProjectInquiryModal({ open, onClose }: { open: boolean; onClose: () => 
 
       window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer')
       setDeliveryStatus('success')
+      trackEvent('generate_lead', { method: channel, location: 'inquiry_modal' })
       return
     }
 
@@ -136,6 +139,7 @@ function ProjectInquiryModal({ open, onClose }: { open: boolean; onClose: () => 
       if (!response.ok) throw new Error('Contact delivery failed')
 
       setDeliveryStatus('success')
+      trackEvent('generate_lead', { method: channel, location: 'inquiry_modal' })
     } catch {
       setDeliveryStatus('error')
     }

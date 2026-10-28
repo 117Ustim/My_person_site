@@ -1,6 +1,8 @@
 # Session state
 
-- Google Analytics исправлен: production-переменная Vercel `NEXT_PUBLIC_GA_ID` заменена на `G-XCV7CGBXGV`, локальные `.env.local` и `.env.example` обновлены. Локальная production-сборка с новым ID прошла успешно (27 маршрутов, TypeScript и `git diff --check`). Для применения переменной на сайте нужен новый production-деплой.
+- Пункт 9 локальной настройки конверсий GA4 выполнен. Добавлен безопасный helper `lib/analytics.ts` и события `contact_channel_click`, `generate_lead` и `contact_click` для формы заявки и контактных ссылок футера. В GA4 не передаются имя, email или текст заявки — только канал и место действия. Существующий интерфейс и видимые тексты не менялись. Локальная сборка прошла с 27 маршрутами, `npx tsc --noEmit --incremental false` и `git diff --check` прошли. В production изменения ещё не опубликованы.
+
+- Google Analytics исправлен и опубликован в production: переменная Vercel `NEXT_PUBLIC_GA_ID` заменена на `G-XCV7CGBXGV`, локальные `.env.local` и `.env.example` обновлены. Коммит `5e32478` отправлен в `main`; Vercel deployment `my-person-site-94mavqex2` завершён со статусом `Ready`. Production HTML `https://117m.com.ua` теперь отдаёт `G-XCV7CGBXGV`; публичная страница проверена со статусом `200`.
 
 - Пункт 8 опубликован в production. Коммит `f826d04` (`SEO: add mobile app development pages`) отправлен в `main`; Vercel deployment `my-person-site-lvmklh9w8` завершён со статусом `Ready` и получил production-алиас `https://117m.com.ua`. Production-проверка показала `200` для `/services/mobile-app-development`, `/ru/services/mobile-app-development` и `/en/services/mobile-app-development`. Проверены локальные `lang`, title, description, canonical, hreflang, H1, `Service` и `BreadcrumbList` JSON-LD; мобильный URL присутствует в sitemap.
 

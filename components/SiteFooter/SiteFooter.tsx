@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { useI18n } from '../../lib/i18n'
 import { localizePath } from '../../lib/locale-routing'
+import { trackEvent } from '../../lib/analytics'
 import BrandLogo from '../BrandLogo/BrandLogo'
 import FooterProcess from '../FooterProcess/FooterProcess'
 import SiteCounter from '../SiteCounter/SiteCounter'
@@ -52,6 +53,7 @@ export default function SiteFooter() {
       }
 
       setIsEmailCopied(true)
+      trackEvent('contact_click', { channel: 'email', location: 'footer' })
       window.setTimeout(() => setIsEmailCopied(false), 1800)
     } catch {
       setIsEmailCopied(false)
@@ -100,6 +102,7 @@ export default function SiteFooter() {
                 href="https://t.me/ustikm"
                 target="_blank"
                 rel="noreferrer"
+                onClick={() => trackEvent('contact_click', { channel: 'telegram', location: 'footer' })}
                 aria-label={t('footer.telegram')}
                 title={t('footer.telegram')}
               >
@@ -111,6 +114,7 @@ export default function SiteFooter() {
                 href="https://wa.me/380673276040"
                 target="_blank"
                 rel="noreferrer"
+                onClick={() => trackEvent('contact_click', { channel: 'whatsapp', location: 'footer' })}
                 aria-label={t('footer.whatsapp')}
                 title={t('footer.whatsapp')}
               >
