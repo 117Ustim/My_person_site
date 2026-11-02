@@ -85,8 +85,8 @@ const serviceSeo: Record<Locale, Record<ServiceSlug, SeoPageData>> = {
     },
     'web-development': {
       path: '/services/web-development',
-      title: 'Розробка сайтів для бізнесу | AU Studio',
-      description: 'Створюю корпоративні сайти, лендинги та вебплатформи з продуманою структурою, адаптивним інтерфейсом і зрозумілим шляхом до цільової дії.',
+      title: 'Розробка сайтів під ключ в Україні | AU Studio',
+      description: 'Розробляю сайти під ключ для бізнесу в Україні: корпоративні сайти, лендинги та вебплатформи — від структури й дизайну до запуску та інтеграцій.',
       openGraphLocale: 'uk_UA',
     },
     'mobile-app-development': {
@@ -105,8 +105,8 @@ const serviceSeo: Record<Locale, Record<ServiceSlug, SeoPageData>> = {
     },
     'web-development': {
       path: '/services/web-development',
-      title: 'Разработка сайтов для бизнеса | AU Studio',
-      description: 'Создаю корпоративные сайты, лендинги и веб-платформы с продуманной структурой, адаптивным интерфейсом и понятным путём к целевому действию.',
+      title: 'Разработка сайтов под ключ в Украине | AU Studio',
+      description: 'Разрабатываю сайты под ключ для бизнеса в Украине: корпоративные сайты, лендинги и веб-платформы — от структуры и дизайна до запуска и интеграций.',
       openGraphLocale: 'ru_RU',
     },
     'mobile-app-development': {

@@ -32,6 +32,12 @@ const badges: ReadonlyArray<FooterBadge> = [
 
 const emailAddress = 'ustik72@gmail.com'
 
+const serviceLinks = [
+  { path: '/services/web-development', labelKey: 'footer.webDevelopment' },
+  { path: '/services/crm-development', labelKey: 'footer.crmDevelopment' },
+  { path: '/services/mobile-app-development', labelKey: 'footer.mobileAppDevelopment' },
+] as const
+
 export default function SiteFooter() {
   const { locale, t } = useI18n()
   const [isEmailCopied, setIsEmailCopied] = useState(false)
@@ -122,6 +128,18 @@ export default function SiteFooter() {
                 <span>{t('footer.whatsapp')}</span>
               </a>
             </div>
+            <nav className={styles.serviceNavigation} aria-labelledby="footer-services-title">
+              <p id="footer-services-title" className={styles.serviceNavigationTitle}>{t('footer.services')}</p>
+              <ul className={styles.serviceNavigationList}>
+                {serviceLinks.map(service => (
+                  <li key={service.path}>
+                    <Link className={styles.serviceNavigationLink} href={localizePath(locale, service.path)}>
+                      {t(service.labelKey)}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
           <div className={styles.badges}>
             {badges.map(badge => {

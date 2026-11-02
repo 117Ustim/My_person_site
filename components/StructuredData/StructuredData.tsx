@@ -8,8 +8,8 @@ const structuredData = {
       '@id': `${siteUrl}#service`,
       name: 'AU Studio',
       url: siteUrl,
-      description: 'Website, CRM system, and mobile app development for businesses worldwide.',
-      areaServed: 'Worldwide',
+      description: 'Website, CRM system, and mobile app development for businesses in Ukraine.',
+      areaServed: 'Ukraine',
       serviceType: [
         'Website development',
         'CRM system development',

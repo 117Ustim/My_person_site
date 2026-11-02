@@ -159,6 +159,36 @@
   background: rgb(var(--color-text-rgb) / 0.06);
 }
 
+.serviceNavigation {
+  margin-top: 32px;
+}
+
+.serviceNavigationTitle {
+  margin: 0 0 12px;
+  color: rgb(var(--color-text-rgb) / 0.48);
+  font-size: 13px;
+}
+
+.serviceNavigationList {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.serviceNavigationLink {
+  color: rgb(var(--color-text-rgb) / 0.78);
+  font-size: 14px;
+  text-decoration: none;
+  transition: color 180ms ease;
+}
+
+.serviceNavigationLink:hover,
+.serviceNavigationLink:focus-visible {
+  color: var(--color-text);
+}
+
 .badges {
   display: flex;
   flex-wrap: nowrap;

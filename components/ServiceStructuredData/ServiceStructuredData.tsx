@@ -20,7 +20,7 @@ export default function ServiceStructuredData({ content }: ServiceStructuredData
         url: serviceUrl,
         description: content.description,
         provider: { '@id': `${siteUrl}#service` },
-        areaServed: 'Worldwide',
+        areaServed: 'Ukraine',
         inLanguage: content.locale,
       },
       {
