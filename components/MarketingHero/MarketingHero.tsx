@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
-import type { CSSProperties, ReactNode } from 'react'
+import { Fragment, type CSSProperties, type ReactNode } from 'react'
 import { useI18n } from '../../lib/i18n'
 import { localizePath } from '../../lib/locale-routing'
 import styles from './MarketingHero.module.css'
@@ -61,14 +61,16 @@ export default function MarketingHero({
         {eyebrow ? <span className={styles.eyebrow}>{eyebrow}</span> : null}
         <h1 className={`${styles.title} ${variant === 'home' && locale === 'ru' ? styles.russianTitle : ''}`} aria-label={title}>
           {words.map((word, index) => (
-            <span
-              className={styles.word}
-              key={`${word}-${index}`}
-              style={{ '--word-delay': `${index * 45}ms` } as CSSProperties}
-              aria-hidden="true"
-            >
-              {word}
-            </span>
+            <Fragment key={`${word}-${index}`}>
+              {index > 0 ? ' ' : null}
+              <span
+                className={styles.word}
+                style={{ '--word-delay': `${index * 45}ms` } as CSSProperties}
+                aria-hidden="true"
+              >
+                {word}
+              </span>
+            </Fragment>
           ))}
         </h1>
         <p className={styles.description}>{description}</p>

@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { defaultLocale, localizePath, locales } from '../lib/locale-routing'
+import { portfolioCaseSlugs } from '../lib/portfolio-case-content'
 import { pageRoutes } from '../lib/site-content'
 import { siteUrl } from '../lib/site-config'
 
@@ -9,6 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/services/crm-development',
     '/services/web-development',
     '/services/mobile-app-development',
+    ...portfolioCaseSlugs.map(project => `/portfolio/${project}`),
   ]
   const routes = basePaths.flatMap(path => [
     path,

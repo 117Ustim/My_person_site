@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import { defaultLocale, localizePath, locales, type Locale } from './locale-routing'
+import type { PortfolioCaseSlug } from './portfolio-case-content'
+import { getPortfolioCaseContent } from './portfolio-case-content'
 import { siteUrl } from './site-config'
 import type { ServiceSlug } from './service-content'
 
@@ -246,4 +248,48 @@ export function getLocalizedServiceMetadata(locale: Locale, service: ServiceSlug
 
 export function getDefaultServiceMetadata(service: ServiceSlug): Metadata {
   return getServiceMetadata(defaultLocale, service)
+}
+
+export function getPortfolioCaseMetadata(locale: Locale, project: PortfolioCaseSlug): Metadata {
+  const data = getPortfolioCaseContent(locale, project)
+  const canonicalPath = localizePath(locale, data.path)
+  const canonicalUrl = absoluteUrl(canonicalPath)
+  const localizedUrls = Object.fromEntries(
+    locales.map(item => [item, absoluteUrl(localizePath(item, data.path))]),
+  )
+
+  return {
+    title: data.metaTitle,
+    description: data.metaDescription,
+    alternates: {
+      canonical: canonicalUrl,
+      languages: {
+        ...localizedUrls,
+        'x-default': absoluteUrl(data.path),
+      },
+    },
+    openGraph: {
+      title: data.metaTitle,
+      description: data.metaDescription,
+      url: canonicalUrl,
+      siteName: 'AU Studio',
+      type: 'article',
+      locale: locale === 'uk' ? 'uk_UA' : locale === 'ru' ? 'ru_RU' : 'en_US',
+      images: [{ url: absoluteUrl(data.heroImage), alt: data.imageAlt }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: data.metaTitle,
+      description: data.metaDescription,
+      images: [absoluteUrl(data.heroImage)],
+    },
+  }
+}
+
+export function getLocalizedPortfolioCaseMetadata(locale: Locale, project: PortfolioCaseSlug): Metadata {
+  return getPortfolioCaseMetadata(locale, project)
+}
+
+export function getDefaultPortfolioCaseMetadata(project: PortfolioCaseSlug): Metadata {
+  return getPortfolioCaseMetadata(defaultLocale, project)
 }

@@ -253,7 +253,7 @@ export default function HomePageContent() {
     <main className={styles.main}>
       <MarketingHero
         variant="home"
-        title={localize('Перетворюю ідеї на готові цифрові продукти')}
+        title={localize('Розробка сайтів і цифрових продуктів для бізнесу')}
         description={localize('Full-stack розробник. Сайти, CRM-системи та мобільні застосунки для реальних бізнес-завдань')}
         actionLabel={localize('Переглянути роботи')}
         actionHref="/portfolio"

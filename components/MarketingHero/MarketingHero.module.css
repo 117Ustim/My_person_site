@@ -79,7 +79,7 @@
 
 .word {
   display: inline-block;
-  margin-right: 0.22em;
+  margin-right: 0;
   opacity: 0;
   animation: heroRise 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
   animation-delay: var(--word-delay, 0ms);
