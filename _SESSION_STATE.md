@@ -1,5 +1,7 @@
 # Session state
 
+- Попытка получить Lighthouse/PageSpeed-метрики production главной через PageSpeed API не выполнена: Google API вернул `429 Quota exceeded` для подключённого проекта. Это ограничение квоты аналитического API, а не ошибка сайта. Для LCP/INP/CLS нужен запуск через web-интерфейс PageSpeed Insights или доступная API-квота.
+
 - Коммит `443f905` (`SEO: add portfolio case pages and improve homepage H1`) отправлен в `main`. Vercel автоматически создал production-деплой `https://my-person-site-mg1jligth-ustims-projects.vercel.app`, сборка завершилась со статусом `Ready`. Production-проверка `https://117m.com.ua` показала `200` для `/`, `/ru`, `/en`, `/portfolio/vetscanct`, `/portfolio/auto-service-crm` и всех локализованных URL двух кейсов. На главной подтверждены H1 с пробелами и canonical для всех трёх языков; в sitemap присутствуют новые case URL; у VetScanCT проверены `CreativeWork` и `BreadcrumbList` JSON-LD. Рабочая ветка синхронизирована с `origin/main`.
 
 - H1 главной страницы обновлён на «Розробка сайтів і цифрових продуктів для бізнесу». В `MarketingHero` добавлены настоящие текстовые пробелы между анимированными словами, а CSS-отступ убран, чтобы пробелы не дублировались. Для русской и английской версий добавлены локализованные варианты H1. В сгенерированном production HTML проверены `/`, `/ru` и `/en`: во всех трёх H1 пробелы присутствуют, по 7 слов. `git diff --check`, `npm run build` (33 маршрута) и `npx tsc --noEmit --incremental false` прошли. Production-деплой не выполнялся.
