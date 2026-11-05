@@ -3,6 +3,7 @@ import { localizePath } from '../../lib/locale-routing'
 import { isPortfolioCaseSlug } from '../../lib/portfolio-case-content'
 import type { ServiceContent } from '../../lib/service-content'
 import ServiceStructuredData from '../ServiceStructuredData/ServiceStructuredData'
+import ServiceInquiryButton from '../ServiceInquiryButton/ServiceInquiryButton'
 import styles from './ServicePage.module.css'
 
 type ServicePageProps = {
@@ -27,15 +28,38 @@ export default function ServicePage({ content }: ServicePageProps) {
           <p className={styles.eyebrow}>{content.eyebrow}</p>
           <h1 className={styles.title}>{content.title}</h1>
           <p className={styles.heroDescription}>{content.description}</p>
-          <a className={styles.ctaLink} href="#contacts">{content.ctaAction}</a>
+          <ServiceInquiryButton>{content.ctaAction}</ServiceInquiryButton>
         </section>
 
         <section className={styles.section}>
           <div className={styles.introBlock}>
             <h2 className={styles.introTitle}>{content.introTitle}</h2>
-            <p className={styles.intro}>{content.intro}</p>
+            <div className={styles.textStack}>
+              {(content.introParagraphs ?? [content.intro]).map(paragraph => (
+                <p className={styles.intro} key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
           </div>
         </section>
+
+        {content.details ? (
+          <>
+            <section className={styles.section}>
+              <div className={styles.sectionHeader}>
+                <h2 className={styles.sectionTitle}>{content.details.optionsTitle}</h2>
+                <p className={styles.sectionDescription}>{content.details.optionsDescription}</p>
+              </div>
+              <div className={styles.detailGrid}>
+                {content.details.options.map(item => (
+                  <article className={styles.detailCard} key={item.title}>
+                    <h3 className={styles.detailTitle}>{item.title}</h3>
+                    <p className={styles.detailDescription}>{item.description}</p>
+                  </article>
+                ))}
+              </div>
+            </section>
+          </>
+        ) : null}
 
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
@@ -76,6 +100,56 @@ export default function ServicePage({ content }: ServicePageProps) {
           </ol>
         </section>
 
+        {content.details ? (
+          <>
+            <section className={styles.section}>
+              <div className={styles.sectionHeader}>
+                <h2 className={styles.sectionTitle}>{content.details.includedTitle}</h2>
+                {content.details.includedDescription ? <p className={styles.sectionDescription}>{content.details.includedDescription}</p> : null}
+              </div>
+              <div className={styles.detailGrid}>
+                {content.details.included.map(item => (
+                  <article className={styles.detailCard} key={item.title}>
+                    <h3 className={styles.detailTitle}>{item.title}</h3>
+                    <p className={styles.detailDescription}>{item.description}</p>
+                  </article>
+                ))}
+              </div>
+            </section>
+
+            {content.details.technologyTitle && content.details.technologyParagraphs ? (
+              <section className={styles.section}>
+                <div className={styles.sectionHeader}>
+                  <h2 className={styles.sectionTitle}>{content.details.technologyTitle}</h2>
+                </div>
+                <div className={styles.textStack}>
+                  {content.details.technologyParagraphs.map(paragraph => (
+                    <p className={styles.longCopy} key={paragraph}>{paragraph}</p>
+                  ))}
+                </div>
+              </section>
+            ) : null}
+
+            {content.details.outcomesTitle && content.details.outcomes ? (
+              <section className={styles.section}>
+                <div className={styles.sectionHeader}>
+                  <h2 className={styles.sectionTitle}>{content.details.outcomesTitle}</h2>
+                  {content.details.outcomesDescription ? <p className={styles.sectionDescription}>{content.details.outcomesDescription}</p> : null}
+                </div>
+                <div className={styles.detailGrid}>
+                  {content.details.outcomes.map(item => (
+                    <article className={styles.detailCard} key={item.title}>
+                      <h3 className={styles.detailTitle}>{item.title}</h3>
+                      <p className={styles.detailDescription}>{item.description}</p>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            ) : null}
+
+          </>
+        ) : null}
+
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
             <h2 className={styles.sectionTitle}>{content.casesTitle}</h2>
@@ -99,6 +173,45 @@ export default function ServicePage({ content }: ServicePageProps) {
           </div>
         </section>
 
+        {content.details ? (
+          <>
+            {content.details.developerTitle && content.details.developerParagraphs ? (
+              <section className={styles.section}>
+                <div className={styles.sectionHeader}>
+                  <h2 className={styles.sectionTitle}>{content.details.developerTitle}</h2>
+                </div>
+                <div className={styles.textStack}>
+                  {content.details.developerParagraphs.map(paragraph => (
+                    <p className={styles.longCopy} key={paragraph}>{paragraph}</p>
+                  ))}
+                </div>
+                {content.details.relatedLinks?.length ? (
+                  <div className={styles.relatedLinks}>
+                    {content.details.relatedLinksTitle ? <h3 className={styles.relatedLinksTitle}>{content.details.relatedLinksTitle}</h3> : null}
+                    {content.details.relatedLinksDescription ? <p className={styles.relatedLinksDescription}>{content.details.relatedLinksDescription}</p> : null}
+                    <div className={styles.relatedLinkList}>
+                      {content.details.relatedLinks.map(link => (
+                        <Link className={styles.relatedLink} href={localizePath(content.locale, link.path)} key={link.path}>
+                          {link.label} →
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+              </section>
+            ) : null}
+
+            <section className={styles.section}>
+              <div className={styles.sectionHeader}>
+                <h2 className={styles.sectionTitle}>{content.details.investmentTitle}</h2>
+              </div>
+              <div className={styles.textStack}>
+                {content.details.investment.map(paragraph => <p className={styles.longCopy} key={paragraph}>{paragraph}</p>)}
+              </div>
+            </section>
+          </>
+        ) : null}
+
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
             <h2 className={styles.sectionTitle}>{content.faqTitle}</h2>
@@ -113,11 +226,22 @@ export default function ServicePage({ content }: ServicePageProps) {
           </div>
         </section>
 
+        {content.details ? (
+          <section className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>{content.details.afterLaunchTitle}</h2>
+            </div>
+            <div className={styles.textStack}>
+              {content.details.afterLaunch.map(paragraph => <p className={styles.longCopy} key={paragraph}>{paragraph}</p>)}
+            </div>
+          </section>
+        ) : null}
+
         <section className={`${styles.section} ${styles.ctaSection}`}>
           <h2 className={styles.ctaTitle}>{content.ctaTitle}</h2>
           <div>
             <p className={styles.ctaCopy}>{content.ctaDescription}</p>
-            <a className={styles.ctaLink} href="#contacts">{content.ctaAction}</a>
+            <ServiceInquiryButton>{content.ctaAction}</ServiceInquiryButton>
           </div>
         </section>
       </div>

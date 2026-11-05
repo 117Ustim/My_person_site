@@ -1,6 +1,10 @@
 import { siteUrl } from '../../lib/site-config'
+import type { Locale } from '../../lib/locale-routing'
 
-const structuredData = {
+function getStructuredData(locale: Locale) {
+  const isWorldwide = locale === 'en'
+
+  return {
   '@context': 'https://schema.org',
   '@graph': [
     {
@@ -8,8 +12,10 @@ const structuredData = {
       '@id': `${siteUrl}#service`,
       name: 'AU Studio',
       url: siteUrl,
-      description: 'Website, CRM system, and mobile app development for businesses in Ukraine.',
-      areaServed: 'Ukraine',
+      description: isWorldwide
+        ? 'Website, CRM system, and mobile app development for businesses worldwide.'
+        : 'Website, CRM system, and mobile app development for businesses in Ukraine.',
+      areaServed: isWorldwide ? 'Worldwide' : 'Ukraine',
       serviceType: [
         'Website development',
         'CRM system development',
@@ -26,13 +32,14 @@ const structuredData = {
       inLanguage: ['uk', 'ru', 'en'],
     },
   ],
+  }
 }
 
-export default function StructuredData() {
+export default function StructuredData({ locale }: { locale: Locale }) {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(getStructuredData(locale)) }}
     />
   )
 }

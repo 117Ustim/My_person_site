@@ -20,7 +20,7 @@ export default function ServiceStructuredData({ content }: ServiceStructuredData
         url: serviceUrl,
         description: content.description,
         provider: { '@id': `${siteUrl}#service` },
-        areaServed: 'Ukraine',
+        areaServed: content.locale === 'en' ? 'Worldwide' : 'Ukraine',
         inLanguage: content.locale,
       },
       {
@@ -30,6 +30,18 @@ export default function ServiceStructuredData({ content }: ServiceStructuredData
           { '@type': 'ListItem', position: 1, name: content.breadcrumbHome, item: homeUrl },
           { '@type': 'ListItem', position: 2, name: content.breadcrumbCurrent, item: serviceUrl },
         ],
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': `${serviceUrl}#faq`,
+        mainEntity: content.faq.map(item => ({
+          '@type': 'Question',
+          name: item.question,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: item.answer,
+          },
+        })),
       },
     ],
   }

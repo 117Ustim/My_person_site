@@ -807,7 +807,7 @@ const messages: Record<Locale, MessageDictionary> = {
     'footer.crmDevelopment': 'CRM development',
     'footer.mobileAppDevelopment': 'Mobile app development',
     'footer.locationLabel': 'Based in',
-    'footer.location': 'Kyiv, Ukraine',
+    'footer.location': 'Kyiv, Ukraine · Working worldwide',
     'footer.email': 'Email',
     'footer.copyEmail': 'Copy email',
     'footer.emailCopied': 'Email copied',

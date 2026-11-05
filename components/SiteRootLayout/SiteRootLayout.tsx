@@ -20,7 +20,7 @@ export default function SiteRootLayout({ children, locale }: SiteRootLayoutProps
       <body className={styles.body}>
         <I18nProvider>
           <LenisScroll />
-          <StructuredData />
+          <StructuredData locale={locale} />
           {children}
           {googleAnalyticsId ? <GoogleAnalytics gaId={googleAnalyticsId} /> : null}
         </I18nProvider>
