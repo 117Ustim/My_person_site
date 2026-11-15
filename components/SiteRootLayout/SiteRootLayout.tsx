@@ -3,6 +3,7 @@ import 'lenis/dist/lenis.css'
 import GoogleAnalytics from '../GoogleAnalytics/GoogleAnalytics'
 import LenisScroll from '../LenisScroll/LenisScroll'
 import StructuredData from '../StructuredData/StructuredData'
+import WebVitals from '../WebVitals/WebVitals'
 import { I18nProvider } from '../../lib/i18n'
 import type { Locale } from '../../lib/locale-routing'
 import styles from '../../app/layout.module.css'
@@ -21,6 +22,7 @@ export default function SiteRootLayout({ children, locale }: SiteRootLayoutProps
           <StructuredData locale={locale} />
           {children}
           <GoogleAnalytics />
+          <WebVitals />
         </I18nProvider>
       </body>
     </html>

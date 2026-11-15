@@ -6,6 +6,7 @@
     "dev": "NEXT_DIST_DIR=.next-dev next dev -p 3000",
     "build": "next build",
     "start": "next start",
+    "audit:production": "node scripts/audit-production.mjs",
     "generate:og": "node scripts/generate-og-image.mjs"
   },
   "dependencies": {
@@ -16,7 +17,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "resend": "^6.31.0",
-    "three": "^0.186.0"
+    "three": "^0.186.0",
+    "web-vitals": "^6.2.3"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
