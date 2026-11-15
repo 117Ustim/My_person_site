@@ -13,8 +13,6 @@ type SiteRootLayoutProps = {
 }
 
 export default function SiteRootLayout({ children, locale }: SiteRootLayoutProps) {
-  const googleAnalyticsId = process.env.NEXT_PUBLIC_GA_ID
-
   return (
     <html lang={locale} className={`dark ${styles.html}`}>
       <body className={styles.body}>
@@ -22,7 +20,7 @@ export default function SiteRootLayout({ children, locale }: SiteRootLayoutProps
           <LenisScroll />
           <StructuredData locale={locale} />
           {children}
-          {googleAnalyticsId ? <GoogleAnalytics gaId={googleAnalyticsId} /> : null}
+          <GoogleAnalytics />
         </I18nProvider>
       </body>
     </html>
