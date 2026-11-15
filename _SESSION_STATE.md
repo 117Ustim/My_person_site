@@ -1507,6 +1507,13 @@
 - Production smoke после deploy: `/`, `/ru`, `/en`, `/portfolio`, сервисные URL UA/RU/EN, `/sitemap.xml`, `/robots.txt` и `/admin/login` возвращают HTTP `200`.
 - В production HTML публичной страницы присутствует GA4 `G-XCV7CGBXGV`; в production HTML `/admin/login` отсутствуют GA4 ID и `gaId`, а `noindex,nofollow` сохранены.
 - Изменения в базе данных отсутствуют. Mobile-аудит не выполнялся по ограничению владельца.
+
+## 2026-11-15 — Production SEO re-crawl после deploy
+- Выполнен read-only re-crawl всех 24 URL из production `sitemap.xml` на `https://117m.com.ua`.
+- Результат: 24/24 HTTP `200`, 0 страниц без title, 0 без description, 0 без canonical, 0 с неправильным количеством H1; все страницы отдают правильный `lang`, 4 hreflang-ссылки и JSON-LD.
+- `robots.txt` проверен: sitemap указывает на `https://117m.com.ua/sitemap.xml`, правила закрывают `/admin/` и `/api/`.
+- Локали UA/RU/EN, сервисные страницы и portfolio case pages проходят одинаковую техническую SEO-проверку. PageSpeed/CrUX/Search Console фактические данные в текущем окружении не подключены, поэтому реальные CWV, позиции и клики не измерялись.
+- Изменений кода и базы на этом этапе нет. Mobile-аудит не выполнялся по ограничению владельца.
 - Коммит `425e478` (`SEO: expand localized service pages`) отправлен в `origin/main` GitHub-репозитория `117Ustim/My_person_site`; production-деплой Vercel `my-person-site-p7rmtc334-ustims-projects.vercel.app` завершён успешно;
 - после публикации основной домен `https://117m.com.ua` проверен: CRM и mobile URL для UA/RU/EN возвращают `200`, каждая страница содержит локализованный H1 и 10 FAQ; английские страницы сохраняют worldwide-позиционирование.
 - По команде пользователя расширены страницы `/services/crm-development` и `/services/mobile-app-development` во всех трёх локалях; украинская и русская версии сохраняют `areaServed: Ukraine`, английская — `areaServed: Worldwide`;
