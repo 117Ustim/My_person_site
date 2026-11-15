@@ -1500,6 +1500,13 @@
 - Коммит `d4c5303` (`fix: keep analytics out of admin HTML`) отправлен в `origin/main` GitHub.
 - Production `https://117m.com.ua` после push пока отдаёт старый Vercel deployment с `gaId`; доступ `npx vercel whoami` подтверждён как `117ustim`, но production deploy требует отдельного явного разрешения и в этом этапе не запускался.
 - Prisma/БД не затрагивались. Mobile-аудит не выполнялся по ограничению владельца.
+
+## 2026-11-15 — Production deploy после analytics security fix
+- По явному разрешению владельца выполнен production deploy через Vercel CLI для проекта `my-person-site`.
+- Deployment `dpl_6DNq64RJZ5KJzx4Jx9xS7npRPwrT` получил `readyState: READY`, target `production`, алиас `https://117m.com.ua`.
+- Production smoke после deploy: `/`, `/ru`, `/en`, `/portfolio`, сервисные URL UA/RU/EN, `/sitemap.xml`, `/robots.txt` и `/admin/login` возвращают HTTP `200`.
+- В production HTML публичной страницы присутствует GA4 `G-XCV7CGBXGV`; в production HTML `/admin/login` отсутствуют GA4 ID и `gaId`, а `noindex,nofollow` сохранены.
+- Изменения в базе данных отсутствуют. Mobile-аудит не выполнялся по ограничению владельца.
 - Коммит `425e478` (`SEO: expand localized service pages`) отправлен в `origin/main` GitHub-репозитория `117Ustim/My_person_site`; production-деплой Vercel `my-person-site-p7rmtc334-ustims-projects.vercel.app` завершён успешно;
 - после публикации основной домен `https://117m.com.ua` проверен: CRM и mobile URL для UA/RU/EN возвращают `200`, каждая страница содержит локализованный H1 и 10 FAQ; английские страницы сохраняют worldwide-позиционирование.
 - По команде пользователя расширены страницы `/services/crm-development` и `/services/mobile-app-development` во всех трёх локалях; украинская и русская версии сохраняют `areaServed: Ukraine`, английская — `areaServed: Worldwide`;
