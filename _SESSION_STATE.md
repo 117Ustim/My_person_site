@@ -1491,6 +1491,15 @@
 - компонент `ServicePage` получил опциональные локализованные блоки и сохранил server-first подход; новые секции используют существующий CSS Module и адаптивную одноколоночную раскладку на мобильных экранах;
 - `npx tsc --noEmit --incremental false`, `git diff --check` и `npm run build` прошли успешно; локальный preview на `localhost:3001` подтвердил HTTP 200 для всех трёх страниц, 14 FAQ и наличие JSON-LD;
 - изменения пока локальные: GitHub и Vercel не обновлялись.
+
+## 2026-11-15 — Production safety fix: dependencies и GA4 в админке
+- Репозиторий подтверждён как `117Ustim/My_person_site`, локальная копия `/Users/ustim/IT/Repositore/person_site` чистая и связана с `origin/main`.
+- Next.js обновлён с `15.5.26` до `15.5.29`. В `package.json` добавлены npm overrides для `postcss@8.5.33` и `source-map-js@1.2.2`; `npm audit --audit-level=moderate` после обновления показывает `0 vulnerabilities`.
+- Исправлено попадание GA4 ID в серверный RSC-payload `/admin/login`: client-компонент теперь не рендерит аналитику до определения pathname, не принимает GA ID через server layout и полностью исключает `/admin/*`. Публичные страницы продолжают получать GA4 после гидрации.
+- Проверено: `npm run build` на Next `15.5.29`, `npx tsc --noEmit --incremental false`, `git diff --check`; smoke локальной production-сборки: `/`, `/ru`, `/en`, `/portfolio`, сервисные страницы, `/sitemap.xml`, `/robots.txt`, `/admin/login` — все `200`; GA4 ID отсутствует в HTML админки и присутствует на публичной странице; admin сохраняет `noindex,nofollow`.
+- Коммит `d4c5303` (`fix: keep analytics out of admin HTML`) отправлен в `origin/main` GitHub.
+- Production `https://117m.com.ua` после push пока отдаёт старый Vercel deployment с `gaId`; доступ `npx vercel whoami` подтверждён как `117ustim`, но production deploy требует отдельного явного разрешения и в этом этапе не запускался.
+- Prisma/БД не затрагивались. Mobile-аудит не выполнялся по ограничению владельца.
 - Коммит `425e478` (`SEO: expand localized service pages`) отправлен в `origin/main` GitHub-репозитория `117Ustim/My_person_site`; production-деплой Vercel `my-person-site-p7rmtc334-ustims-projects.vercel.app` завершён успешно;
 - после публикации основной домен `https://117m.com.ua` проверен: CRM и mobile URL для UA/RU/EN возвращают `200`, каждая страница содержит локализованный H1 и 10 FAQ; английские страницы сохраняют worldwide-позиционирование.
 - По команде пользователя расширены страницы `/services/crm-development` и `/services/mobile-app-development` во всех трёх локалях; украинская и русская версии сохраняют `areaServed: Ukraine`, английская — `areaServed: Worldwide`;
